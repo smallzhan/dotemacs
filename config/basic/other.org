@@ -121,47 +121,17 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
                  (kbd "M-p")
                  'helm-eshell-history)))
 
-(defun pcomplete/sudo ()
-  (let ((prec (pcomplete-arg 'last -1)))
-    (cond ((string= "sudo" prec)
-           (while (pcomplete-here*
-                    (funcall pcomplete-command-completion-function)
-                    (pcomplete-arg 'last) t))))))
+(setq helm-locate-command "locate -e -b %s -r %s")
 
-(defun pcomplete/find ()
-  (let ((prec (pcomplete-arg 'last -1)))
-    (cond ((and (pcomplete-match "^-" 'last)
-                (string= "find" prec))
-           (pcomplete-opt "HLPDO"))
-          ((pcomplete-match "^-" 'last)
-           (while (pcomplete-here
-                   '("-amin" "-anewer" "-atime" "-cmin" "-cnewer" "-context"
-                     "-ctime" "-daystart" "-delete" "-depth" "-empty" "-exec"
-                     "-execdir" "-executable" "-false" "-fls" "-follow" "-fprint"
-                     "-fprint0" "-fprintf" "-fstype" "-gid" "-group"
-                     "-help" "-ignore_readdir_race" "-ilname" "-iname"
-                     "-inum" "-ipath" "-iregex" "-iwholename"
-                     "-links" "-lname" "-ls" "-maxdepth"
-                     "-mindepth" "-mmin" "-mount" "-mtime"
-                     "-name" "-newer" "-nogroup" "-noignore_readdir_race"
-                     "-noleaf" "-nouser" "-nowarn" "-ok"
-                     "-okdir" "-path" "-perm" "-print"
-                     "-print0" "-printf" "-prune" "-quit"
-                     "-readable" "-regex" "-regextype" "-samefile"
-                     "-size" "-true" "-type" "-uid"
-                     "-used" "-user" "-version" "-warn"
-                     "-wholename" "-writable" "-xdev" "-xtype"))))
-          ((string= "-type" prec)
-           (while (pcomplete-here (list "b" "c" "d" "p" "f" "l" "s" "D"))))
-          ((string= "-xtype" prec)
-           (while (pcomplete-here (list "b" "c" "d" "p" "f" "l" "s"))))
-          ((or (string= prec "-exec")
-               (string= prec "-execdir"))
-           (while (pcomplete-here* (funcall pcomplete-command-completion-function)
-                                   (pcomplete-arg 'last) t))))
-    (while (pcomplete-here (pcomplete-entries) nil 'identity))))
+;;(setq helm-locate-command
+;;        (case system-type
+;;          ('gnu/linux "locate -i -r %s")
+;;          ('berkeley-unix "locate -i %s")
+;;          ('windows-nt "es %s")
+;;          ('darwin "mdfind -name %s %s")
+;;          (t "locate %s")))
 #+END_SRC
-* Paredit
+* Paredit & SmartParens
 paredit 是编辑括号的神器，在 scheme 等模式里面尤其需要。
 emacs rocks 对其进行了介绍，见 http://emacsrocks.com/e14.html 貌似新的　
 smart-parens 比较好用，更换了
@@ -197,6 +167,9 @@ paredit 类似的，但是要自己配置，比较麻烦。
 (show-smartparens-global-mode +1)
 
 (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+
+;; (if (member major-mode sp--lisp-modes)
+;;      (turn-on-smartparens-strict-mode))
 
 ;;; markdown-mode
 (sp-with-modes '(markdown-mode gfm-mode rst-mode)
@@ -244,6 +217,22 @@ paredit 类似的，但是要自己配置，比较麻烦。
 
 (setq prelude-interactive-lisp-coding-hook 'prelude-interactive-lisp-coding-defaults)
 
+(defun ome-create-newline-and-enter-sexp (&rest _ignored)
+    "Open a new brace or bracket expression, with relevant newlines and indent. "
+    (previous-line)
+    (indent-according-to-mode)
+    (forward-line)
+    (newline)
+    (indent-according-to-mode)
+    (forward-line -1)
+    (indent-according-to-mode))
+
+  (dolist (mode '(c-mode c++-mode java-mode js2-mode sh-mode css-mode))
+    (sp-local-pair mode
+                   "{"
+                   nil
+                   :post-handlers
+                   '((ome-create-newline-and-enter-sexp "RET"))))
 
 #+END_SRC
 * expand-region
@@ -267,7 +256,7 @@ paredit 类似的，但是要自己配置，比较麻烦。
 emacs rocks 链接见 http://emacsrocks.com/e13.html
 
 #+BEGIN_SRC emacs-lisp
-(require 'multiple-cursors)
+(require-package 'multiple-cursors)
 
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-line-like-this)
@@ -335,7 +324,7 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 
 #+END_SRC
 * 其他琐碎设定
-
+** 各种小包的配置
 #+BEGIN_SRC emacs-lisp
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -361,6 +350,8 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'html-mode-hook 'emmet-mode)
 (add-hook 'css-mode-hook  'emmet-mode)
+
+(require 'dired+)
 #+END_SRC
 
 ** uniquify
@@ -403,32 +394,64 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 					auto-mode-alist))
 	  ))
 #+END_SRC
-** modeline-awesome 好玩的货.
+** modeline-awesome 好玩的货, 与 diminish 配合可以清理　modeline.
 #+BEGIN_SRC emacs-lisp
+(require-package 'diminish)
 ;; Use align-left icon for `auto-fill-mode'.
 (eval-after-load 'diminish-autoloads
-'(eval-after-load 'simple
-'(diminish 'auto-fill-function (concat " " [#xF036]))))
+  '(eval-after-load 'simple
+    '(progn
+      (diminish 'auto-fill-function (concat " " [#xF036]))
+      (when (string< emacs-version "24.3.50")
+         (diminish 'global-visual-line-mode))
+       (diminish 'visual-line-mode))))
 
 ;; Use thumbs-up / thumbs-down for flymake status.
 ;; We need to reimplement `flymake-report-status' to make this happen.
 (eval-after-load 'flymake
-'(defun flymake-report-status (e-w &optional status)
-"Show status in mode line."
-(when e-w
-(setq flymake-mode-line-e-w e-w))
-(when status
-(setq flymake-mode-line-status status))
-(let* ((mode-line " "))
-(if (> (length flymake-mode-line-e-w) 0)
-(setq mode-line (concat mode-line [#xF165] flymake-mode-line-e-w))
-(setq mode-line (concat mode-line [#xF164])))
-(setq mode-line (concat mode-line flymake-mode-line-status))
-(setq flymake-mode-line mode-line)
-(force-mode-line-update))))
+  '(defun flymake-report-status (e-w &optional status)
+  "Show status in mode line."
+  (when e-w
+    (setq flymake-mode-line-e-w e-w))
+  (when status
+    (setq flymake-mode-line-status status))
+  (let* ((mode-line " "))
+    (if (> (length flymake-mode-line-e-w) 0)
+      (setq mode-line (concat mode-line [#xF165] flymake-mode-line-e-w))
+    (setq mode-line (concat mode-line [#xF164])))
+  (setq mode-line (concat mode-line flymake-mode-line-status))
+  (setq flymake-mode-line mode-line)
+  (force-mode-line-update))))
 
 ;; Use the tags icon for `gtags-mode'.
 (add-hook 'gtags-mode-hook '(lambda ()
-(diminish 'gtags-mode (concat " " [#xF02C]))))
+  (diminish 'gtags-mode (concat " " [#xF02C]))))
 
+(eval-after-load "outline"
+  '(diminish 'outline-minor-mode))
+
+(eval-after-load "eldoc"
+  '(diminish 'eldoc-mode))
+
+;; diminish third-party mode
+(eval-after-load "elisp-slime-nav"
+  '(diminish 'elisp-slime-nav-mode))
+
+(eval-after-load "helm"
+  '(diminish 'helm-mode))
+
+(eval-after-load "projectile"
+  '(diminish 'projectile-mode "Prjl"))
+
+(eval-after-load "undo-tree"
+  '(diminish 'undo-tree-mode))
+
+(eval-after-load "rainbow-mode"
+  '(diminish 'rainbow-mode))
+
+#+END_SRC
+
+* linum-relative
+#+BEGIN_SRC emacs-lisp
+(require-package 'linum-relative)
 #+END_SRC

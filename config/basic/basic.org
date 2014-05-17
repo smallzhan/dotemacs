@@ -42,8 +42,8 @@
 (auto-image-file-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (column-number-mode t)
-(show-paren-mode t)
-(setq show-paren-style 'parenthesis)
+;; (show-paren-mode t)
+;; (setq show-paren-style 'parenthesis)
 ;;(setq show-paren-style 'expression) ;;高亮显示括号匹配区域。颜色不好。取消..
 (setq visible-bell t)
 
@@ -142,10 +142,14 @@
      (require 'em-cmpl)
      (require 'em-prompt)
      (require 'em-term)
+     (require 'em-smart)
      ;; TODO: for some reason requiring this here breaks it, but
      ;; requiring it after an eshell session is started works fine.
      ;; (require 'eshell-vc)
      (setenv "PAGER" "cat")
+     (setq eshell-where-to-jump 'begin)
+     (setq eshell-review-quick-commands nil)
+     (setq eshell-smart-space-goes-to-end t)
      ; (set-face-attribute 'eshell-prompt nil :foreground "turquoise1")
      (add-hook 'eshell-mode-hook ;; for some reason this needs to be a hook
                '(lambda () (define-key eshell-mode-map "\C-a" 'eshell-bol)))
@@ -157,8 +161,30 @@
                   '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))))
 ;;     (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)))
 
+
+(defun eshell/rpwd2home ()
+    (let ((abs-path (eshell/pwd))
+          (home-dir (getenv "HOME")))
+       (if (string-match home-dir abs-path)
+          (replace-match "~" nil nil abs-path)
+         abs-path)
+       )
+)
+
+(defun eshell/rpwd ()
+  (let ((rdir (eshell/rpwd2home)))
+   (car (last (split-string rdir "/"))))
+)
+
 (setq eshell-directory-name
       (expand-file-name "./" (expand-file-name "eshell" my-config-dir)))
+
+(setq eshell-prompt-function
+      (lambda ()
+        (concat "[" (user-login-name) "@" (system-name) ":" (eshell/rpwd) "]"
+                (if (= (user-uid) 0) "# " "$ "))))
+
+(setq eshell-prompt-regexp "^[^#$\n]*[#$] ")
 
 (setq eshell-aliases-file "eshellalias")
 (defalias 'v 'find-file)
@@ -168,6 +194,122 @@
                                  (let ((default-directory (getenv "HOME")))
                                    (command-execute 'eshell)
                                    (bury-buffer))))
+
+(require-package 'pcomplete-extension)
+(require 'pcomplete-extension)
+
+(defun eshell/deb (&rest args)
+  (eshell-eval-using-options
+   "deb" args
+   '((?f "find" t find "list available packages matching a pattern")
+     (?i "installed" t installed "list installed debs matching a pattern")
+     (?l "list-files" t list-files "list files of a package")
+     (?s "show" t show "show an available package")
+     (?v "version" t version "show the version of an installed package")
+     (?w "where" t where "find the package containing the given file")
+     (nil "help" nil nil "show this usage information")
+     :show-usage)
+   (eshell-do-eval
+    (eshell-parse-command
+     (cond
+      (find
+       (format "apt-cache search %s" find))
+      (installed
+       (format "dlocate -l %s | grep '^.i'" installed))
+      (list-files
+       (format "dlocate -L %s | sort" list-files))
+      (show
+       (format "apt-cache show %s" show))
+      (version
+       (format "dlocate -s %s | egrep '^(Package|Status|Version):'" version))
+      (where
+       (format "dlocate %s" where))))
+    t)))
+
+(defun eshell/vi (&rest args)
+  "Invoke `find-file' on the file.
+\"vi +42 foo\" also goes to line 42 in the buffer."
+  (while args
+    (if (string-match "\\`\\+\\([0-9]+\\)\\'" (car args))
+        (let* ((line (string-to-number (match-string 1 (pop args))))
+               (file (pop args)))
+          (find-file file)
+          (goto-line line))
+      (find-file (pop args)))))
+
+(defun eshell/emacs (&rest args)
+  "Open a file in emacs. Some habits die hard."
+  (if (null args)
+      ;; If I just ran "emacs", I probably expect to be launching
+      ;; Emacs, which is rather silly since I'm already in Emacs.
+      ;; So just pretend to do what I ask.
+      (bury-buffer)
+    ;; We have to expand the file names or else naming a directory in an
+    ;; argument causes later arguments to be looked for in that directory,
+    ;; not the starting directory
+    (mapc #'find-file (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
+
+(defun eshell/clear ()
+  "Clear the current buffer, leaving one prompt at the top."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    ))
+
+(defun pcomplete/eshell-mode/bmk ()
+  "Completion for `bmk'"
+  (pcomplete-here (bookmark-all-names)))
+
+(defun eshell/bmk (&rest args)
+  "Integration between EShell and bookmarks.
+For usage, execute without arguments."
+  (setq args (eshell-flatten-list args))
+  (let ((bookmark (car args))
+        filename name)
+    (cond
+     ((eq nil args)
+      (format "Usage:
+ * bmk BOOKMARK to
+ ** either change directory pointed to by BOOKMARK
+ ** or bookmark-jump to the BOOKMARK if it is not a directory.
+ * bmk . BOOKMARK to bookmark current directory in BOOKMARK.
+ Completion is available."))
+     ((string= "." bookmark)
+      ;; Store current path in EShell as a bookmark
+      (if (setq name (car (cdr args)))
+          (progn
+            (bookmark-set name)
+            (bookmark-set-filename name (eshell/pwd))
+            (format "Saved current directory in bookmark %s" name))
+        (error "You must enter a bookmark name")))
+     (t
+       ;; Check whether an existing bookmark has been specified
+       (if (setq filename (cdr (car (bookmark-get-bookmark-record bookmark))))
+           ;; If it points to a directory, change to it.
+           (if (file-directory-p filename)
+               (eshell/cd filename)
+             ;; otherwise, just jump to the bookmark
+             (bookmark-jump bookmark))
+         (error "%s is not a bookmark" bookmark))))))
+
+  (defadvice eldoc-current-symbol (around eldoc-current-symbol activate)
+    ad-do-it
+    (if (and (not ad-return-value)
+             (eq major-mode 'eshell-mode))
+        (save-excursion
+          (goto-char eshell-last-output-end)
+          (let ((esym (eshell-find-alias-function (current-word)))
+                (sym (intern-soft (current-word))))
+            (setq ad-return-value (or esym sym))))))
+
+(eval-after-load 'eshell
+  '(require 'eshell-autojump nil t))
+
+(add-hook 'eshell-mode-hook
+  (lambda ()
+    (smartparens-mode +1)
+    (eldoc-mode +1))
+)
 #+END_SRC
 * 其他设置
 

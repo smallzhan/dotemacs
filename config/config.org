@@ -44,7 +44,7 @@
    (tool-bar-mode  0)
    (my-default-font)))
 #+END_SRC
-* 预订义环境变量
+* 预定义环境变量
 #+BEGIN_SRC emacs-lisp
 (setq bookmark-default-file (concat my-emacs-path ".emacs.bmk")) ;书签文件
 ;;(setq custom-file (concat my-emacs-path "custom.el"))

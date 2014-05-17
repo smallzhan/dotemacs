@@ -1,7 +1,7 @@
 ;;=========================================================
 ;;============关于 custom 的配置=============================
 ;;=========================================================
-;;Time-stamp: <smallqiang 2014-05-17 15:27:54>
+;;Time-stamp: <smallqiang 2014-05-17 18:25:08>
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -16,11 +16,10 @@
  '(bmkp-last-as-first-bookmark-file "~/.emacs.d/.emacs.bmk")
  '(cursor-color "#839496")
  '(custom-enabled-themes (quote (tangotango)))
- '(custom-safe-themes (quote ("a68fa33e66a883ce1a5698bc6ff355b445c87da1867fdb68b9a7325ee6ea3507" "81f214eeecb74cf7da4dc30725016f6d7ad048adcf68e2fddf156afcbdafee27" "8594644a98dffa6e7e0f1d7c660df33207bd7f4a510a33493ef131298099275d" "a60b0bfa18eec65b382df4df15da904544cfc98dc55ffc559bd8d36bf5d2bf5e" default)))
+ '(custom-safe-themes (quote ("a10e35ea2d05e09c19d688da256bd3ca073432c97d92a399dcf907befaee707c" "a68fa33e66a883ce1a5698bc6ff355b445c87da1867fdb68b9a7325ee6ea3507" "81f214eeecb74cf7da4dc30725016f6d7ad048adcf68e2fddf156afcbdafee27" "8594644a98dffa6e7e0f1d7c660df33207bd7f4a510a33493ef131298099275d" "a60b0bfa18eec65b382df4df15da904544cfc98dc55ffc559bd8d36bf5d2bf5e" default)))
  '(fci-rule-character-color "#192028")
  '(fci-rule-color "#0a2832")
  '(foreground-color "#839496")
- '(helm-locate-command "locate %s -e %s")
  '(menu-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
