@@ -1,0 +1,30 @@
+;; -*- mode: lisp-interaction; coding: utf-8; -*-
+;(set-default-font "WenQuanYi Micro Hei:pixelsize=14")
+;(set-fontset-font (frame-parameter nil 'font)
+;                 'han (font-spec :family "WenQuanYi Micor Hei" :size 16))
+;(set-fontset-font (frame-parameter nil 'font)
+;                 'symbol (font-spec :family "WenQuanYi Micro Hei" :size 16))
+;(set-fontset-font (frame-parameter nil 'font)
+;                 'cjk-misc (font-spec :family "WenQuanYi Micro Hei" :size 16))
+;(set-fontset-font (frame-parameter nil 'font)
+;                 'bopomofo (font-spec :family "WenQuanYi Micro Hei" :size 16))
+
+(defconst  my-emacs-path "~/myEmacs/")
+(defconst  my-emacs-dir "~/.emacs.d/")
+;(defconst my-emacs-path "/media/Works/smallqiang/myEmacs/")
+;(defconst my-emacs-dir "/media/Works/smallqiang/.emacs.d/")
+(defconst  my-lisp-path (concat my-emacs-path "site-lisp/"))
+;;(load-file (concat my-lisp-path "cedet-1.1/common/cedet.el"))
+
+(add-to-list 'load-path my-lisp-path)
+(setq my-conf-path (concat my-emacs-path "config/"))
+(setq my-config-dir (concat my-emacs-path "config/"))
+
+;;(mapc 'load (directory-files my-conf-path t "\\.el\\'"))
+
+;(require 'package)
+(setq package-user-dir (concat my-config-dir "elpa"))
+(package-initialize)
+
+(org-babel-load-file (concat my-config-dir "config.org"))
+(put 'dired-find-alternate-file 'disabled nil)
