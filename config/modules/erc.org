@@ -1,0 +1,191 @@
+#+TITLE: ERC 聊天软件设置
+
+* ERC
+ERC 是 emacs 内置的 irc 聊天软件，还有一个是 rcirc， 不过貌似不好用，后来就没有
+用了。研究了下 erc 的配置，看起来还不错。
+
+#+BEGIN_SRC emacs-lisp
+(require 'erc)
+(require 'erc-ring)
+(require 'erc-services)
+(require 'erc-fill)
+(require 'erc-autoaway)
+(require 'erc-log)
+(require 'erc-nick-colors)
+                                        ;(require 'ssl)
+
+(load-file (concat my-emacs-dir  "erc/emacs-erc-passwd.el"))
+(erc-netsplit-mode nil)                 ; I don't need this.
+(erc-ring-enable)
+(erc-log-enable)
+
+(setq erc-nick "zhan")
+(setq erc-away-nickname "zhan")
+(setq erc-user-full-name "Guoqiang Jin")
+
+;(setq erc-auto-set-away t)
+;(setq erc-auto-discard-away t)
+;(setq erc-autoaway-idle-seconds 600)
+
+(erc-services-mode 1)
+(setq erc-prompt-for-nickserv-password nil)
+
+(setq erc-fill-function 'erc-fill-static)
+(setq erc-fill-static-center 12)
+
+(setq erc-default-coding-system '(utf-8 . utf-8))
+;; Auto un-away
+(setq erc-auto-discard-away t)
+;; Spell check
+(erc-spelling-mode 1)
+;; Do not make nicks as buttons
+(setq erc-button-buttonize-nicks nil)
+
+(setq erc-insert-timestamp-function 'erc-insert-timestamp-left)
+(setq erc-ignore-list nil)
+(setq erc-hide-list
+      '("JOIN" "PART" "QUIT" "MODE" "NICK"))
+
+(erc-match-mode 1)
+(setq erc-current-nick-highlight-type 'nick-or-keyword)
+(setq erc-keywords '("zhan" "smallzhan" "鲇鱼"))
+(setq erc-pals nil)
+(defface erc-query-buffer-face '((t (:bold t :foreground "magenta")))
+  "ERC face for your query buffers."
+  :group 'erc-faces)
+
+;; Logging
+(setq erc-log-channels t
+      erc-log-channels-directory (concat my-emacs-dir "erc/logs")
+      erc-log-insert-log-on-open nil
+      erc-log-file-coding-system 'utf-8)
+
+(setq erc-prompt (lambda ()
+                   (if (and (boundp 'erc-default-recipients)
+                            (erc-default-target))
+                       (erc-propertize (concat (erc-default-target) ">")
+                                       'read-only t
+                                       'rear-nonsticky t
+                                       'front-nonsticky t)
+                     (erc-propertize (concat "ERC>")
+                                     'read-only t
+                                     'rear-nonsticky t
+                                     'front-nonsticky t))))
+
+(setq erc-autojoin-channels-alist '(("freenode.net"
+                                        ;"#emacs" "#scheme" "#ubuntu-cn")))
+                                     "#ubuntu-cn" "#ppmm" "#gentoo-cn" "#emacs")
+;                                   ("irc.linuxfire.com.cn" "#linuxfire")
+                                    ("oftc.net" "#emacs-cn")))
+
+(setq erc-quit-reason-various-alist
+      '(("bye" "Goodbye Everyone...")
+        ("z" "Zzz...")
+        ("sleep" "Time for sleep now, Go...")
+        ("^$" yow)))
+(setq erc-quit-reason 'erc-quit-reason-various)
+
+(defvar erc-insert-post-hook)
+(add-hook 'erc-insert-post-hook
+          'erc-truncate-buffer)
+(setq erc-truncate-buffer-on-save t)
+
+(setq erc-format-nick-function 'my-erc-format-nick)
+
+(defun my-erc-format-nick (&optional user channel-data)
+  "Like `erc-format-nick' but trim nick to a fixed length. "
+  (let ((nick (erc-format-nick user channel-data)))
+    (when (> (length nick) 8)
+      (setq nick (concat (substring nick 0 5)
+                         ".."
+                         (substring nick -1))))
+    nick))
+
+
+
+(defun erc-start ()
+  (interactive)
+  (erc :server "ipv6.chat.freenode.net" :port 6667 :nick erc-nick :password freenodepw)
+ ; (erc :server "irc.linuxfire.com.cn" :port 6668 :nick erc-nick :password firepw)
+  (erc :server "irc.oftc.net" :port 7000 :nick erc-nick :password oftcpw))
+
+(defun erc-cmd-HOWMANY (&rest ignore)
+    "Display how many users (and ops) the current channel has."
+    (erc-display-message nil 'notice (current-buffer)
+                         (let ((hash-table (with-current-buffer
+                                               (erc-server-buffer)
+                                             erc-server-users))
+                               (users 0)
+                               (ops 0))
+                           (maphash (lambda (k v)
+                                      (when (member (current-buffer)
+                                                    (erc-server-user-buffers v))
+                                        (incf users))
+                                      (when (erc-channel-user-op-p k)
+                                        (incf ops)))
+                                    hash-table)
+                           (format
+                            "There are %s users (%s ops) on the current channel"
+                            users ops))))
+
+(defun erc-cmd-SHOW (&rest form)
+    "Eval FORM and send the result and the original form as:
+ FORM => (eval FORM)."
+    (let* ((form-string (mapconcat 'identity form " "))
+           (result
+            (condition-case err
+                (eval (read-from-whole-string form-string))
+              (error
+               (format "Error: %s" error)))))
+      (erc-send-message (format "%s => %S" form-string result))))
+
+
+                                        ;(message "world")
+(add-hook 'erc-mode-hook
+            '(lambda ()
+               (require 'erc-pcomplete)
+               (pcomplete-erc-setup)
+               (erc-completion-mode 1)))
+(add-hook 'erc-mode-hook 'erc-add-scroll-to-bottom)
+  (setq erc-auto-query 'buffer)
+  ;;(require 'smiley)
+  ;;(add-to-list 'smiley-regexp-alist '("\\(:-?]\\)\\W" 1 "forced"))
+  ;;(add-to-list 'smiley-regexp-alist '("\\s-\\(:-?/\\)\\W" 1 "wry"))
+  ;;(add-to-list 'smiley-regexp-alist '("\\(:-?(\\)\\W" 1 "sad"))
+  ;;(add-to-list 'smiley-regexp-alist '("\\((-?:\\)\\W" 1 "reverse-smile"))
+  ;;(add-to-list 'smiley-regexp-alist '("\\(:-?D\\)\\W" 1 "grin"))
+  ;;(add-to-list 'smiley-regexp-alist '("\\(:-?P\\)\\W" 1 "poke"))
+  ;;(message "smile")
+  ;;(setq erc-sound-path '("~/.erc/sounds")
+  ;;(setq erc-default-sound "~/.erc/sounds/login.wav")
+                                        ;(setq erc-play-command "aplay")
+                                        ;(message "play")
+                                        ;(add-hook 'erc-text-matched-hook
+                                        ;         (lambda (match-type nickuserhost message)
+                                        ;           (cond
+                                        ;            ((eq match-type 'current-nick)
+                                        ;             (play-sound-file "/home/zhan/.erc/sounds/receive.wav"))
+                                        ;            ((eq match-type 'keyword)
+                                        ;             (play-sound-file "/home/zhan/.erc/sounds/send.wav")))))
+
+
+  ;; (add-hook 'erc-send-pre-hook 'erc-maybe-h4x0r)
+
+  ;; (define-minor-mode erc-h4x0r-mode
+  ;;   "Toggle automatic usage of h4x0r code for everything you type in ERC.")
+
+  ;; (defun erc-maybe-h4x0r (ignore)
+  ;;   "Change the text to h4x0r code, if `erc-h4x0r-mode' is non-nil."
+  ;;   (when erc-h4x0r-mode
+  ;;     (with-temp-buffer
+  ;;    (insert str)
+  ;;    (erc-h4x0r)
+  ;;    (setq str (buffer-string)))))
+
+  ;; (defun erc-h4x0r ()
+  ;;   "Transform the buffer into h4x0r code."
+  ;;   (h4x0r-region (point-min) (point-max)))
+
+  ;; (autoload 'h4x0r-region "h4x0r")
+
+#+END_SRC

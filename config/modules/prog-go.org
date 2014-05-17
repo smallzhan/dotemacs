@@ -1,0 +1,17 @@
+#+TITLE: GO 语言编程的相关设置
+* go-mode 设定
+首先是指定 gocode 的位置，然后直接加上 go 的 auto-complete 设置
+#+BEGIN_SRC emacs-lisp
+;;
+;;; add gocode exec-path
+(if (eq system-type 'windows-nt)
+	(setq exec-path (cons (concat (getenv "GOPATH") "\\bin") exec-path)))
+	;; (progn
+
+	;; (setq exec-path (cons "c:/package/MyGo/bin" exec-path))
+	;; (setq exec-path (cons "e:/package/MyGo/bin" exec-path))))
+
+
+(require 'go-autocomplete)
+
+#+END_SRC

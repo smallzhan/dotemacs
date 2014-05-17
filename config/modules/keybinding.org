@@ -1,0 +1,108 @@
+#+TITLE: 快捷键绑定设置
+
+* 集成了所有全局快捷键的设置，也好找的说
+** 内置模块的一些设置
+#+BEGIN_SRC emacs-lisp
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+(global-set-key [f1] 'ispell-word)         ;拼写检查
+(global-set-key [(shift f1)] 'ispell-region)
+(global-set-key [(ctrl f1)] 'ispell)
+
+(global-set-key (kbd "S-<f2>") 'menu-bar-mode)
+(global-set-key (kbd "<f5>") 'compile)
+(global-set-key (kbd "S-<f5>") 'ecb-toggle-compile-window)
+(global-set-key (kbd "<f6>") 'highlight-changes-mode)
+(global-set-key (kbd "<f7>") 'add-change-log-entry-other-window)
+
+(global-set-key (kbd "<f8>") 'bookmark-jump)
+(global-set-key (kbd "C-x <f8>") 'bookmark-set)
+
+(global-set-key (kbd "<f11>") (lambda () (interactive) (switch-to-buffer-other-window "*scratch*")))
+
+(global-set-key (kbd "<f12>") 'org-remember)
+
+#+END_SRC
+** [[file:../basic/own.org][own.org]] 中的函数的相关设置
+#+BEGIN_SRC emacs-lisp
+(global-set-key "%" 'match-paren)
+
+(global-set-key [(control ?\.)] 'ska-point-to-register)
+(global-set-key [(control ?\,)] 'ska-jump-to-register)
+
+;; (global-set-key "(" (lambda()(interactive)(dwim-paren-region "(" "(" ")")))
+;; (global-set-key ")" (lambda()(interactive)(dwim-paren-region ")" "(" ")")))
+;; (global-set-key "{" (lambda()(interactive)(dwim-paren-region "{" "{" "}")))
+;; (global-set-key "}" (lambda()(interactive)(dwim-paren-region "}" "{" "}")))
+;; (global-set-key "[" (lambda()(interactive)(dwim-paren-region "[" "[" "]")))
+;; (global-set-key "]" (lambda()(interactive)(dwim-paren-region "]" "[" "]")))
+
+(global-set-key (kbd "M-w") 'my-copy)
+(global-set-key (kbd "C-w") 'my-kill)
+(global-set-key (kbd "M-n") 'my-mark-line)
+(global-set-key "\M-;" 'my-comment-dwim-line)
+
+(global-set-key (kbd "C-x 4 c") (quote change-split-type-3))
+(global-set-key (kbd "C-x 4 r")  (quote roll-v-3))
+(global-set-key (kbd "C-c z") (quote shell))
+#+END_SRC
+
+** 从 melpa 中安装的包的相关设置
+#+BEGIN_SRC emacs-lisp
+
+;;================================================================
+(global-set-key (kbd "C-c o") 'occur)
+
+(global-set-key (kbd "C-x C-z") 'magit-status)
+
+(global-set-key (kbd "C-<") 'mark-previous-like-this)
+(global-set-key (kbd "C->") 'mark-next-like-this)
+(global-set-key (kbd "C-M-m") 'mark-more-like-this)
+(global-set-key (kbd "C-*") 'mark-all-like-this)
+
+;;(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-c o") 'helm-occur)
+;;(global-set-key (kbd "C-c f") 'helm-find-files)
+;; (setq smex-save-file (concat my-emacs-dir ".smex-items"))
+
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+
+
+;;; Configuration:
+;;
+;; To make it easier to use, assign the commands to some keys.
+;;
+;; M$ Visual Studio key setup.
+(global-set-key (kbd "<C-f2>") 'bm-toggle)
+(global-set-key (kbd "<f2>") 'bm-next)
+(global-set-key (kbd "<S-f2>") 'bm-previous)
+;;
+;; Click on fringe to toggle bookmarks, and use mouse wheel to move
+;; between them.
+(global-set-key (kbd "<left-fringe> <mouse-5>") 'bm-next-mouse)
+(global-set-key (kbd "<left-fringe> <mouse-4>") 'bm-previous-mouse)
+(global-set-key (kbd "<left-fringe> <mouse-1>") 'bm-toggle-mouse)
+;;
+;; If you would like the markers on the right fringe instead of the
+;; left, add the following to line:
+;;
+(setq bm-marker 'bm-marker-right)
+
+#+END_SRC
+** 其他.
+*** windows 下的 Menu 键的绑定
+#+BEGIN_SRC emacs-lisp
+;; Set the menu/apps key to do emacs's M-x, if on Windows
+(cond
+ ((string-equal system-type "windows-nt")
+  (global-set-key (kbd "<apps>") 'execute-extended-command)
+  )
+ ((string-equal system-type "darwin")   ; Mac
+  t )
+ ((string-equal system-type "gnu/linux")
+  t ) )
+#+END_SRC

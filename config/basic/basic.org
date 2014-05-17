@@ -1,0 +1,191 @@
+#+TITLE: 基本设置
+
+基本设置主要是针对一些内置的模块进行定制，或打开一些内置默认没打开的功能。
+
+* Emacs 外观以及信息设置
+#+BEGIN_SRC emacs-lisp
+;;关闭开机画面
+(setq inhibit-startup-message t)
+(setq gnus-inhibit-startup-message t)
+
+(display-time-mode 1)
+(setq display-time-24hr-format t)
+(setq display-time-day-and-date t)
+
+(transient-mark-mode t)
+;(setq x-select-enable-clipboard t)
+(setq frame-title-format "Guoqiang Jin@%b")
+(setq-default ispell-program-name "aspell")
+
+;;去掉工具栏
+(tool-bar-mode -1)
+;;去掉滚动栏
+(scroll-bar-mode -1)
+;;去掉菜单栏
+;;(menu-bar-mode nil)
+;;F10默认绑定到菜单栏, 暂时使用不爽，留着。
+(setq user-full-name "Guoqiang Jin")
+;(setq usr-full-address "ustczhan@gmail.com")
+(setq user-mail-address "ustczhan@gmail.com")
+#+END_SRC
+* 小功能定制
+#+BEGIN_SRC emacs-lisp
+(setq default-major-mode 'text-mode)
+(add-hook 'text-mode-hook  'turn-on-auto-fill)
+(global-font-lock-mode t)
+;;From emacs mailling lists "How to enable font lock for functions called by
+;;other functions"
+(font-lock-add-keywords
+ nil `(("\\([[:alpha:]_][[:alnum:]_]*\\)("
+        1 font-lock-function-name-face)) t)
+
+(auto-image-file-mode t)
+(fset 'yes-or-no-p 'y-or-n-p)
+(column-number-mode t)
+(show-paren-mode t)
+(setq show-paren-style 'parenthesis)
+;;(setq show-paren-style 'expression) ;;高亮显示括号匹配区域。颜色不好。取消..
+(setq visible-bell t)
+
+
+(icomplete-mode 1)
+(auto-compression-mode 1)
+(setq apropos-do-all t)
+;(partial-completion-mode 1)
+(setq default-fill-column 80)
+
+(setq search-highlight t)
+(setq query-replace-highlight t)
+(setq bookmark-save-flag 1)
+
+;;自动补全功能，这是从王垠的网站直接Copy过来的
+;;(autoload 'senator-try-expand-semantic "senator")
+(global-set-key [(meta ?/)] 'hippie-expand)
+(setq hippie-expand-try-functions-list
+      '(
+                                        ;senator-try-expand-semantic
+        try-expand-dabbrev
+        try-expand-dabbrev-visible
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-all-abbrevs
+        try-expand-list
+        try-expand-list-all-buffers
+        try-expand-line
+        try-expand-line-all-buffers
+        try-complete-lisp-symbol-partially
+        try-expand-whole-kill))
+
+;;设定删除保存记录为200
+(setq kill-ring-max 200)
+
+;;设置 sentence-end 可以识别中文标点。不用在 fill 时在句号后插 入两个空格。
+(setq sentence-end
+      "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*")
+(setq sentence-end-double-space nil)
+
+;;不管你的光标在文档的那个位置，或是在 minibuffer，鼠标 中键一点击，
+;;X selection 的内容就被插入到那个位置。
+(setq mouse-yank-at-point t)
+(setq default-tab-width 4)
+(setq tab-width 4)
+;;光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线。
+(mouse-avoidance-mode 'animate)
+
+;;把这些缺省禁用的功能打开。
+(put 'set-goal-column 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'LaTeX-hide-environment 'disabled nil)
+
+;;设置一下备份时的版本控制，这样更加安全。
+(setq version-control t)
+(setq kept-old-versions 1)
+(setq kept-new-versions 2)
+(setq delete-old-versions t)
+(setq dired-kept-versions 1)
+(setq backup-directory-alist '(("." . "~/.emacs.tmp")))
+(setq backup-by-copying t)
+
+
+(setq lazy-lock-defer-on-scrolling t)
+;;(setq font-lock-support-mode 'lazy-lock-mode)
+(setq font-lock-maximum-decoration t)
+
+;;前缀
+(setq adaptive-fill-regexp "[ \t]+\\|[ \t]*\\([0-9]+\\.\\|\\*+\\)[ \t]*")
+(setq adaptive-fill-first-line-regexp "^\\* *$")
+
+
+
+;;(global-set-key (quote [8388640]) (quote set-mark-command))
+ ;;绑定 set-mark-command 到s-<SPC>
+;(global-set-key (quote [8388640]) (quote mark-word))
+;;time-stamp 的设置。
+(setq time-stamp-active t)
+(setq time-stamp-warn-inactive t)
+(setq time-stamp-format "%:u %04y-%02m-%02d %02H:%02M:%02S")
+(setq time-stamp-end: "\n")
+(add-hook 'write-file-hooks 'time-stamp)
+#+END_SRC
+* eshell 设置
+#+BEGIN_SRC emacs-lisp
+(setq eshell-cmpl-cycle-completions nil
+      eshell-save-history-on-exit t
+      eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'")
+
+(eval-after-load 'esh-opt
+  '(progn
+     (require 'em-cmpl)
+     (require 'em-prompt)
+     (require 'em-term)
+     ;; TODO: for some reason requiring this here breaks it, but
+     ;; requiring it after an eshell session is started works fine.
+     ;; (require 'eshell-vc)
+     (setenv "PAGER" "cat")
+     ; (set-face-attribute 'eshell-prompt nil :foreground "turquoise1")
+     (add-hook 'eshell-mode-hook ;; for some reason this needs to be a hook
+               '(lambda () (define-key eshell-mode-map "\C-a" 'eshell-bol)))
+     (add-to-list 'eshell-visual-commands "ssh")
+     (add-to-list 'eshell-visual-commands "tail")
+     (add-to-list 'eshell-command-completions-alist
+                  '("gunzip" "gz\\'"))
+     (add-to-list 'eshell-command-completions-alist
+                  '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))))
+;;     (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)))
+
+(setq eshell-directory-name
+      (expand-file-name "./" (expand-file-name "eshell" my-config-dir)))
+
+(setq eshell-aliases-file "eshellalias")
+(defalias 'v 'find-file)
+(defalias 'vo 'find-file-other-window)
+
+#+END_SRC
+* 其他设置
+
+主要包括 scratch 的保存，以及 cygwin，还有 eshell 相关的东西
+#+BEGIN_SRC emacs-lisp
+;; disable the fucking stupid save *scratch* in every fucking
+;; place!!!!!!!!!!!!!!!!!!!!!!
+(add-hook 'emacs-startup-hook
+          (lambda ()
+			(with-current-buffer (get-buffer "*scratch*")
+			  (auto-save-mode -1))))
+
+(when (eq system-type 'windows-nt)
+  (require 'cygwin-mount)
+  (cygwin-mount-activate)
+  (add-hook 'comint-output-filter-functions
+            'shell-strip-ctrl-m nil t)
+  (add-hook 'comint-output-filter-functions
+            'comint-watch-for-password-prompt nil t)
+  (setq explicit-shell-file-name "bash.exe")
+  ;; For subprocesses invoked via the shell
+;; (e.g., “shell -c command”)
+  (setq shell-file-name explicit-shell-file-name)
+)
+#+END_SRC

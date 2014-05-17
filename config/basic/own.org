@@ -1,0 +1,297 @@
+#+TITLE: 自己写，或网上偷的一些函数
+
+这些函数绑定的快捷键可以看  [[file:../modules/keybinding.org][keybinding.org]]
+* 匹配括号的函数
+
+这个函数模仿 vim 的设置，如果在括号上输入 "%"，那么跳到匹配的括号，否则直接输出 %.
+#+BEGIN_SRC emacs-lisp
+(defun match-paren (arg)
+  "Go to the matching paren if on a paren; otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+    ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+    (t (self-insert-command (or arg 1)))))
+#+END_SRC
+* 简单的 register 操作函数
+#+BEGIN_SRC emacs-lisp
+(defun ska-point-to-register()
+  "Store cursorposition _fast_ in a register.
+Use ska-jump-to-register to jump back to the stored
+position."
+  (interactive)
+  (setq zmacs-region-stays t)
+  (point-to-register 8))
+
+(defun ska-jump-to-register()
+  "Switches between current cursorposition and position
+that was stored with ska-point-to-register."
+  (interactive)
+  (setq zmacs-region-stays t)
+  (let ((tmp (point-marker)))
+        (jump-to-register 8)
+    (set-register 8 tmp)))
+#+END_SRC
+* 自动的括号匹配
+不知道这个与 paredit mode 是不是可以集合的。 dwim-paren-regin 的意思是说，如果当
+前有选中区域，那么按括号就用括号包围，否则直接输入括号，但是好像没啥用。 所以就
+一起换成 smartparens 了
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun my-auto-comp()
+        "auto complete some charectors"
+  (local-set-key (kbd "(") 'electric-pair)
+  (local-set-key (kbd "{") 'electric-pair)
+  (local-set-key (kbd "`") 'electric-pair)
+  (local-set-key (kbd "[") 'electric-pair)
+  (local-set-key (kbd "\"") 'electric-pair)
+  (local-set-key (kbd ")") 'self-insert-command)
+  (local-set-key (kbd "}") 'self-insert-command)
+  (local-set-key (kbd "'") 'self-insert-command)
+  (local-set-key (kbd "]") 'self-insert-command))
+
+
+
+(defun electric-pair ()
+  "Insert character pair without sournding spaces"
+  (interactive)
+  (let (parens-require-spaces)
+    (insert-pair)))
+
+(defun dwim-paren-region (arg leftp rightp)
+  (if mark-active
+      (save-excursion
+        (let ((beg (min (point) (mark)))
+              (end (max (point) (mark))))
+          (goto-char beg)
+          (insert leftp)
+          (goto-char (1+ end))
+          (insert rightp))
+        )
+	(insert arg)))
+#+END_SRC
+* 修改过的 copy 和 kill 函数
+
+  这几个函数主要如下意思
+   - copy 函数意思是如果有缓冲区，那么 copy 缓冲区的内容，否则 copy 当前行。
+   - kill 函数是如果有缓冲区，那么 kill 缓冲区，否则删除之前的一个单词。
+   - mark-line 是说每次调用的时候 mark 下一行，当然，第一次调用 mark 本行。
+   - dwim-comment-line 是说光标在一行中间注释时，主要注释本行。
+
+#+BEGIN_SRC emacs-lisp
+(defun my-copy (&optional arg)
+  "if mark-active, copy the region, else mark current line"
+  (interactive "P")
+  (if mark-active
+      (kill-ring-save (region-beginning) (region-end))
+    (let ((beg (progn (back-to-indentation) (point)))
+          (end (line-end-position arg)))
+      (copy-region-as-kill beg end))))
+
+;; (defun my-kill (&optional arg region)
+;;   "`kill-region' if the region is active, otherwise `backward-kill-word'"
+;;   (interactive
+;;    (list (prefix-numeric-value current-prefix-arg) (use-region-p)))
+;;   (if region (kill-region (region-beginning) (region-end))
+;; 	(kill-whole-line arg)))
+
+(defun my-kill (&optional arg region)
+  "`kill-region' if the region is active, otherwise `backward-kill-word'"
+  (interactive
+   (list (prefix-numeric-value current-prefix-arg) (use-region-p)))
+  (if region (kill-region (region-beginning) (region-end))
+	(backward-kill-word arg)))
+
+(defun my-mark-line (&optional arg)
+  "mark line, mark current line when first call, then mark to next line each call"
+  (interactive "P")
+  (if (region-active-p)
+        (goto-char (line-end-position 2))
+    (progn
+      (back-to-indentation)
+      (set-mark (point))
+      (goto-char (line-end-position))))
+  (setq arg (if arg (prefix-numeric-value arg)
+              (if (< (mark) (point)) -1 1)))
+  (if (and arg (> arg 1))
+      (goto-char (line-end-position arg))))
+
+;;;the 2 function below is from http://emacser.com/torture-emacs.htm
+(defun my-comment-dwim-line (&optional arg)
+  "Replacement for the comment-dwim command.
+If no region is selected and current line is not blank and we are
+not at the end of the line, then comment current line. Replaces
+default behaviour of comment-dwim, when it inserts comment at the
+end of the line."
+  (interactive "*P")
+  (comment-normalize-vars)
+  (if (and (not (region-active-p))
+		   (not (looking-at "[ \t]*$")))
+      (comment-or-uncomment-region
+	   (line-beginning-position) (line-end-position))
+    (comment-dwim arg)))
+
+(dolist (command '(yank yank-pop))
+  (eval
+   `(defadvice ,command (after indent-region activate)
+      (and (not current-prefix-arg)
+           (member major-mode
+                   '(emacs-lisp-mode
+                     lisp-mode
+                     clojure-mode
+                     scheme-mode
+					 haskell-mode
+                     ruby-mode
+                     rspec-mode
+					 python-mode
+                     c-mode
+					 c++-mode
+                     objc-mode
+                     ;;latex-mode
+                     js-mode
+                     plain-tex-mode))
+           (let ((mark-even-if-inactive transient-mark-mode))
+			 (indent-region (region-beginning) (region-end) nil))))))
+
+
+#+END_SRC
+* 关于窗口样式的设置。
+#+BEGIN_SRC emacs-lisp
+;;; transfer the window type...
+(defun change-split-type-3 ()
+  "Change 3 window style from horizontal to vertical and vice-versa"
+  (interactive)
+
+  (select-window (get-largest-window))
+  (if (= 3 (length (window-list)))
+      (let ((winList (window-list)))
+            (let ((1stBuf (window-buffer (car winList)))
+                  (2ndBuf (window-buffer (car (cdr winList))))
+                  (3rdBuf (window-buffer (car (cdr (cdr winList)))))
+
+                  (split-3
+                   (lambda(1stBuf 2ndBuf 3rdBuf split-1 split-2)
+                     "change 3 window from horizontal to vertical and vice-versa"
+                     (message "%s %s %s" 1stBuf 2ndBuf 3rdBuf)
+
+                     (delete-other-windows)
+                     (funcall split-1)
+                     (set-window-buffer nil 2ndBuf)
+                     (funcall split-2)
+                     (set-window-buffer (next-window) 3rdBuf)
+                     (other-window 2)
+                     (set-window-buffer nil 1stBuf)))
+
+                  (split-type-1 nil)
+                  (split-type-2 nil)
+                  )
+              (if (= (window-width) (frame-width))
+                  (setq split-type-1 'split-window-horizontally
+                        split-type-2 'split-window-vertically)
+                (setq split-type-1 'split-window-vertically
+					         split-type-2 'split-window-horizontally))
+              (funcall split-3 1stBuf 2ndBuf 3rdBuf split-type-1 split-type-2)
+))))
+
+
+(defun roll-v-3 (&optional arg)
+  "Rolling 3 window buffers (anti-)clockwise"
+  (interactive "P")
+  (select-window (get-largest-window))
+  (if (= 3 (length (window-list)))
+	  (let ((winList (window-list)))
+		(let ((1stWin (car winList))
+			  (2ndWin (car (cdr winList)))
+			  (3rdWin (car (last winList))))
+		  (let ((1stBuf (window-buffer 1stWin))
+				(2ndBuf (window-buffer 2ndWin))
+				(3rdBuf (window-buffer 3rdWin)))
+			(if arg (progn
+										; anti-clockwise
+					  (set-window-buffer 1stWin 3rdBuf)
+					  (set-window-buffer 2ndWin 1stBuf)
+					  (set-window-buffer 3rdWin 2ndBuf))
+			  (progn                                      ; clockwise
+				(set-window-buffer 1stWin 2ndBuf)
+				(set-window-buffer 2ndWin 3rdBuf)
+				(set-window-buffer 3rdWin 1stBuf))
+			  ))))))
+
+
+
+(add-hook 'shell-mode-hook 'kill-shell-buffer-after-exit t)
+
+(when (fboundp 'winner-mode)
+  (winner-mode)
+  (windmove-default-keybindings))
+
+;; good point! but it will hide line numbers in some mode with linum opened
+;; (global-set-key [remap goto-line] 'goto-line-with-feedback)
+
+;; (defun goto-line-with-feedback ()
+;;   "Show line numbers temporarily, while prompting for the line number input"
+;;   (interactive)
+;;   (unwind-protect
+;;       (progn
+;;         (linum-mode 1)
+;;         (goto-line (read-number "Goto line: ")))
+;;     (linum-mode -1)))
+
+#+END_SRC
+
+* shell-mode 里退出的同时杀掉这个 buffer
+#+BEGIN_SRC emacs-lisp
+(defun kill-shell-buffer(process event)
+    "The one actually kill shell buffer when exit. "
+    (kill-buffer (process-buffer process))
+  )
+
+  (defun kill-shell-buffer-after-exit()
+    "kill shell buffer when exit."
+    (set-process-sentinel (get-buffer-process (current-buffer))
+                  #'kill-shell-buffer)
+  )
+#+END_SRC
+* 好玩的，隐藏掉 mode-line
+#+BEGIN_SRC emacs-lisp
+;; See http://bzg.fr/emacs-hide-mode-line.html
+(defvar-local hidden-mode-line-mode nil)
+(defvar-local hide-mode-line nil)
+
+(define-minor-mode hidden-mode-line-mode
+  "Minor mode to hide the mode-line in the current buffer."
+  :init-value nil
+  :global nil
+  :variable hidden-mode-line-mode
+  :group 'editing-basics
+  (if hidden-mode-line-mode
+      (setq hide-mode-line mode-line-format
+            mode-line-format nil)
+    (setq mode-line-format hide-mode-line
+          hide-mode-line nil))
+  (force-mode-line-update)
+  (set-window-buffer nil (current-buffer))
+  (when (and (called-interactively-p 'interactive)
+             hidden-mode-line-mode)
+    (run-with-idle-timer
+     0 nil 'message
+     (concat "Hidden Mode Line Mode enabled.  "
+             "Use M-x hidden-mode-line-mode RET to make the mode-line appear."))))
+
+;; Activate hidden-mode-line-mode
+(hidden-mode-line-mode 1)
+
+;; Alternatively, you can paint your mode-line in White but then
+;; you'll have to manually paint it in black again
+;; (custom-set-faces
+;;  '(mode-line-highlight ((t nil)))
+;;  '(mode-line ((t (:foreground "white" :background "white"))))
+;;  '(mode-line-inactive ((t (:background "white" :foreground "white")))))
+
+;; Command to toggle the display of the mode-line as a header, 这个函数貌似没用
+(defun mode-line-in-header ()
+  (interactive)
+  (if (not header-line-format)
+      (setq header-line-format mode-line-format)
+    (setq header-line-format nil)))
+(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
+#+END_SRC

@@ -1,0 +1,75 @@
+#+TITLE: Python 编程设定
+
+* Elpy
+在 elpy 的强势下，其他一切的 python 配置都没啥了，包括格式检查，文档，补全等等
+
+#+NAME: elpy
+#+BEGIN_SRC emacs-lisp
+(elpy-enable)
+
+(elpy-use-ipython)
+
+(elpy-clean-modeline)
+(setq elpy-default-minor-modes
+  '(flymake-mode
+	highlight-indentation-mode
+	yas-minor-mode
+	auto-complete-mode))
+#+END_SRC
+
+* 其他乱78糟的设置
+#+NAME:misc
+#+BEGIN_SRC emacs-lisp
+(add-hook 'python-mode-hook
+          (lambda ()
+            (linum-mode 1)
+            (hs-minor-mode 1)))
+
+(defadvice py-execute-buffer (around python-keep-focus activate)
+  "return focus to python code buffer"
+  (save-excursion ad-do-it))
+
+(unless (fboundp 'tramp-tramp-file-p)
+  (defun tramp-tramp-file-p (&rest args) nil))
+
+(eval-when-compile (require 'pylookup))
+
+(setq pylookup-program (concat my-lisp-path "python-utils/pylookup.py"))
+(setq pylookup-db-file (concat my-lisp-path "python-utils/pylookup.db"))
+
+(autoload 'pylookup-lookup "pylookup"
+ "Lookup SEARCH-TERM in the Python HTML indexes." t)
+
+(autoload 'pylookup-update "pylookup"
+ "Run pylookup-update and create the database at `pylookup-db-file'." t)
+
+(defun annotate-pdb ()
+  (interactive)
+  (highlight-lines-matching-regexp "import pdb")
+  (highlight-lines-matching-regexp "pdb.set_trace()"))
+
+(add-hook 'py-mode-hook 'annotate-pdb)
+
+(defun py-newline-and-indent ()
+  "Strives to act like the Emacs `newline-and-indent'.
+This is just `strives to' because correct indentation can't be computed
+from scratch for Python code.  In general, deletes the whitespace before
+point, inserts a newline, and takes an educated guess as to how you want
+the new line indented."
+  (interactive)
+  (let ((ci (current-indentation)))
+    (if (< ci (current-column)) ; if point beyond indentation
+	(newline-and-indent)
+      ;; else try to act like newline-and-indent "normally" acts
+      (beginning-of-line)
+      (insert-char ?\n 1)
+      (move-to-column ci))))
+
+(defun python-add-breakpoint ()
+  (interactive)
+  (py-newline-and-indent)
+  (insert "import ipdb; ipdb.set_trace()")
+  (highlight-lines-matching-regexp "^[ ]*import ipdb; ipdb.set_trace()"))
+
+(define-key python-mode-map (kbd "C-c t") 'python-add-breakpoint)
+#+END_SRC

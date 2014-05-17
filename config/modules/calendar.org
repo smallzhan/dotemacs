@@ -1,0 +1,80 @@
+#+TITLE: Calendar 日历的相关设定
+
+* 日历定制
+#+BEGIN_SRC emacs-lisp
+(setq calendar-load-hook
+      '(lambda ()
+     (set-face-foreground 'diary-face "skyblue")
+     (set-face-background 'holiday-face "slate blue")
+     (set-face-foreground 'holiday-face "white")))
+
+(setq view-diary-entries-initially t
+      mark-diary-entries-in-calendar t
+      number-of-diary-entries 7)
+(add-hook 'diary-display-hook 'fancy-diary-display)
+(add-hook 'today-visible-calendar-hook 'calendar-mark-today)
+
+(add-hook 'fancy-diary-display-mode-hook
+      '(lambda ()
+         (alt-clean-equal-signs)))
+
+(defun alt-clean-equal-signs ()
+  "This function makes lines of = signs invisible."
+  (goto-char (point-min))
+  (let ((state buffer-read-only))
+    (when state (setq buffer-read-only nil))
+    (while (not (eobp))
+      (search-forward-regexp "^=+$" nil 'move)
+      (add-text-properties (match-beginning 0)
+               (match-end 0)
+               '(invisible t)))
+    (when state (setq buffer-read-only t))))
+#+END_SRC
+* 经度和纬度设置，据说可以显示日出时间的
+#+BEGIN_SRC emacs-lisp
+(setq calendar-latitude +32)
+(setq calendar-longitude +117)
+(setq calendar-location-name "He Fei")
+
+#+END_SRC
+* 日历，节假日等
+
+节假日主要是显示固定的节日，其实是可以定制生日之类的。
+日记后来用 org 管理了，所以这里是个空的。
+
+#+BEGIN_SRC emacs-lisp
+(setq diary-file "~/.emacs.d/diary")
+(setq diary-mail-addr "ustczhan@gmail.com")
+
+(setq christian-holidays nil)
+(setq hebrew-holidays nil)
+(setq islamic-holidays nil)
+(setq solar-holidays nil)
+(setq general-holidays '(
+             (holiday-fixed  1  1   "元旦")
+             (holiday-fixed  2 14   "情人节")
+             (holiday-fixed  3  1   "龙抬头")
+             (holiday-fixed  3  8   "妇女节")
+             (holiday-fixed  3 12   "植树节")
+             (holiday-fixed  4  1   "愚人节")
+             (holiday-fixed  5  1   "劳动节")
+             (holiday-fixed  5  4   "青年节")
+             (holiday-float  5 0 2  "母亲节")
+             (holiday-fixed  6  1   "儿童节")
+             (holiday-float  6 0 3  "父亲节")
+             (holiday-fixed  9 10   "教师节")
+             (holiday-fixed 10  1   "国庆节")
+             (holiday-fixed 12 25   "圣诞节")
+             ))
+
+(setq mark-calendar-holidays-in-calendar t)
+(setq view-calendar-holidays-initially t)
+#+END_SRC
+* 中国日历设置
+中国日历可以显示天干地支之类的东西，以及中国的传统节日等，还是很有意思的
+#+BEGIN_SRC emacs-lisp
+(require 'cal-china-x)
+(setq mark-holidays-in-calendar t)
+(setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+(setq calendar-holidays cal-china-x-important-holidays)
+#+END_SRC

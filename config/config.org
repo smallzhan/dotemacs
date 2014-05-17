@@ -1,0 +1,273 @@
+#+OPTIONS: html-link-use-abs-url:nil html-postamble:auto
+#+OPTIONS: html-preamble:t html-scripts:t html-style:t
+#+OPTIONS: html5-fancy:nil tex:t
+#+CREATOR: <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.5f)
+#+HTML_CONTAINER: div
+#+HTML_DOCTYPE: xhtml-strict
+#+HTML_HEAD:
+#+HTML_HEAD_EXTRA:
+#+HTML_LINK_HOME:
+#+HTML_LINK_UP:
+#+HTML_MATHJAX:
+#+INFOJS_OPT:
+#+LATEX_HEADER:
+
+#+TITLE 基本配置
+
+* 简介
+* 字体设置
+#+BEGIN_SRC emacs-lisp
+(defun my-default-font()
+  (interactive)
+  (if (eq system-type 'windows-nt)
+      (set-default-font "Consolas:pixelsize=14:antialias=subpixel")
+    (set-default-font "DejaVu Sans Mono:pixelsize=14:antialias=subpixel")
+    )
+  ;;(set-default-font "Inconsolata:pixelsize=14:antialias=subpixel")
+  (set-fontset-font "fontset-default"
+		    'unicode '("Microsoft YaHei" . "unicode-bmp"))
+  )
+
+(defun my-font-mono()
+  (interactive)
+  (set-default-font "Inconsolata:pixelsize=14:antialias=subpixel")
+  (set-fontset-font "fontset-default"
+		    'unicode '("Microsoft YaHei" . "unicode-bmp"))
+  )
+
+(my-default-font)
+
+(add-to-list
+ 'after-make-frame-functions
+ (lambda (new-frame)
+   (select-frame new-frame)
+   (tool-bar-mode  0)
+   (my-default-font)))
+#+END_SRC
+* 预订义环境变量
+#+BEGIN_SRC emacs-lisp
+(setq bookmark-default-file (concat my-emacs-path ".emacs.bmk")) ;书签文件
+;;(setq custom-file (concat my-emacs-path "custom.el"))
+
+
+(setq custom-file (concat my-config-dir "custom.el"))
+(setq custom-theme-directory my-config-dir)
+;;(setq gnus-init-file "~/.emacs.d/my-gnus.el") ;gnus启动的默认配置文件
+
+;; (setq Info-default-directory-list
+;;       (append Info-default-directory-list
+;;               (list "~/myEmacs/info")))
+
+;; (setq Info-default-directory-list Info-directory-list)
+
+;(setq tex-dvi-view-command "xdvi")
+;(server-start)
+(if (eq system-type 'windows-nt)
+    (progn (setenv "PATH" (concat "d:/cygwin/bin;" (getenv "PATH")))
+           (setq exec-path (cons "d:/cygwin/bin/" exec-path))
+           (setq null-device "/dev/null"))
+  (add-to-list 'Info-default-directory-list "~/myEmacs/info")
+  ;(push "~/myEmacs/info" Info-directory-list)
+  )
+;(require ‘cygwin-mount)
+;(cygwin-mount-activate)
+
+;================load-path
+(dolist (dir (list
+               "python-utils/"
+               "cedet-extra/"
+			   "eim-2.4/"
+;;			   "twittering-mode/"
+               ))
+         (add-to-list 'load-path (concat my-lisp-path dir)))
+#+END_SRC
+* melpa
+  melpa 是一个包管理器，主要管理如何自动安装相关包的。
+** 添加相关软件源
+#+BEGIN_SRC emacs-lisp
+;; (require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+;; (add-to-list 'package-archives '("elpy" . "http://jorgenschaefer.github.io/packages/") t)
+;; (progn
+;;   (switch-to-buffer
+;;    (url-retrieve-synchronously
+;;     "https://raw.github.com/milkypostman/melpa/master/melpa.el"))
+;;   (package-install-from-buffer  (package-buffer-info) 'single))
+#+END_SRC
+** 一些简单配置
+#+BEGIN_SRC emacs-lisp
+(setq url-http-attempt-keepalives nil)
+
+(defadvice package-compute-transaction
+  (before
+   package-compute-transaction-reverse (package-list requirements)
+   activate compile)
+  "reverse the requirements"
+  (setq requirements (reverse requirements))
+  (print requirements))
+
+
+;; (load (concat my-emacs-path "site-lisp/cedet-1.1/common/cedet") nil t)
+;; (eval-when-compile (require 'cl))
+;; (package-initialize)
+#+END_SRC
+
+** 其他一些包，需要预先进行配置的，主要包括 smex 这货
+#+BEGIN_SRC emacs-lisp :tangle no
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; some packages need to be initialized
+
+(setq flyspell-issue-welcome-flag nil)
+
+(smex-initialize)
+#+END_SRC
+
+* 载入其他包
+** 定义载入函数
+主要是从 oh-my-emacs 项目中偷来的， 见
+https://github.com/xiaohanyu/oh-my-emacs/blob/master/ome.org
+载入函数中的 =org-babel-load-file= 会在同目录下生成一个 =.el= 文件，虽然不影响使
+用，但是看起来很不爽，因此将其生成特定目录下的隐藏文件，首先修改
+=org-babel-load-file= 为 =my-org-babel-load-file=. 如下
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-babel-load-file (file &optional compile)
+  "Load Emacs Lisp source code blocks in the Org-mode FILE.
+This function exports the source code using `org-babel-tangle'
+and then loads the resulting file using `load-file'.  With prefix
+arg (noninteractively: 2nd arg) COMPILE the tangled Emacs Lisp
+file to byte-code before it is loaded."
+  (interactive "fFile to load: \nP")
+  (require 'ob-core)
+  (let* ((age (lambda (file)
+		(float-time
+		 (time-subtract (current-time)
+				(nth 5 (or (file-attributes (file-truename file))
+					   (file-attributes file)))))))
+	 (base-name (file-name-base file))
+     ;(dir-name (file-name-directory file))
+     (dir-name (concat my-config-dir "elisp/"))
+	 (exported-file (concat dir-name "." base-name ".el")))
+    ;; tangle if the org-mode file is newer than the elisp file
+    (unless (and (file-exists-p exported-file)
+		 (> (funcall age file) (funcall age exported-file)))
+      (setq exported-file
+	    (car (org-babel-tangle-file file exported-file "emacs-lisp"))))
+    (message "%s %s"
+	     (if compile
+		 (progn (byte-compile-file exported-file 'load)
+			"Compiled and loaded")
+	       (progn (load-file exported-file) "Loaded"))
+	     exported-file)))
+#+END_SRC
+
+之后将 =ome-load= 函数中的载入函数替换成 =my-org-babel-load-file=.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-load (module &rest header-or-tags)
+  "Load configuration from other ome-*.org files.
+If the optional argument is the id of a subtree then only
+configuration from within that subtree will be loaded.  If it is
+not an id then it will be interpreted as a tag, and only subtrees
+marked with the given tag will be loaded.
+
+For example, to load all of ome-lisp.org simply add (ome-load
+\"ome-lisp\") to your configuration.
+
+To load only the 'window-system' config from ome-miscs.org
+add (ome-load \"ome-miscs.org\" \"window-system\") to your
+configuration.
+
+The good news is, you can load multiple parts config from one
+single file by simply (ome-load \"ome-module.org\" \"part1\"
+\"part2\")."
+  (let ((module-name (file-name-base module))
+        (file (expand-file-name (if (string-match ".+\.org" module)
+                                    module
+                                  (format "my-%s.org" module))
+                                my-config-dir)))
+    ;; ensure el-get-sources is empty before loading "ome-.+\.org" files
+    ;(setq el-get-sources nil)
+    ;; enable git shallow clone to save time and bandwidth
+    ;(setq el-get-git-shallow-clone t)
+
+    (if header-or-tags
+        (dolist (header-or-tag header-or-tags)
+          (let* ((base (file-name-nondirectory file))
+                 (dir  (file-name-directory file))
+                 (partial-file (expand-file-name
+                                (concat "." (file-name-sans-extension base)
+                                        ".part." header-or-tag ".org")
+                                dir)))
+            (unless (file-exists-p partial-file)
+              (with-temp-file partial-file
+                (insert
+                 (with-temp-buffer
+                   (insert-file-contents file)
+                   (save-excursion
+                     (condition-case nil ;; collect as a header
+                         (progn
+                           (org-link-search (concat "#" header-or-tag))
+                           (org-narrow-to-subtree)
+                           (buffer-string))
+                       (error ;; collect all entries with as tags
+                        (let (body)
+                          (org-map-entries
+                           (lambda ()
+                             (save-restriction
+                               (org-narrow-to-subtree)
+                               (setq body (concat body "\n" (buffer-string)))))
+                           header-or-tag)
+                          body))))))))
+            (my-org-babel-load-file partial-file)))
+      (my-org-babel-load-file file))))
+#+END_SRC
+
+** 载入判断函数
+该函数从 emacs24-start-kit 中拿过来的，主要是用来判断一个包是否安装，如果没有安
+装，那么使用 elpa 方式来安装。在相关需要设置的地方，就可以直接用
+=starter-kit-install-if-needed= 了。
+#+BEGIN_SRC emacs-lisp
+(defun starter-kit-loadable-p (package)
+  "Check if PACKAGE is loadable from a directory in `load-path'."
+  (let ((load-file (concat (symbol-name package) ".el")))
+    (catch 'file-found
+      (dolist (dir load-path)
+        (let ((path (expand-file-name load-file dir)))
+          (when (file-exists-p path)
+            (throw 'file-found path)))))))
+
+
+(defun starter-kit-install-if-needed (&rest packages)
+  "Install PACKAGES using ELPA if they are not loadable or installed locally."
+  (when packages
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (dolist (package packages)
+      (unless (or (starter-kit-loadable-p package)
+                  (package-installed-p package))
+        (package-install package)))))
+#+END_SRC
+** 载入其他包
+#+BEGIN_SRC emacs-lisp
+(my-org-load "basic/basic.org")
+(my-org-load "basic/own.org")
+(my-org-load "basic/other.org")
+(my-org-load "modules/auto-complete.org")
+(my-org-load "modules/yasnippet.org")
+(my-org-load "modules/prog-c.org")
+(my-org-load "modules/prog-py.org")
+(my-org-load "modules/prog-tex.org")
+(my-org-load "modules/prog-ros.org")
+(my-org-load "modules/prog-go.org")
+(my-org-load "modules/orgmode.org")
+(my-org-load "modules/erc.org")
+(my-org-load "modules/calendar.org")
+(my-org-load "modules/keybinding.org")
+
+(load custom-file 'noerror)
+#+END_SRC

@@ -1,0 +1,794 @@
+#+TITLE: orgmode 的配置
+
+* 简介
+这份 orgmode 包含的东西很多，包括基本的设置，将 org-mode 做日程管理的设置，做笔
+记的设置，以及做文档，输出的设置。注意该 orgmode 设置不兼容低于 8.0 的 org。
+* 基本设置
+
+基本设置主要将环境进行激活，目前为了采用 >= 8 的 org， 从 melpa 中安装。
+** 预先环境设置
+#+NAME: pre-basic
+#+BEGIN_SRC emacs-lisp
+(require 'org-install)
+(require 'ob-tangle)
+
+(require 'ox-latex)
+
+(require 'htmlize)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (require 'google-weather)
+;; (require 'org-google-weather)
+
+#+END_SRC
+** 基本设置，包括文件位置，todo 状态
+
+#+NAME: basic
+#+BEGIN_SRC emacs-lisp
+(if (eq system-type 'windows-nt)
+	(setq org-directory "~/Dropbox/Notes/org/")
+  (setq org-directory "~/Notes/org/")
+  )
+
+(setq org-agenda-diary-file (concat org-directory "diary.org"))
+(setq org-default-notes-file (concat org-directory "refile.org"))
+
+(setq org-mobile-directory "~/Dropbox/应用/MobileOrg/")
+(setq org-mobile-inbox-for-pull (concat org-directory "inbox.org"))
+
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cb" 'org-iswitchb)
+
+(setq auto-coding-alist
+      (append auto-coding-alist '(("\\.org\\'" . utf-8))))
+(setq org-log-done 'time)
+(setq org-log-into-drawer "LOGBOOK")
+(setq org-deadline-warning-days 2)
+(setq org-agenda-start-on-weekday nil)
+(setq org-agenda-insert-diary-extract-time t)
+
+(setq org-agenda-files (list (concat org-directory "planning.org")
+                             (concat org-directory "notes.org")))
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "ACTIVE(a)" "|" "DONE(d!/!)")
+              (sequence "WAIT(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE"))))
+
+(setq org-todo-state-tags-triggers
+      (quote (("CANCELLED" ("CANCELLED" . t))
+              ("WAIT" ("WAIT" . t))
+              ("HOLD" ("WAIT" . t) ("HOLD" . t))
+              (done ("WAIT") ("HOLD"))
+              ("TODO" ("WAIT") ("CANCELLED") ("HOLD"))
+              ("ACTIVE" ("WAIT") ("CANCELLED") ("HOLD"))
+              ("DONE" ("WAIT") ("CANCELLED") ("HOLD")))))
+
+(setq org-columns-default-format "%70ITEM(Task) %10Effort(Effort){:} %20CLOCKSUM")
+(setq org-agenda-log-mode-items (quote (closed state)))
+
+
+(setq org-tag-alist (quote ((:startgroup)
+							("@News" . ?n)
+							("@Work" . ?w)
+							("@Funny" . ?f)
+							("@Self" . ?e)
+							(:endgroup)
+							("PHONE" . ?m)
+							("PERSONAL" . ?P)
+							("PROG" . ?p)
+                            ("SOFT" . ?s)
+							("IDEA" . ?I)
+							("EXP" . ?E)
+							("ROBOT" . ?R)
+							("OTHER" . ?O)
+							("NOTE" . ?N)
+							("TIPS" . ?T)
+							("WAITING" . ?W)
+							("MARK" . ?M)
+							("HOLD" . ?H)
+							("CANCELLED" . ?c)
+							("READING" . ?a)
+							)))
+
+;; Allow setting single tags without the menu
+(setq org-fast-tag-selection-single-key (quote expert))
+
+;; For tag searches ignore tasks with scheduled and deadline dates
+(setq org-agenda-tags-todo-honor-ignore-options t)
+
+
+(defun bh/remove-empty-drawer-on-clock-out ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line 0)
+    (org-remove-empty-drawer-at "LOGBOOK" (point))))
+
+(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+
+(setq org-hide-leading-stars nil)
+(setq org-startup-indented t)
+(setq org-cycle-separator-lines 0)
+(setq org-blank-before-new-entry (quote ((heading)
+                                         (plain-list-item . auto))))
+(setq org-insert-heading-respect-content nil)
+
+#+END_SRC
+
+
+* Capture 和 Refile 设置
+** Capture
+org-capture 是指，在利用 emacs 工作时，在任何情况下，可以通过按键来记录当前的工
+作状态，并生成笔记。例如 =C-c r t= 则可以很快的新建一个 todo 项目，项目包括目前
+工作的上下文，例如是在查看某个文件之类，文件链接等都会被记录。
+
+#+NAME: capture
+#+BEGIN_SRC emacs-lisp
+;; I use C-M-r to start capture mode
+;; (global-set-key (kbd "C-M-r") 'org-capture)
+;; I use C-c r to start capture mode when using SSH from my Android phone
+(global-set-key (kbd "C-c r") 'org-capture)
+
+;; Capture templates for: TODO tasks, Notes, appointments, phone calls, and org-protocol
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file (concat org-directory "refile.org"))
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("r" "respond" entry (file (concat org-directory "refile.org"))
+               "* TODO Respond to %:from on %:subject\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+              ("n" "note" entry (file (concat org-directory "refile.org"))
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("j" "Journal" entry (file+datetree (concat org-directory "diary.org"))
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+              ("w" "org-protocol" entry (file (concat org-directory "refile.org"))
+               "* TODO Review %c\n%U\n" :immediate-finish t)
+              ("p" "Phone call" entry (file (concat org-directory "refile.org"))
+               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
+              ("h" "Habit" entry (file (concat org-directory "refile.org"))
+               "* ACTIVE %?\n%U\n%a\nSCHEDULED: %t .+1d/3d\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: ACTIVE\n:END:\n"))))
+
+#+END_SRC
+
+** Refile
+Refile 是指将一个 org 的项目移动到另一个地方，例如记录笔记，会先打开一个缓冲区来
+记录，完成之后整理，就可以直接将整个项目移动到相关的地方进行归类，处理。
+#+NAME: refile
+#+BEGIN_SRC emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;; REFILE Settings ;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+(setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9))))
+
+;; Use full outline paths for refile targets - we file directly with IDO
+(setq org-refile-use-outline-path t)
+
+;; Targets complete directly with IDO
+(setq org-outline-path-complete-in-steps nil)
+
+;; Allow refile to create parent tasks with confirmation
+(setq org-refile-allow-creating-parent-nodes (quote confirm))
+
+;; ;; Use IDO for both buffer and file completion and ido-everywhere to t
+;; (setq org-completion-use-ido t)
+;; (setq ido-everywhere t)
+;; (setq ido-max-directory-size 100000)
+;; (ido-mode (quote both))
+
+;;;; Refile settings
+;; Exclude DONE state tasks from refile targets
+(defun bh/verify-refile-target ()
+  "Exclude todo keywords with a done state from refile targets"
+  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+(setq org-refile-target-verify-function 'bh/verify-refile-target)
+
+
+#+END_SRC
+** 在 TODO 标签的时候添加一个 CREATED 字段
+这段代码来自 https://gist.github.com/mrvdb/4037694
+#+BEGIN_SRC emacs-lisp
+(require 'org-expiry)
+;; Configure it a bit to my liking
+(setq
+org-expiry-created-property-name "CREATED" ; Name of property when an item is created
+org-expiry-inactive-timestamps t ; Don't have everything in the agenda view
+)
+
+(defun mrb/insert-created-timestamp()
+"Insert a CREATED property using org-expiry.el for TODO entries"
+(org-expiry-insert-created)
+(org-back-to-heading)
+(org-end-of-line)
+(insert " ")
+)
+;; Whenever a TODO entry is created, I want a timestamp
+;; Advice org-insert-todo-heading to insert a created timestamp using org-expiry
+(defadvice org-insert-todo-heading (after mrb/created-timestamp-advice activate)
+"Insert a CREATED property using org-expiry.el for TODO entries"
+(mrb/insert-created-timestamp)
+)
+;; Make it active
+(ad-activate 'org-insert-todo-heading)
+
+(require 'org-capture)
+
+(defadvice org-capture (after mrb/created-timestamp-advice activate)
+"Insert a CREATED property using org-expiry.el for TODO entries"
+; Test if the captured entry is a TODO, if so insert the created
+; timestamp property, otherwise ignore
+(when (member (org-get-todo-state) org-todo-keywords-1)
+(mrb/insert-created-timestamp)))
+(ad-activate 'org-capture)
+
+;; Add feature to allow easy adding of tags in a capture window
+(defun mrb/add-tags-in-capture()
+(interactive)
+"Insert tags in a capture window without losing the point"
+(save-excursion
+(org-back-to-heading)
+(org-set-tags)))
+;; Bind this to a reasonable key
+(define-key org-capture-mode-map "\C-c\C-t" 'mrb/add-tags-in-capture)
+#+END_SRC
+
+* 时间管理
+org-mode 有强大的时间管理功能，不管是记录当前时间，还是记录在一个项目上工作的时
+间。这里的很大部分代码是在网上收录的。
+#+NAME: time
+#+BEGIN_SRC emacs-lisp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;; CLOCK ;;;;;;;;;;;;;;;;
+;;
+;; Resume clocking task when emacs is restarted
+(org-clock-persistence-insinuate)
+;;
+;; Show lot sof clocking history so it's easy to pick items off the C-F11 list
+(setq org-clock-history-length 36)
+;; Resume clocking task on clock-in if the clock is open
+(setq org-clock-in-resume t)
+;; Change tasks to ACTIVE when clocking in
+(setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
+;; Separate drawers for clocking and logs
+(setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
+;; Save clock data and state changes and notes in the LOGBOOK drawer
+(setq org-clock-into-drawer t)
+;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+(setq org-clock-out-remove-zero-time-clocks t)
+;; Clock out when moving task to a done state
+(setq org-clock-out-when-done t)
+;; Save the running clock and all clock history when exiting Emacs, load it on startup
+(setq org-clock-persist t)
+;; Do not prompt to resume an active clock
+(setq org-clock-persist-query-resume nil)
+;; Enable auto clock resolution for finding open clocks
+(setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+;; Include current clocking task in clock reports
+(setq org-clock-report-include-clocking-task t)
+
+(setq bh/keep-clock-running nil)
+
+(defun bh/clock-in-to-next (kw)
+  "Switch a task from TODO to ACTIVE when clocking in.
+Skips capture tasks, projects, and subprojects.
+Switch projects and subprojects from ACTIVE back to TODO"
+  (when (not (and (boundp 'org-capture-mode) org-capture-mode))
+    (cond
+     ((and (member (org-get-todo-state) (list "TODO"))
+           (bh/is-task-p))
+      "ACTIVE")
+     ((and (member (org-get-todo-state) (list "ACTIVE"))
+           (bh/is-project-p))
+      "TODO"))))
+
+(defun bh/is-project-p ()
+  "Any task with a todo keyword subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task has-subtask))))
+
+(defun bh/is-project-subtree-p ()
+  "Any task with a todo keyword that is in a project subtree.
+Callers of this function already widen the buffer view."
+  (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
+                              (point))))
+    (save-excursion
+      (bh/find-project-task)
+      (if (equal (point) task)
+          nil
+        t))))
+
+(defun bh/is-task-p ()
+  "Any task with a todo keyword and no subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task (not has-subtask)))))
+
+(defun bh/find-project-task ()
+  "Move point to the parent (project) task if any"
+  (save-restriction
+    (widen)
+    (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
+      (while (org-up-heading-safe)
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq parent-task (point))))
+      (goto-char parent-task)
+      parent-task)))
+
+(defun bh/punch-in (arg)
+  "Start continuous clocking and set the default task to the
+selected task.  If no task is selected set the Organization task
+as the default task."
+  (interactive "p")
+  (setq bh/keep-clock-running t)
+  (if (equal major-mode 'org-agenda-mode)
+      ;;
+      ;; We're in the agenda
+      ;;
+      (let* ((marker (org-get-at-bol 'org-hd-marker))
+             (tags (org-with-point-at marker (org-get-tags-at))))
+        (if (and (eq arg 4) tags)
+            (org-agenda-clock-in '(16)))))
+  ;; (bh/clock-in-organization-task-as-default))))
+  ;;
+  ;; We are not in the agenda
+  ;;
+  (save-restriction
+	(widen)
+	;; Find the tags on the current task
+	(if (and (equal major-mode 'org-mode) (not (org-before-first-heading-p)) (eq arg 4))
+		(org-clock-in '(16)))))
+;; (bh/clock-in-organization-task-as-default)))))
+
+(defun bh/punch-out ()
+  (interactive)
+  (setq bh/keep-clock-running nil)
+  (when (org-clock-is-active)
+	(org-clock-out))
+  (org-agenda-remove-restriction-lock))
+
+(defun bh/clock-in-default-task ()
+  (save-excursion
+	(org-with-point-at org-clock-default-task
+	  (org-clock-in))))
+
+(defun bh/clock-in-parent-task ()
+  "Move point to the parent (project) task if any and clock in"
+  (let ((parent-task))
+	(save-excursion
+	  (save-restriction
+		(widen)
+		(while (and (not parent-task) (org-up-heading-safe))
+		  (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+			(setq parent-task (point))))
+		(if parent-task
+			(org-with-point-at parent-task
+			  (org-clock-in))
+		  (when bh/keep-clock-running
+			(bh/clock-in-default-task)))))))
+
+;; (defvar bh/organization-task-id "eb155a82-92b2-4f25-a3c6-0304591af2f9")
+
+;; (defun bh/clock-in-organization-task-as-default ()
+;;   (interactive)
+;;   (org-with-point-at (org-id-find bh/organization-task-id 'marker)
+;;     (org-clock-in '(16))))
+
+(defun bh/clock-out-maybe ()
+  (when (and bh/keep-clock-running
+			 (not org-clock-clocking-in)
+			 (marker-buffer org-clock-default-task)
+			 (not org-clock-resolving-clocks-due-to-idleness))
+	(bh/clock-in-parent-task)))
+
+(add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
+
+
+(defun bh/insert-inactive-timestamp ()
+  (interactive)
+  (org-insert-time-stamp nil t t nil nil nil))
+
+(defun bh/insert-heading-inactive-timestamp ()
+  (save-excursion
+    (org-return)
+    (org-cycle)
+    (bh/insert-inactive-timestamp)))
+
+(setq org-enforce-todo-dependencies t)
+(setq org-deadline-warning-days 30)
+#+END_SRC
+
+** reminder
+reminder 是 emacs 的提示机制，可以在规定的任务时间到的时候进行提示。这些代码来自
+http://doc.norang.ca/org-mode.html
+
+#+NAME: reminder
+#+BEGIN_SRC emacs-lisp
+; Erase all reminders and rebuilt reminders for today from the agenda
+(defun bh/org-agenda-to-appt ()
+  (interactive)
+  (setq appt-time-msg-list nil)
+  (org-agenda-to-appt))
+
+; Rebuild the reminders everytime the agenda is displayed
+(add-hook 'org-finalize-agenda-hook 'bh/org-agenda-to-appt 'append)
+
+; This is at the end of my .emacs - so appointments are set up when Emacs starts
+(bh/org-agenda-to-appt)
+
+; Activate appointments so we get notifications
+(appt-activate t)
+
+; If we leave Emacs running overnight - reset the appointments one minute after midnight
+(run-at-time "24:01" nil 'bh/org-agenda-to-appt)
+#+END_SRC
+** 废弃的 org-remember
+随着 org-mode 的更新，其功能完全被 org-capture 替代了，而且 org-capture 还是内置
+的。
+#+NAME: remember
+#+BEGIN_SRC emacs-lisp :tangle no
+ (setq org-default-notes-file "~/.emacs.d/notes")
+
+ (setq org-remember-templates
+       '(("Proj" ?j "* TODO %?\n %x\n %a" "~/Notes/org/planning.org" "Project List")
+         ("Todo" ?t "* TODO %?\n %x\n %a" "~/Notes/org/planning.org" "Task List")
+         ("IDEA" ?i "* TODO %?\n %i\n %a" "~/Notes/org/planning.org" "Idea List")
+         ("NOTES" ?n "* TODO %?\n %x\n %a" "~/Notes/org/notes.org" "Notes")
+         ("Python" ?p "* TODO %?\n %x\n %a" "~/Notes/org/notes.org" "Python")
+         ("Emacs" ?e "* TODO %?\n %x\n %a" "~/Notes/org/notes.org" "Emacs")
+         ("Reading" ?r "* TODO %?\n %x\n %a" "~/Notes/org/notes.org" "读书")
+ 		("Done"    ?d "* DONE %u\n  - %?%x\n %a" "~/Notes/org/self.org" "DoneListEveryDay")
+         ))
+
+ (setq remember-annotation-functions '(org-remember-annotation))
+ (setq remember-handler-functions '(org-remember-handler))
+
+ (add-hook 'org-remember-mode-hook
+           (lambda ()
+             (set (make-local-variable
+                   'org-complete-tags-always-offer-all-agenda-tags)
+                  t)))
+#+END_SRC
+* 输出设置
+包括各种输出，org-mode 的一个很好的特性就是可以输出成各种文档，平时使用到的包括
+输出成 tex 或 html
+#+NAME: export-basic
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-timestamps nil)
+(add-hook 'org-mode-hook 'turn-on-org-cdlatex)
+#+END_SRC
+** 输出到 google calendar
+之前想用的，不过不好用，就放在这里了。
+#+NAME:exporg-google
+#+BEGIN_SRC emacs-lisp :tangle no
+ ;;; define categories that should be excluded
+ (setq org-export-exclude-category (list "google" "private"))
+
+ (setq org-icalendar-use-scheduled '(todo-start event-if-todo))
+
+ ;;; define filter. The filter is called on each entry in the agenda.
+ ;;; It defines a regexp to search for two timestamps, gets the start
+ ;;; and end point of the entry and does a regexp search. It also
+ ;;; checks if the category of the entry is in an exclude list and
+ ;;; returns either t or nil to skip or include the entry.
+
+ (defun org-mycal-export-limit ()
+   "Limit the export to items that have a date, time and a range. Also exclude certain categories."
+   (setq org-tst-regexp
+         "<\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ... [0-9]\\{2\\}:[0-9]\\{2\\}[^\r\n>]*?\\)>")
+
+   (setq org-tstr-regexp (concat org-tst-regexp "--?-?" org-tst-regexp))
+   (save-excursion
+                                         ; get categories
+     (setq mycategory (org-get-category))
+                                         ; get start and end of tree
+     (org-back-to-heading t)
+     (setq mystart    (point))
+     (org-end-of-subtree)
+     (setq myend      (point))
+     (goto-char mystart)
+                                         ; search for timerange
+     (setq myresult (re-search-forward org-tstr-regexp myend t))
+                                         ; search for categories to exclude
+     (setq mycatp (member mycategory org-export-exclude-category))
+                                         ; return t if ok, nil when not ok
+     (if (and myresult (not mycatp)) t nil)))
+
+ ;;; activate filter and call export function
+ (defun org-mycal-export ()
+   (interactive)
+   (let ((org-icalendar-verify-function 'org-mycal-export-limit))
+     (org-export-icalendar-combine-agenda-files)))
+
+#+END_SRC
+** 输出到 latex
+#+NAME: export-latex
+#+BEGIN_SRC emacs-lisp
+
+(require 'reftex)
+(defun org-mode-reftex-setup ()
+  (load-library "reftex")
+  (and (buffer-file-name)
+       (file-exists-p (buffer-file-name))
+       (reftex-parse-all))
+										;  (reftex-set-cite-format
+										;   "[[cite][%l]]")
+  (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+  )
+(add-hook 'org-mode-hook 'org-mode-reftex-setup)
+
+(setq org-latex-listings t)
+
+;; 'org-beamer...' for export org documents to the LaTex 'article', using
+;; XeTeX and some fancy fonts; requires XeTeX (see org-latex-to-pdf-process)
+
+;; (unless (boundp 'org-export-latex-classes)
+;;   (setq org-export-latex-classes nil))
+
+(add-to-list 'org-latex-classes
+			 '("my-beamer"
+			   "\\documentclass[presentation]{beamer}
+\\usepackage{xeCJK}
+\\setCJKmainfont[BoldFont={FZHei-B01S}]{FZHei-B01S}
+\\setCJKmonofont[BoldFont={FZHei-B01S}]{FZKai-Z03S}
+\\setCJKfamilyfont{song}{FZShuSong-Z01S}
+\\setCJKfamilyfont{hei}{FZHei-B01S}
+\\setCJKfamilyfont{kai}{FZKai-Z03S}
+\\setCJKfamilyfont{fang}{FZFangSong-Z02S}
+\\mode<presentation> {
+  \\setbeamercovered{transparent}
+  \\setbeamertemplate{theorems}[numbered]
+  \\usefonttheme[onlymath]{serif}
+}
+\\usepackage{amsmath, amssymb}
+\\usepackage[english]{babel}
+\\usepackage{tikz}
+\\setbeamerfont{smallfont}{size=\\small}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]
+[EXTRA]"
+			   ("\\section\{%s\}" . "\\section*\{%s\}")
+               ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+               ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}"))
+			   )
+
+(add-to-list 'org-latex-classes
+			 '("my-article"
+			   "\\documentclass{ctexart}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+         ("\\section{%s}" . "\\section*{%s}")
+         ("\\subsection{%s}" . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+         ("\\paragraph{%s}" . "\\paragraph*{%s}")
+         ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+             '("llncs"
+               "\\documentclass{llncs}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+("\\section{%s}" . "\\section*{%s}")
+("\\subsection{%s}" . "\\subsection*{%s}")
+("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+("\\paragraph{%s}" . "\\paragraph*{%s}")
+("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+
+(setq org-latex-pdf-process
+      '("xelatex -interaction nonstopmode %f"
+        "xelatex -interaction nonstopmode %f")) ;; for multiple passes
+
+;(setq org-export-latex-hyperref-format "\\ref{%s}")
+
+(setq org-agenda-exporter-settings
+      '((ps-number-of-columns 1)
+        (ps-landscape-mode t)
+        (htmlize-output-type 'css)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#+END_SRC
+** 输出到 html 的配置
+#+NAME: export-html
+#+BEGIN_SRC emacs-lisp
+(setq org-html-head-include-default-style nil)
+(setq org-html-postamble t)
+(setq org-html-postamble-format
+      '(("en" "<hr /> <p class=\"postamble\">[<b>Last Updated:</b> %T | <b>Created by</b> %c]</p>")))
+(setq org-html-footnote-format " [%s]")
+
+(setq org-publish-project-alist
+      `(("orgfiles" ;; see the backquote ` not ' and the comma before the variable
+         ;;:base-directory "~/Notes/org/" ; FIXME: can't be a variable.
+         :base-directory , org-directory
+		 :base-extension "org"
+         :publishing-directory , (concat org-directory "../public_html")
+		 :publishing-function org-html-publish-to-html
+		 :exclude "PrivatePage.org"   ;; regexp
+		 :language: utf-8
+		 :headline-levels 3
+		 :section-numbers nil
+		 :table-of-contents nil
+		 :html-head: "<link rel=\"stylesheet\" href=\"org.css\" type=\"text/css\">"
+		 :footnotes t
+		 :language "utf-8"
+		 ;;:html-postamble: '(("en" "<hr />[<p class=\"author\">Author: %a (%e)</p> | <p class=\"date\">Last Update: %T</p> | <p class=\"creator\">%c</p> | <p class=\"xhtml-validation\">%v</p>]"))
+		 :auto-index t)
+
+		("homepage"
+		 :base-directory , (concat org-directory "../homepage")
+		 :base-extension "org"
+		 :publishing-directory , (concat org-directory "../public_html")
+		 :publishing-function org-html-publish-to-html
+		 :headline-levels 3
+		 :section-numbers nil
+		 :table-of-contents nil
+		 :footnotes t
+		 :style-include-default nil
+		 :language "utf-8"
+		 :html-head "<link rel=\"stylesheet\" href=\"theme/style.css\"  type=\"text/css\" />
+<link rel=\"stylesheet\" href=\"theme/facebox.css\"  type=\"text/css\" />"
+                                        ;:style "<link rel=\"stylesheet\" href=\"org.css\" type=\"text/css\">"
+		 :auto-preamble t
+		 :auto-postamble nil
+		 :auto-index nil)
+		("notes" :components ("orgfiles"))
+		("webpage" :components ("homepage")))
+	  )
+
+#+END_SRC
+* org-babel 设置
+org-babel 就是在 org 文件中嵌入各种其他编程语言，本文核心能做为 emacs 配置文件就
+是拜其所赐。
+#+NAME:babel
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (sh . t)
+   (R . t)
+   (perl . t)
+   (ruby . t)
+   (python . t)
+   (sh . t)
+   (haskell . t)
+   (dot . t)
+   (ditaa . t)
+   (C . nil)
+   (latex . t)
+   ))
+#+END_SRC
+* 其他杂项
+很多东西，主要处理日程的，还包括工作以及时间的统计
+#+BEGIN_SRC emacs-lisp
+(defun myorg-update-parent-cookie ()
+  (when (equal major-mode 'org-mode)
+    (save-excursion
+      (ignore-errors
+        (org-back-to-heading)
+        (org-update-parent-todo-statistics)))))
+
+(defadvice org-kill-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+(defadvice kill-whole-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+
+;;; for yasnippet
+(defun yas/org-very-safe-expand ()
+  (let ((yas/fallback-behavior 'return-nil)) (yas-expand)))
+
+
+
+;;(load-file (concat my-emacs-dir ".toodledo-pass.el"))
+;;(setq org-toodledo-userid my-toodledo-id)
+;;(setq org-toodledo-password my-toodledo-passwd)
+
+
+
+;; used by org-clock-sum-today-by-tags
+(defun filter-by-tags ()
+  (let ((head-tags (org-get-tags-at)))
+	(member current-tag head-tags)))
+
+(defun org-clock-sum-today-by-tags (timerange &optional tstart tend noinsert)
+  (interactive "P")
+  (let* ((timerange-numeric-value (prefix-numeric-value timerange))
+         (files (org-add-archive-files (org-agenda-files)))
+         (include-tags '("PROG" "READING" "NOTE" "OTHER" "IDEA" "@Work" "@Self"))
+		 ;;                         "LEARNING" "OUTPUT" "OTHER"))
+         (tags-time-alist (mapcar (lambda (tag) `(,tag . 0)) include-tags))
+         (output-string "")
+         (tstart (or tstart
+                     (and timerange (equal timerange-numeric-value 4)
+						  (- (org-time-today) 86400))
+                     (and timerange (equal timerange-numeric-value 16)
+						  (org-read-date nil nil nil "Start Date/Time:"))
+                     (org-time-today)))
+         (tend (or tend
+                   (and timerange (equal timerange-numeric-value 16)
+						(org-read-date nil nil nil "End Date/Time:"))
+                   (+ tstart 86400)))
+         h m file item prompt donesomething)
+    (while (setq file (pop files))
+      (setq org-agenda-buffer (if (file-exists-p file)
+                                  (org-get-agenda-file-buffer file)
+                                (error "No such file %s" file)))
+      (with-current-buffer org-agenda-buffer
+        (dolist (current-tag include-tags)
+          (org-clock-sum tstart tend 'filter-by-tags)
+          (setcdr (assoc current-tag tags-time-alist)
+                  (+ org-clock-file-total-minutes (cdr (assoc current-tag tags-time-alist)))))))
+    (while (setq item (pop tags-time-alist))
+      (unless (equal (cdr item) 0)
+        (setq donesomething t)
+        (setq h (/ (cdr item) 60)
+              m (- (cdr item) (* 60 h)))
+        (setq output-string (concat output-string (format "[-%s-] %.2d:%.2d\n" (car item) h m)))))
+    (unless donesomething
+      (setq output-string (concat output-string "[-Nothing-] Done nothing!!!\n")))
+    (unless noinsert
+	  (insert output-string))
+    output-string))
+#+END_SRC
+** 两个小函数
+第一个用于将标记为 done 的项进行 archive，第二个用于在当前环境内搜索相应的标签。
+都是从org-mode 的wiki 或 stackoverflow 里面来的
+#+BEGIN_SRC emacs-lisp
+(defun my-org-archive-done-tasks ()
+  (interactive)
+  (dolist (tag (list
+				"/DONE"
+				"/CANCELLED"
+				))
+
+	(org-map-entries 'org-archive-subtree tag 'file)))
+
+(setq org-agenda-text-search-extra-files (quote (agenda-archives)))
+
+(defun zin/org-tag-match-context (&optional todo-only match)
+  "Identical search to `org-match-sparse-tree', but shows the content of the matches."
+  (interactive "P")
+  (org-agenda-prepare-buffers (list (current-buffer)))
+  (org-overview)
+  (org-remove-occur-highlights)
+  (org-scan-tags '(progn (org-show-entry)
+                         (org-show-context))
+                 (cdr (org-make-tags-matcher match)) todo-only))
+#+END_SRC
+** 加密
+具有加密标签 crypt 的项目可以被加密
+#+BEGIN_SRC emacs-lisp
+(require 'org-crypt)
+; Encrypt all entries before saving
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+; GPG key to use for encryption
+(setq org-crypt-key "DE7253E4")
+
+(setq org-crypt-disable-auto-save nil)
+#+END_SRC

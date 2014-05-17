@@ -1,0 +1,354 @@
+#+TITLE: 其他内置模块等简单的设定
+主要配置内置模块的设定，其中涉及的函数，包等都是 emacs 自带的。
+* IDO
+ido 已经成 emacs 内置的玩意了，不过需要一点简单配置才好用。暂时替换成 helm 配置
+性和可扩展性更强更好玩
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'ido)
+(ido-mode 1)
+(require 'ido-hacks)
+
+(setq ido-ignore-buffers                   ;不需要切换到的buffer
+      '("\\` " "^\\*ESS\\*" "^\\*Messages\\*" "^\\*Help\\*" "^\\*Buffer"
+        "^\\*.*Completions\\*$" "^\\*Ediff" "^\\*tramp" "^\\*cvs-"
+        "_region_" " output\\*$" "^TAGS$" "^\*Ido")
+      ido-ignore-directories               ;不需要打开的目录
+      '("\\`auto/" "\\.prv/" "\\`CVS/" "\\`\\.\\./" "\\`\\./" "\\.svn/")
+      ido-ignore-files                     ;不需要打开的文件
+      '("\\`auto/" "\\.prv/" "_region_" "\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./"))
+(define-key ido-file-dir-completion-map
+  [remap set-mark-command]  'ido-restrict-to-matches)
+
+(defun ido-goto-symbol (&optional symbol-list)
+  "Refresh imenu and jump to a place in the buffer using Ido."
+  (interactive)
+  (unless (featurep 'imenu)
+	(require 'imenu nil t))
+  (cond
+   ((not symbol-list)
+	(let ((ido-mode ido-mode)
+		  (ido-enable-flex-matching
+		   (if (boundp 'ido-enable-flex-matching)
+			   ido-enable-flex-matching t))
+		  name-and-pos symbol-names position)
+	  (unless ido-mode
+		(ido-mode 1)
+		(setq ido-enable-flex-matching t))
+	  (while (progn
+			   (imenu--cleanup)
+			   (setq imenu--index-alist nil)
+			   (ido-goto-symbol (imenu--make-index-alist))
+			   (setq selected-symbol
+					 (ido-completing-read "Symbol? " symbol-names))
+			   (string= (car imenu--rescan-item) selected-symbol)))
+	  (unless (and (boundp 'mark-active) mark-active)
+		(push-mark nil t nil))
+	  (setq position (cdr (assoc selected-symbol name-and-pos)))
+	  (cond
+	   ((overlayp position)
+		(goto-char (overlay-start position)))
+	   (t
+		(goto-char position)))))
+   ((listp symbol-list)
+	(dolist (symbol symbol-list)
+	  (let (name position)
+		(cond
+		 ((and (listp symbol) (imenu--subalist-p symbol))
+		  (ido-goto-symbol symbol))
+		 ((listp symbol)
+		  (setq name (car symbol))
+		  (setq position (cdr symbol)))
+		 ((stringp symbol)
+		  (setq name symbol)
+		  (setq position
+				(get-text-property 1 'org-imenu-marker symbol))))
+		(unless (or (null position) (null name)
+					(string= (car imenu--rescan-item) name))
+		  (add-to-list 'symbol-names name)
+		  (add-to-list 'name-and-pos (cons name position))))))))
+
+(global-set-key "\C-ci" 'ido-goto-symbol) ; or any key you see fit
+;;(setq ido-enable-tramp-completion nil)
+;;(setq ido-save-directory-list-file nil)
+(defun my-ido-setup-hook ()
+  (define-key
+      ido-buffer-completion-map
+      " "
+    'ido-restrict-to-matches))
+
+(add-hook 'ido-setup-hook 'my-ido-setup-hook)
+
+#+END_SRC
+** ido-ubiquitous
+=ido-ubiquitous= 实际上应该叫 =ido-everywhere=, 是说在各种模式下使用 ido 方式，
+ido 本身只有寻找文件部分。用了这个之后其他部分都可以使用了，包括 =C-h f= 等等。
+
+#+BEGIN_SRC emacs-lisp
+;; Use ido everywhere
+(require 'ido-ubiquitous)
+(ido-ubiquitous-mode 1)
+
+;; Fix ido-ubiquitous for newer packages
+(defmacro ido-ubiquitous-use-new-completing-read (cmd package)
+  `(eval-after-load ,package
+     '(defadvice ,cmd (around ido-ubiquitous-new activate)
+        (let ((ido-ubiquitous-enable-compatibility nil))
+          ad-do-it))))
+
+(ido-ubiquitous-use-new-completing-read webjump 'webjump)
+(ido-ubiquitous-use-new-completing-read yas/expand 'yasnippet)
+(ido-ubiquitous-use-new-completing-read yas/visit-snippet-file 'yasnippet)
+#+END_SRC
+
+* HELM
+ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= 比他功能多，所以想办法结合
+下。最近先测试用 =helm-M-x= 来替代 =M-x= 看看。 =smex= 那个先放下。
+#+BEGIN_SRC emacs-lisp
+(require 'helm-config)
+(helm-mode 1)
+;;(require 'helm-C-x-b)
+
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map
+                [remap eshell-pcomplete]
+                'helm-esh-pcomplete)))
+
+ (add-hook 'eshell-mode-hook
+           #'(lambda ()
+               (define-key eshell-mode-map
+                 (kbd "M-p")
+                 'helm-eshell-history)))
+
+(defun pcomplete/sudo ()
+  (let ((prec (pcomplete-arg 'last -1)))
+    (cond ((string= "sudo" prec)
+           (while (pcomplete-here*
+                    (funcall pcomplete-command-completion-function)
+                    (pcomplete-arg 'last) t))))))
+
+(defun pcomplete/find ()
+  (let ((prec (pcomplete-arg 'last -1)))
+    (cond ((and (pcomplete-match "^-" 'last)
+                (string= "find" prec))
+           (pcomplete-opt "HLPDO"))
+          ((pcomplete-match "^-" 'last)
+           (while (pcomplete-here
+                   '("-amin" "-anewer" "-atime" "-cmin" "-cnewer" "-context"
+                     "-ctime" "-daystart" "-delete" "-depth" "-empty" "-exec"
+                     "-execdir" "-executable" "-false" "-fls" "-follow" "-fprint"
+                     "-fprint0" "-fprintf" "-fstype" "-gid" "-group"
+                     "-help" "-ignore_readdir_race" "-ilname" "-iname"
+                     "-inum" "-ipath" "-iregex" "-iwholename"
+                     "-links" "-lname" "-ls" "-maxdepth"
+                     "-mindepth" "-mmin" "-mount" "-mtime"
+                     "-name" "-newer" "-nogroup" "-noignore_readdir_race"
+                     "-noleaf" "-nouser" "-nowarn" "-ok"
+                     "-okdir" "-path" "-perm" "-print"
+                     "-print0" "-printf" "-prune" "-quit"
+                     "-readable" "-regex" "-regextype" "-samefile"
+                     "-size" "-true" "-type" "-uid"
+                     "-used" "-user" "-version" "-warn"
+                     "-wholename" "-writable" "-xdev" "-xtype"))))
+          ((string= "-type" prec)
+           (while (pcomplete-here (list "b" "c" "d" "p" "f" "l" "s" "D"))))
+          ((string= "-xtype" prec)
+           (while (pcomplete-here (list "b" "c" "d" "p" "f" "l" "s"))))
+          ((or (string= prec "-exec")
+               (string= prec "-execdir"))
+           (while (pcomplete-here* (funcall pcomplete-command-completion-function)
+                                   (pcomplete-arg 'last) t))))
+    (while (pcomplete-here (pcomplete-entries) nil 'identity))))
+#+END_SRC
+* Paredit
+paredit 是编辑括号的神器，在 scheme 等模式里面尤其需要。
+emacs rocks 对其进行了介绍，见 http://emacsrocks.com/e14.html
+#+BEGIN_SRC emacs-lisp
+(autoload 'enable-paredit-mode "paredit"
+  "Turn on pseudo-structural editing of Lisp code."
+  t)
+(add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
+(add-hook 'ielm-mode-hook             'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           'enable-paredit-mode)
+
+(autoload 'paredit-everywhere-mode "paredit-everywhere"
+  "A cut-down version of paredit which can be used in non-lisp buffers."
+t)
+
+(add-hook 'prog-mode-hook 'paredit-everywhere-mode)
+#+END_SRC
+
+还有一个包叫做 smartparens， 测试下来和 paredit 差不多，快捷键之类的虽然有和
+paredit 类似的，但是要自己配置，比较麻烦。
+#+BEGIN_SRC emacs-lisp :tangle no
+;(require 'smartparens-config)
+(setq sp-base-key-bindings 'paredit)
+(require 'smartparens-config)
+
+(smartparens-global-mode t)
+
+#+END_SRC
+* expand-region
+从 emacs rocks 里面看到的，主要的用处就是在标记一个代码块的时候可以按照语义结构
+来标记。很有用。包本身在 melpa 里面。介绍见 http://emacsrocks.com/e09.html
+#+BEGIN_SRC emacs-lisp
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(defun er/add-text-mode-expansions ()
+  (make-variable-buffer-local 'er/try-expand-list)
+  (setq er/try-expand-list (append
+                            er/try-expand-list
+                            '(mark-paragraph
+                              mark-page))))
+
+(add-hook 'text-mode-hook 'er/add-text-mode-expansions)
+#+END_SRC
+* multiple-cursors
+从 emacs rocks 里面看来的，可以标记并编辑一样的文字。还是很有用的。
+emacs rocks 链接见 http://emacsrocks.com/e13.html
+#+BEGIN_SRC emacs-lisp
+(require 'multiple-cursors)
+
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-line-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+#+END_SRC
+* ace-jump-mode
+ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。emacs rocks 也对其进
+行了介绍，见 http://emacsrocks.com/e10.html
+#+BEGIN_SRC emacs-lisp
+(autoload
+  'ace-jump-mode
+  "ace-jump-mode"
+  "Emacs quick move minor mode"
+  t)
+;; you can select the key you prefer to
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
+
+
+;;
+;; enable a more powerful jump back function from ace jump mode
+;;
+(autoload
+  'ace-jump-mode-pop-mark
+  "ace-jump-mode"
+  "Ace jump back:-)"
+  t)
+(eval-after-load "ace-jump-mode"
+  '(ace-jump-mode-enable-mark-sync))
+(define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+
+#+END_SRC
+* projectile
+很不错管理工程的东西，对于含有 =.git= 的目录直接当做一个工程来管理．
+#+BEGIN_SRC emacs-lisp
+(add-hook 'python-mode-hook 'projectile-on)
+(setq projectile-completion-system 'grizzl)
+
+#+END_SRC
+* 其他琐碎设定
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(setq tramp-default-method "ssh")
+
+(require 'sdcv-mode)
+(setq sdcv-dictionary-list '("牛津英汉双解美化版" "朗道英汉字典5.0"))
+(global-set-key (kbd "s-d") 'sdcv-search-current-word)
+
+
+(require 'smodels-mode)
+
+
+;; these are the lines i use to set up correct auto-ing
+(autoload 'bison-mode "bison-mode.el")
+(add-to-list 'auto-mode-alist '("\\.y$" . bison-mode))
+
+;(autoload 'flex-mode "flex-mode")
+;(add-to-list 'auto-mode-alist '("\\.l$" . flex-mode))
+
+(guru-mode 1)
+
+(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'html-mode-hook 'emmet-mode)
+(add-hook 'css-mode-hook  'emmet-mode)
+#+END_SRC
+
+** uniquify
+
+uniquify 主要是进行名字重复化的一个调整，例如开了两个 buffer 名字都叫 foo，他可
+以分别显示目录的名字在之前。
+
+#+BEGIN_SRC emacs-lisp
+;; uniquify.el is a helper routine to help give buffer names a better unique name.
+(when (load "uniquify" 'NOERROR)
+  (require 'uniquify)
+  (setq uniquify-buffer-name-style 'forward)
+  ;(setq uniquify-buffer-name-style 'post-forward)
+  )
+
+;; Rename the buffer as part of the cmake-mode
+
+(defun cmake-rename-buffer ()
+  "Renames a CMakeLists.txt buffer to cmake-<directory name>."
+  (interactive)
+  ;(print (concat "buffer-filename = " (buffer-file-name)))
+  ;(print (concat "buffer-name     = " (buffer-name)))
+  (when (and (buffer-file-name) (string-match "CMakeLists.txt" (buffer-name)))
+      ;(setq file-name (file-name-nondirectory (buffer-file-name)))
+      (setq parent-dir (file-name-nondirectory (directory-file-name (file-name-directory (buffer-file-name)))))
+      ;(print (concat "parent-dir = " parent-dir))
+      (setq new-buffer-name (concat "cmake-" parent-dir))
+      ;(print (concat "new-buffer-name= " new-buffer-name))
+      (rename-buffer new-buffer-name t)
+      )
+  )
+
+(add-hook 'cmake-mode-hook (function cmake-rename-buffer))
+(if (eq system-type 'windows-nt)
+	(progn
+	  (require 'cmake-mode)
+	  (setq auto-mode-alist
+			(append '(("CMakeLists\\.txt\\'" . cmake-mode)
+					  ("\\.cmake\\'" . cmake-mode))
+					auto-mode-alist))
+	  ))
+#+END_SRC
+** modeline-awesome 好玩的货.
+#+BEGIN_SRC emacs-lisp
+;; Use align-left icon for `auto-fill-mode'.
+(eval-after-load 'diminish-autoloads
+'(eval-after-load 'simple
+'(diminish 'auto-fill-function (concat " " [#xF036]))))
+
+;; Use thumbs-up / thumbs-down for flymake status.
+;; We need to reimplement `flymake-report-status' to make this happen.
+(eval-after-load 'flymake
+'(defun flymake-report-status (e-w &optional status)
+"Show status in mode line."
+(when e-w
+(setq flymake-mode-line-e-w e-w))
+(when status
+(setq flymake-mode-line-status status))
+(let* ((mode-line " "))
+(if (> (length flymake-mode-line-e-w) 0)
+(setq mode-line (concat mode-line [#xF165] flymake-mode-line-e-w))
+(setq mode-line (concat mode-line [#xF164])))
+(setq mode-line (concat mode-line flymake-mode-line-status))
+(setq flymake-mode-line mode-line)
+(force-mode-line-update))))
+
+;; Use the tags icon for `gtags-mode'.
+(add-hook 'gtags-mode-hook '(lambda ()
+(diminish 'gtags-mode (concat " " [#xF02C]))))
+
+#+END_SRC

@@ -1,0 +1,11 @@
+#+TITLE: YASnippet 设定
+
+* 简单配置即可
+#+BEGIN_SRC emacs-lisp
+(require 'yasnippet)
+
+(setq-default yas/my-own-command 'return-nil)
+
+(yas-global-mode 1)
+
+#+END_SRC

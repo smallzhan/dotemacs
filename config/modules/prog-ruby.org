@@ -1,0 +1,47 @@
+#+TITLE: Ruby 编程的设置
+
+* 一般设定
+#+BEGIN_SRC emacs-lisp
+(require 'rcodetools)
+(autoload 'ruby-mode "ruby-mode" "Major mode to edit ruby files." t)
+(autoload 'ruby-electric "ruby-electric" "Ruby Electric mode." t)
+(autoload 'ruby-electric-mode "ruby-electric" "Ruby Electric mode." t)
+
+(add-to-list 'auto-mode-alist '("\\.rb\\'" . ruby-mode))
+(add-to-list 'interpreter-mode-alist  '("ruby" . ruby-mode))
+
+
+(autoload 'run-ruby "inf-ruby" "Run an inferior Ruby process" t)
+(autoload 'inf-ruby-keys "inf-ruby" "Set local key defs for inf-ruby in ruby-mode")
+
+(add-hook 'ruby-mode-hook 'inf-ruby-keys)
+                                        ;(add-hook 'ruby-mode-hook (lambda () (ruby-electric-mode t)))
+
+(autoload 'rubydb "rubydb3x" "Ruby debugger" t)
+
+(setq ruby-indent-level 4)
+
+(defun my-ruby-mode-hook ()
+  "My ruby mode hook"
+  (interactive)
+  (ruby-electric-mode t)
+ ; (auto-complete-mode t)
+  (linum-mode t)
+  )
+                                        ;
+(add-hook 'ruby-mode-hook 'my-ruby-mode-hook)
+#+END_SRC
+
+* auto-complete 的配置
+  采用 rcodetools， 貌似效果一般般
+#+BEGIN_SRC emacs-lisp
+(defun my-ruby-mode-setup()
+  (setq ac-sources (append
+					'(ac-source-yasnippet
+					  ac-source-rcodetools)
+					ac-sources))
+  (make-local-variable 'ac-ignores)
+  (add-to-list 'ac-ignores "end"))
+
+(add-hook 'ruby-mode-hook 'my-ruby-mode-setup)
+#+END_SRC

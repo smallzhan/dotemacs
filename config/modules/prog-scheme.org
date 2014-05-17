@@ -1,0 +1,88 @@
+#+TITLE: Scheme 编程设定
+#+OPTIONS: toc:2 num:nil ^:nil
+从 Oh My Emacs 项目里面抄来的东西
+
+* Prerequisites
+  :PROPERTIES:
+  :CUSTOM_ID: scheme-prerequisites
+  :END:
+
+#+NAME: scheme-prerequisites
+#+CAPTION: Prerequisites for ome-scheme module
+|            | Windows | Ubuntu/Debian/Mint | ArchLinux | Fedora | Mac OS X | Mandatory? |
+|------------+---------+--------------------+-----------+--------+----------+------------|
+| [[http://www.gnu.org/software/guile/][Guile]]      |         | guile-2.0          |           |        |          | Yes        |
+
+Note:
+- [[http://www.gnu.org/software/guile/][Guile]] or [[http://racket-lang.org/][Racket]] as a Scheme implementation. Geiser requires Guile >= 2.0.
+
+* Melpa packages
+  :PROPERTIES:
+  :CUSTOM_ID: scheme-melpa-packages
+  :END:
+
+#+NAME: scheme-melpa-packages
+#+CAPTION: melpa packages for ome-scheme module
+|           | Status   | Description                                    |
+|-----------+----------+------------------------------------------------|
+| [[http://www.nongnu.org/geiser/][geiser]]    | Required | Geiser to Scheme is what slime to Common Lisp. |
+| [[https://github.com/xiaohanyu/ac-geiser][ac-geiser]] | Required | Auto-complete backend for geiser.              |
+
+* Scheme
+  :PROPERTIES:
+  :CUSTOM_ID: scheme
+  :END:
+** geiser 的配置
+
+[[http://www.nongnu.org/geiser/][geiser]] 号称是对应 scheme 的 slime，不过不管那么多，貌似比 quack 好点。geiser 官
+方说支持 guile 和 racket，还说支持别的，不过没试过，有这俩就够了。
+
+那个 Oh-my-emacs 的作者写了个 ac-geiser, 可以在 melpa 安装，因此链接就不放了。先
+配置 geiser，主要从 oh-my-emacs 里面偷来的，因此都是 ome 的前缀。自己修改了点。
+
+#+NAME: geiser
+#+BEGIN_SRC emacs-lisp :file
+  (defun ome-geiser-setup ()
+    (setq geiser-default-implementation 'guile)
+    (setq geiser-guile-load-init-file-p t))
+
+  (defun ome-ac-geiser-setup ()
+    (add-hook 'geiser-mode-hook 'ac-geiser-setup)
+    (add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
+    (eval-after-load "auto-complete"
+      '(add-to-list 'ac-modes 'geiser-repl-mode)))
+
+  (when (or (executable-find "guile") (executable-find "racket"))
+    (progn
+      (ome-geiser-setup)
+      (ome-ac-geiser-setup)))
+  ;; (ome-install 'quack)
+#+END_SRC
+
+Actually, the official SLIME contrib has some swank backends for scheme
+implementations, you can try it if you like. There's a [[https://github.com/nickg/swank-chicken][swank-chicken]] for
+[[http://www.call-cc.org/][chicken scheme]], but it only provides a small part of SLIME features. So it is
+disabled by default.
+
+#+NAME: chicken
+#+BEGIN_SRC emacs-lisp :tangle no
+  (defun ome-swank-chicken-setup ()
+    (setq swank-chicken-path "~/.emacs.d/el-get/swank-chicken/swank-chicken.scm")
+    (add-hook 'scheme-mode-hook
+              (lambda ()
+                (slime-mode t))))
+
+  (ome-install 'swank-chicken)
+#+END_SRC
+
+** paredit mode
+geiser 自己也推荐 [[http://www.emacswiki.org/emacs/ParEdit][paredit]]， 看了下特性，挺好的，因此也配置一些，这货也在 melpa
+里面，因此不折腾。去上面页面里面抄点 配置过来。其他的在 [[file:../basic/other.org][other.org]] 里面已经定义了
+后来看见了 smartparens，smartparens 优点是可以支持好多其他的模式里面的括号定义。
+需要时间来适应的说。
+#+BEGIN_SRC emacs-lisp
+(require 'eldoc) ; if not already loaded
+(eldoc-add-command
+   'paredit-backward-delete
+   'paredit-close-round)
+#+END_SRC

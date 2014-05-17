@@ -1,0 +1,175 @@
+#+TITLE: LaTeX 写文档相关设定
+
+* auctex
+主要采用 auctex + cdlatex + reftex 等进行设定，在 melpa 安装之后，所有的 path 都自动搞定了。
+设置很简单
+** 基本设定
+#+NAME: auctex
+#+BEGIN_SRC emacs-lisp
+;;(require 'tex-site)
+;(load "latex.el" nil t t)
+(load "preview.el" nil t t)
+
+;(require 'auctex-autoloads)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq auto-coding-alist
+      (append auto-coding-alist '(("\\.tex\\'" . utf-8))))
+
+(setq-default TeX-master nil)
+
+(autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
+(autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" t)
+(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
+(add-hook 'LaTeX-mode-hook
+      (function (lambda ()
+              (define-key LaTeX-mode-map
+            (kbd "C-c -") 'cdlatex-item))))
+
+(add-hook 'LaTeX-mode-hook
+      (lambda()
+        ;(define-key LaTeX-mode-map (kbd "TAB") 'TeX-complete-symbol)
+        ;(setq TeX-command-default "XeLaTeX")
+        ;(setq TeX-engine 'xetex)
+        (TeX-PDF-mode t)
+        (setq TeX-save-query nil)
+        (setq TeX-show-compilation nil)
+        ))
+
+(setq reftex-revisit-to-follow t
+      reftex-auto-recenter-toc t)
+
+(add-hook 'TeX-mode-hook
+      (lambda()
+        (setq TeX-engine 'xetex)
+        (setq reftex-plug-into-AUCTEX t)
+        (turn-on-reftex)
+        ))
+
+(setq reftex-section-levels
+      '(("part" . 0) ("chapter" . 1) ("section" . 2) ("subsection" . 3)
+        ("frametitle" . 4) ("subsubsection" . 4) ("paragraph" . 5)
+        ("subparagraph" . 6) ("addchap" . -1) ("addsec" . -2)))
+
+(setq bibtex-autokey-names 1
+      bibtex-autokey-names-stretch 1
+      bibtex-autokey-name-separator "-"
+      bibtex-autokey-additional-names "-et.al."
+      bibtex-autokey-name-case-convert 'identity
+      bibtex-autokey-name-year-separator "-"
+      bibtex-autokey-titlewords-stretch 0
+      bibtex-autokey-titlewords 0
+      bibtex-maintain-sorted-entries 'plain
+      bibtex-entry-format '(opts-or-alts numerical-fields))
+#+END_SRC
+** 关于 beamer 的设定
+用 auctex 写 beamer 时，能够对单页 frame 进行操作是很方便的事情，
+下面的函数就按照单个 frame 为单位来进行 frame 的选中，缩进等，还可以直接编译。
+
+#+NAME: beamer
+#+BEGIN_SRC emacs-lisp
+(defvar beamer-frame-begin "^[ ]*\\\\begin{frame}"
+  "Regular expression that matches the frame start")
+
+(defvar beamer-frame-end "^[ ]*\\\\end{frame}"
+  "Regular expression that matches the frame start")
+
+
+(defun beamer-find-frame-begin ()
+  "Move point to the \\begin of the current frame."
+  (re-search-backward beamer-frame-begin))
+
+
+(defun beamer-find-frame-end ()
+  "Move point to the \\end of the current environment."
+  (re-search-forward beamer-frame-end))
+
+
+
+(defun beamer-mark-frame ()
+  "Set mark to end of current frame and point to the matching begin.
+The command will not work properly if there are unbalanced
+begin-end pairs in comments and verbatim environments."
+  (interactive)
+  (let ((cur (point))
+        beg end)
+    (setq end (beamer-find-frame-end))
+    (goto-char cur)
+    (setq beg (beamer-find-frame-begin))
+    (goto-char beg)
+    (set-mark end)))
+
+;; (defun beamer-mark-frame ()
+;;   "beamer-mark-frame"
+;;   (interactive)
+;;   (let ((pos (point)))
+;;     (when (re-search-backward "\\\\begin{frame}")
+;;       (set-mark)
+;;       (if (re-search-forward "\\\\end{frame}")
+;; 		  (message "frame marked")
+;; 		(message "not in frame")))))
+
+
+(defun beamer-indent-frame ()
+  (interactive)
+  (let ((pos (point))
+        beg end)
+    (setq beg (beamer-find-frame-begin))
+    (goto-char pos)
+    (setq end (beamer-find-frame-end))
+    (indent-region beg end)
+    (goto-char pos)))
+
+(defun beamer-narrow-to-frame ()
+  (interactive)
+  (let ((pos (point))
+        beg end)
+    (setq beg (beamer-find-frame-begin))
+    (goto-char pos)
+    (setq end (beamer-find-frame-end))
+    (narrow-to-region beg end)
+    (goto-char pos)))
+
+#+END_SRC
+* 查看输出文件的程序定义
+对输出的 pdf 文件，使用  pdfviewer 这个程序进行查看， pdfviewer 就用喜欢的
+reader 链接一个到 bin 目录下就可以了
+
+#+NAME: viewer
+#+BEGIN_SRC emacs-lisp
+
+;(setq TeX-engine 'xetex)
+(setq TeX-output-view-style '(("^pdf$" "." "pdfviewer %s.pdf")))
+;; (add-to-list 'TeX-command-list (list "View" "pdfviewer .\/\"%s.pdf\"" 'TeX-run-command nil t))
+;; (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+
+
+#+END_SRC
+* 定制 reftex
+事情是这样的， 在 =cdlatex= 下面 =C-c )= 可以选择 =\ref= 引用的标号，只要 =\label= 定义
+过，就会出现一个 buffer， buffer 里面都是定义过的 label 最舒心的是，这些 label
+的上下文同时也给出来了，这样直接在其中选择就可以了。最近写文章，由于是和别人合作，
+文章里面他给出了一个宏定义, 如下
+
+#+BEGIN_SRC tex :tangle no
+\def\beq{\begin{equation}}
+\def\eeq#1{\label{#1}\end{equation}}
+#+END_SRC
+
+
+这样写公式的时候，只要 =\beq \eeq{xx}= 就会自动的加上 =\label{xx}= 了，但是这样
+一来，reftex 不认识这个 label 了， =C-c )= 的时候选不到，只能跑到定义的那里去看，
+再写，一点都不自动。
+
+于是翻了一下 reftex 的 manual, 发现可以设置 =reftex-label-alist= 这个变量, 不多
+说了，上代码
+
+#+BEGIN_SRC emacs-lisp
+(setq reftex-label-alist '(("\\eeq{*}" ?e nil nil 1 nil)))
+#+END_SRC
+
+意思是说， 将 =\eeq{xx}= 里面的 xx 参数当作 =\label= 的对象， =?e= 是说这个对象
+的类型是 equation, 在 =C-c )= 的时候可以按 e 来显示出来。
+
+大括号里面的星号不能少，是将这个参数直接当作 label 对象。 后面有个 1 说的是
+=\eeq{}= 的第一个参数，虽然总共也只有一个。

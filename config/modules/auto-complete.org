@@ -1,0 +1,18 @@
+#+TITLE: 自动补全 auto-complete 设定
+* 简单的配置
+其实简单配置就够了，其他的部分都放到分别的配置里面去了
+#+BEGIN_SRC emacs-lisp
+(require 'auto-complete-config)
+
+(add-to-list 'ac-dictionary-directories (concat my-emacs-path "ac-dict"))
+(setq ac-auto-start 3)
+(setq ac-trigger-commands-on-completing nil)
+(setq ac-dwim t)
+(setq ac-use-comphist nil)
+(setq ac-completion-limit 12)
+(setq ac-delay 0.5)
+
+(setq ac-use-quick-help nil)
+(ac-config-default)
+
+#+END_SRC
