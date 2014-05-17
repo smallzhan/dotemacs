@@ -5,6 +5,8 @@
 
 #+NAME: elpy
 #+BEGIN_SRC emacs-lisp
+;;(require-package 'elpy)
+
 (elpy-enable)
 
 (elpy-use-ipython)

@@ -295,3 +295,16 @@ end of the line."
     (setq header-line-format nil)))
 (global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
 #+END_SRC
+* prelude 里面拿来的　switch buffer 用的
+#+BEGIN_SRC emacs-lisp
+(defun prelude-start-or-switch-to (function buffer-name)
+  "Invoke FUNCTION if there is no buffer with BUFFER-NAME.
+Otherwise switch to the buffer named BUFFER-NAME. Don't clobber
+the current buffer."
+  (if (not (get-buffer buffer-name))
+      (progn
+        (split-window-sensibly (selected-window))
+        (other-window 1)
+        (funcall function))
+    (switch-to-buffer-other-window buffer-name)))
+#+END_SRC

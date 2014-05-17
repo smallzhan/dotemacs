@@ -84,7 +84,7 @@ ido 已经成 emacs 内置的玩意了，不过需要一点简单配置才好用
 =ido-ubiquitous= 实际上应该叫 =ido-everywhere=, 是说在各种模式下使用 ido 方式，
 ido 本身只有寻找文件部分。用了这个之后其他部分都可以使用了，包括 =C-h f= 等等。
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; Use ido everywhere
 (require 'ido-ubiquitous)
 (ido-ubiquitous-mode 1)
@@ -163,8 +163,10 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
 #+END_SRC
 * Paredit
 paredit 是编辑括号的神器，在 scheme 等模式里面尤其需要。
-emacs rocks 对其进行了介绍，见 http://emacsrocks.com/e14.html
-#+BEGIN_SRC emacs-lisp
+emacs rocks 对其进行了介绍，见 http://emacsrocks.com/e14.html 貌似新的　
+smart-parens 比较好用，更换了
+#+BEGIN_SRC emacs-lisp :tangle no
+(require-package 'paredit)
 (autoload 'enable-paredit-mode "paredit"
   "Turn on pseudo-structural editing of Lisp code."
   t)
@@ -184,12 +186,64 @@ t)
 
 还有一个包叫做 smartparens， 测试下来和 paredit 差不多，快捷键之类的虽然有和
 paredit 类似的，但是要自己配置，比较麻烦。
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
+(require-package 'smartparens)
+(require-package 'rainbow-delimiters)
 ;(require 'smartparens-config)
 (setq sp-base-key-bindings 'paredit)
 (require 'smartparens-config)
 
-(smartparens-global-mode t)
+(smartparens-global-mode +1)
+(show-smartparens-global-mode +1)
+
+(sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+
+;;; markdown-mode
+(sp-with-modes '(markdown-mode gfm-mode rst-mode)
+  (sp-local-pair "*" "*" :bind "C-*")
+  (sp-local-tag "2" "**" "**")
+  (sp-local-tag "s" "```scheme" "```")
+  (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+
+;;; tex-mode latex-mode
+(sp-with-modes '(tex-mode plain-tex-mode latex-mode)
+  (sp-local-tag "i" "\"<" "\">"))
+
+;;; html-mode
+(sp-with-modes '(html-mode sgml-mode)
+  (sp-local-pair "<" ">"))
+
+;;; lisp modes
+(sp-with-modes sp--lisp-modes
+  (sp-local-pair "(" nil :bind "C-("))
+
+(defun prelude-wrap-with (s)
+  "Create a wrapper function for smartparens using S."
+  `(lambda (&optional arg)
+     (interactive "P")
+     (sp-wrap-with-pair ,s)))
+
+;; wrap keybindings
+(define-key lisp-mode-shared-map (kbd "M-(") (prelude-wrap-with "("))
+;; FIXME: Pick terminal-friendly binding.
+;;(define-key lisp-mode-shared-map (kbd "M-[") (prelude-wrap-with "["))
+(define-key lisp-mode-shared-map (kbd "M-\"") (prelude-wrap-with "\""))
+
+;; a great lisp coding hook
+(defun prelude-lisp-coding-defaults ()
+  (smartparens-strict-mode +1)
+  (rainbow-delimiters-mode +1))
+
+(setq prelude-lisp-coding-hook 'prelude-lisp-coding-defaults)
+
+;; interactive modes don't need whitespace checks
+(defun prelude-interactive-lisp-coding-defaults ()
+  (smartparens-strict-mode +1)
+  (rainbow-delimiters-mode +1)
+  (whitespace-mode -1))
+
+(setq prelude-interactive-lisp-coding-hook 'prelude-interactive-lisp-coding-defaults)
+
 
 #+END_SRC
 * expand-region
@@ -211,6 +265,7 @@ paredit 类似的，但是要自己配置，比较麻烦。
 * multiple-cursors
 从 emacs rocks 里面看来的，可以标记并编辑一样的文字。还是很有用的。
 emacs rocks 链接见 http://emacsrocks.com/e13.html
+
 #+BEGIN_SRC emacs-lisp
 (require 'multiple-cursors)
 
@@ -219,6 +274,31 @@ emacs rocks 链接见 http://emacsrocks.com/e13.html
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
+(defvar jc/mc-search--last-term nil)
+
+;; 下面代码可以在　multiple-cursors 中实现　C-s 和　C-r 的增量搜索
+(defun jc/mc-search (search-command)
+  ;; Read new search term when not repeated command or applying to fake cursors
+  (when (and (not mc--executing-command-for-fake-cursor)
+             (not (eq last-command 'jc/mc-search-forward))
+             (not (eq last-command 'jc/mc-search-backward)))
+    (setq jc/mc-search--last-term (read-from-minibuffer "Search(regex): ")))
+  (funcall search-command jc/mc-search--last-term))
+
+(defun jc/mc-search-forward ()
+  "Simplified version of forward search that supports multiple cursors"
+  (interactive)
+  (jc/mc-search 'search-forward-regexp))
+
+(defun jc/mc-search-backward ()
+  "Simplified version of backward search that supports multiple cursors"
+  (interactive)
+  (jc/mc-search 'search-backward-regexp))
+
+(add-hook 'multiple-cursors-mode-enabled-hook
+          (lambda()
+            (local-set-key (kbd "C-s") 'jc/mc-search-forward)
+            (local-set-key (kbd "C-r") 'jc/mc-search-backward)))
 #+END_SRC
 * ace-jump-mode
 ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。emacs rocks 也对其进

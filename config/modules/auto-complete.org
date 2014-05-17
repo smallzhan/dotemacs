@@ -2,6 +2,8 @@
 * 简单的配置
 其实简单配置就够了，其他的部分都放到分别的配置里面去了
 #+BEGIN_SRC emacs-lisp
+(require-package 'auto-complete)
+
 (require 'auto-complete-config)
 
 (add-to-list 'ac-dictionary-directories (concat my-emacs-path "ac-dict"))

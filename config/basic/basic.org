@@ -164,6 +164,10 @@
 (defalias 'v 'find-file)
 (defalias 'vo 'find-file-other-window)
 
+(add-hook 'emacs-startup-hook #'(lambda ()
+                                 (let ((default-directory (getenv "HOME")))
+                                   (command-execute 'eshell)
+                                   (bury-buffer))))
 #+END_SRC
 * 其他设置
 

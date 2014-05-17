@@ -42,6 +42,8 @@ Note:
 
 #+NAME: geiser
 #+BEGIN_SRC emacs-lisp :file
+  (require-package 'geiser)
+
   (defun ome-geiser-setup ()
     (setq geiser-default-implementation 'guile)
     (setq geiser-guile-load-init-file-p t))
@@ -75,14 +77,18 @@ disabled by default.
   (ome-install 'swank-chicken)
 #+END_SRC
 
-** paredit mode
+** paredit mode -- 切换成 smart-parens, 并增加　smartparens 的　strict mode
 geiser 自己也推荐 [[http://www.emacswiki.org/emacs/ParEdit][paredit]]， 看了下特性，挺好的，因此也配置一些，这货也在 melpa
 里面，因此不折腾。去上面页面里面抄点 配置过来。其他的在 [[file:../basic/other.org][other.org]] 里面已经定义了
 后来看见了 smartparens，smartparens 优点是可以支持好多其他的模式里面的括号定义。
 需要时间来适应的说。
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (require 'eldoc) ; if not already loaded
 (eldoc-add-command
    'paredit-backward-delete
    'paredit-close-round)
 #+END_SRC
+
+ #+BEGIN_SRC emacs-lisp
+ (add-hook 'scheme-mode-hook (lambda () (run-hooks 'prelude-lisp-coding-hook)))
+ #+END_SRC
