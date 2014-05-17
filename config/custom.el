@@ -1,7 +1,7 @@
 ;;=========================================================
 ;;============关于 custom 的配置=============================
 ;;=========================================================
-;;Time-stamp: <smallqiang 2014-05-15 17:46:30>
+;;Time-stamp: <smallqiang 2014-05-17 15:27:54>
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -22,7 +22,6 @@
  '(foreground-color "#839496")
  '(helm-locate-command "locate %s -e %s")
  '(menu-bar-mode nil)
- '(org-agenda-files (quote ("~/Dropbox/Docs/WP/todo/waterprinter.org" "~/Dropbox/Docs/乐士/todo/leshi.org" "~/Dropbox/Docs/跑步机/todo/runningpad.org" "~/Notes/org/planning.org" "~/Notes/org/notes.org")))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

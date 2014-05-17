@@ -244,6 +244,7 @@ re-downloaded in order to locate PACKAGE."
 (my-org-load "modules/prog-py.org")
 (my-org-load "modules/prog-tex.org")
 (my-org-load "modules/prog-ros.org")
+(my-org-load "modules/prog-scheme.org")
 (my-org-load "modules/prog-go.org")
 (my-org-load "modules/orgmode.org")
 (my-org-load "modules/erc.org")
