@@ -117,6 +117,21 @@
 #+END_SRC
 
 * 载入其他包
+** 载入判断函数
+简化一下，使用下面的函数就足够了, 没安装的就直接安装
+#+BEGIN_SRC emacs-lisp
+(defun require-package (package &optional min-version no-refresh)
+  "Install given PACKAGE, optionally requiring MIN-VERSION.
+If NO-REFRESH is non-nil, the available package lists will not be
+re-downloaded in order to locate PACKAGE."
+  (if (package-installed-p package min-version)
+      t
+    (if (or (assoc package package-archive-contents) no-refresh)
+        (package-install package)
+      (progn
+        (package-refresh-contents)
+        (require-package package min-version t)))))
+#+END_SRC
 ** 定义载入函数
 主要是从 oh-my-emacs 项目中偷来的， 见
 https://github.com/xiaohanyu/oh-my-emacs/blob/master/ome.org
@@ -125,6 +140,7 @@ https://github.com/xiaohanyu/oh-my-emacs/blob/master/ome.org
 =org-babel-load-file= 为 =my-org-babel-load-file=. 如下
 
 #+BEGIN_SRC emacs-lisp
+(require-package 'org '(8))
 (defun my-org-babel-load-file (file &optional compile)
   "Load Emacs Lisp source code blocks in the Org-mode FILE.
 This function exports the source code using `org-babel-tangle'
@@ -139,10 +155,11 @@ file to byte-code before it is loaded."
 				(nth 5 (or (file-attributes (file-truename file))
 					   (file-attributes file)))))))
 	 (base-name (file-name-base file))
-     ;(dir-name (file-name-directory file))
-     (dir-name (concat my-config-dir "elisp/"))
+	 (dir-name (concat my-config-dir "elisp/"))
 	 (exported-file (concat dir-name "." base-name ".el")))
     ;; tangle if the org-mode file is newer than the elisp file
+    (if (not (file-exists-p dir-name))
+	(make-directory dir-name))
     (unless (and (file-exists-p exported-file)
 		 (> (funcall age file) (funcall age exported-file)))
       (setq exported-file
@@ -217,21 +234,6 @@ single file by simply (ome-load \"ome-module.org\" \"part1\"
       (my-org-babel-load-file file))))
 #+END_SRC
 
-** 载入判断函数
-简化一下，使用下面的函数就足够了, 没安装的就直接安装
-#+BEGIN_SRC emacs-lisp
-(defun require-package (package &optional min-version no-refresh)
-  "Install given PACKAGE, optionally requiring MIN-VERSION.
-If NO-REFRESH is non-nil, the available package lists will not be
-re-downloaded in order to locate PACKAGE."
-  (if (package-installed-p package min-version)
-      t
-    (if (or (assoc package package-archive-contents) no-refresh)
-        (package-install package)
-      (progn
-        (package-refresh-contents)
-        (require-package package min-version t)))))
-#+END_SRC
 ** 载入其他包
 #+BEGIN_SRC emacs-lisp
 (my-org-load "basic/basic.org")

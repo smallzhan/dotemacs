@@ -305,11 +305,7 @@ For usage, execute without arguments."
 (eval-after-load 'eshell
   '(require 'eshell-autojump nil t))
 
-(add-hook 'eshell-mode-hook
-  (lambda ()
-    (smartparens-mode +1)
-    (eldoc-mode +1))
-)
+
 #+END_SRC
 * 其他设置
 

@@ -9,6 +9,7 @@
 #+BEGIN_SRC emacs-lisp
 (require-package 'diminish)
 (require-package 'rainbow-mode)
+(require-package 'elisp-slime-nav)
 
 #+END_SRC
 #+BEGIN_SRC emacs-lisp

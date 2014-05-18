@@ -5,7 +5,7 @@
 
 #+NAME: elpy
 #+BEGIN_SRC emacs-lisp
-;;(require-package 'elpy)
+(require-package 'elpy)
 
 (elpy-enable)
 
@@ -34,16 +34,16 @@
 (unless (fboundp 'tramp-tramp-file-p)
   (defun tramp-tramp-file-p (&rest args) nil))
 
-(eval-when-compile (require 'pylookup))
+;; (eval-when-compile (require 'pylookup))
 
-(setq pylookup-program (concat my-lisp-path "python-utils/pylookup.py"))
-(setq pylookup-db-file (concat my-lisp-path "python-utils/pylookup.db"))
+;; (setq pylookup-program (concat my-lisp-path "python-utils/pylookup.py"))
+;; (setq pylookup-db-file (concat my-lisp-path "python-utils/pylookup.db"))
 
-(autoload 'pylookup-lookup "pylookup"
- "Lookup SEARCH-TERM in the Python HTML indexes." t)
+;; (autoload 'pylookup-lookup "pylookup"
+;;  "Lookup SEARCH-TERM in the Python HTML indexes." t)
 
-(autoload 'pylookup-update "pylookup"
- "Run pylookup-update and create the database at `pylookup-db-file'." t)
+;; (autoload 'pylookup-update "pylookup"
+;;  "Run pylookup-update and create the database at `pylookup-db-file'." t)
 
 (defun annotate-pdb ()
   (interactive)

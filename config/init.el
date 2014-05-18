@@ -26,5 +26,10 @@
 (setq package-user-dir (concat my-config-dir "elpa"))
 (package-initialize)
 
+(unless (fboundp 'org-babel-load-file)
+  (require 'org)
+  (require 'ob)
+  (message "no org")
+)
 (org-babel-load-file (concat my-config-dir "config.org"))
 (put 'dired-find-alternate-file 'disabled nil)

@@ -156,6 +156,7 @@ completionable by auto-complete-clang"
     (message "Error: pkg-config tool not found.")))
 
 (defun ome-auto-complete-clang-setup ()
+  (require-package 'auto-complete-clang-async)
   (require 'auto-complete-clang-async)
   (setq command "echo | g++ -v -x c++ -E - 2>&1 |
                  grep -A 20 starts | grep include | grep -v search")

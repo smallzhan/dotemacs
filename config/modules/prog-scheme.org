@@ -43,6 +43,7 @@ Note:
 #+NAME: geiser
 #+BEGIN_SRC emacs-lisp :file
   (require-package 'geiser)
+  (require-package 'ac-geiser)
 
   (defun ome-geiser-setup ()
     (setq geiser-default-implementation 'guile)

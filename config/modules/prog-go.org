@@ -11,7 +11,7 @@
 	;; (setq exec-path (cons "c:/package/MyGo/bin" exec-path))
 	;; (setq exec-path (cons "e:/package/MyGo/bin" exec-path))))
 
-
+(require-package 'go-autocomplete)
 (require 'go-autocomplete)
 
 #+END_SRC

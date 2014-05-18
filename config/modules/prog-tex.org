@@ -8,6 +8,7 @@
 #+BEGIN_SRC emacs-lisp
 ;;(require 'tex-site)
 ;(load "latex.el" nil t t)
+(require-package 'auctex)
 (load "preview.el" nil t t)
 
 ;(require 'auctex-autoloads)

@@ -2,6 +2,7 @@
 
 * 一般设定
 #+BEGIN_SRC emacs-lisp
+(require-package 'rcodetools)
 (require 'rcodetools)
 (autoload 'ruby-mode "ruby-mode" "Major mode to edit ruby files." t)
 (autoload 'ruby-electric "ruby-electric" "Ruby Electric mode." t)

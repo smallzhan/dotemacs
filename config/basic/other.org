@@ -105,6 +105,7 @@ ido 本身只有寻找文件部分。用了这个之后其他部分都可以使�
 ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= 比他功能多，所以想办法结合
 下。最近先测试用 =helm-M-x= 来替代 =M-x= 看看。 =smex= 那个先放下。
 #+BEGIN_SRC emacs-lisp
+(require-package 'helm)
 (require 'helm-config)
 (helm-mode 1)
 ;;(require 'helm-C-x-b)
@@ -234,12 +235,18 @@ paredit 类似的，但是要自己配置，比较麻烦。
                    :post-handlers
                    '((ome-create-newline-and-enter-sexp "RET"))))
 
+(add-hook 'eshell-mode-hook
+  (lambda ()
+    (smartparens-mode +1)
+    (eldoc-mode +1))
+)
 #+END_SRC
 * expand-region
 从 emacs rocks 里面看到的，主要的用处就是在标记一个代码块的时候可以按照语义结构
 来标记。很有用。包本身在 melpa 里面。介绍见 http://emacsrocks.com/e09.html
 #+BEGIN_SRC emacs-lisp
-(require 'expand-region)
+(require-package 'expand-region)
+;;(require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 (defun er/add-text-mode-expansions ()
@@ -293,6 +300,7 @@ emacs rocks 链接见 http://emacsrocks.com/e13.html
 ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。emacs rocks 也对其进
 行了介绍，见 http://emacsrocks.com/e10.html
 #+BEGIN_SRC emacs-lisp
+(require-package 'ace-jump-mode)
 (autoload
   'ace-jump-mode
   "ace-jump-mode"
@@ -319,9 +327,14 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 * projectile
 很不错管理工程的东西，对于含有 =.git= 的目录直接当做一个工程来管理．
 #+BEGIN_SRC emacs-lisp
+(require-package 'projectile)
 (add-hook 'python-mode-hook 'projectile-on)
 (setq projectile-completion-system 'grizzl)
 
+#+END_SRC
+* linum-relative
+#+BEGIN_SRC emacs-lisp
+(require-package 'linum-relative)
 #+END_SRC
 * 其他琐碎设定
 ** 各种小包的配置
@@ -335,7 +348,7 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (global-set-key (kbd "s-d") 'sdcv-search-current-word)
 
 
-(require 'smodels-mode)
+;; (require 'smodels-mode)
 
 
 ;; these are the lines i use to set up correct auto-ing
@@ -345,13 +358,18 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 ;(autoload 'flex-mode "flex-mode")
 ;(add-to-list 'auto-mode-alist '("\\.l$" . flex-mode))
 
+(require-package 'guru-mode)
 (guru-mode 1)
 
+(require-package 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'html-mode-hook 'emmet-mode)
 (add-hook 'css-mode-hook  'emmet-mode)
 
+(require-package 'dired+)
 (require 'dired+)
+
+(require-package 'magit)
 #+END_SRC
 
 ** uniquify
@@ -394,10 +412,10 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 					auto-mode-alist))
 	  ))
 #+END_SRC
-** modeline-awesome 好玩的货, 与 diminish 配合可以清理　modeline.
+** diminish: 清理　modeline.
 #+BEGIN_SRC emacs-lisp
 (require-package 'diminish)
-;; Use align-left icon for `auto-fill-mode'.
+;; Use align-left icon for `auto-fill-mode'. 需要安装 awesome 字体
 (eval-after-load 'diminish-autoloads
   '(eval-after-load 'simple
     '(progn
@@ -449,9 +467,4 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 (eval-after-load "rainbow-mode"
   '(diminish 'rainbow-mode))
 
-#+END_SRC
-
-* linum-relative
-#+BEGIN_SRC emacs-lisp
-(require-package 'linum-relative)
 #+END_SRC
