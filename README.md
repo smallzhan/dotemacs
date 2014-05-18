@@ -9,8 +9,8 @@ my Emacs configuration
 
 使用的包在需要的时候，如果没有安装，会自动在 melpa 下载。
 
-使用方法
+使用方法:
 
-1. =下载 dotemacs=
-2. =ln -s <path/to/dotemacs> ~/myEmacs; ln -s <path/to/dotemacs/config/init.el> ~/.emacs=
-3. 启动 emacs
+    下载 dotemacs : git clone https://github.com/smallzhan/dotemacs.git 
+    ln -s <path/to/dotemacs> ~/myEmacs; ln -s <path/to/dotemacs/config/init.el> ~/.emacs
+    emacs
