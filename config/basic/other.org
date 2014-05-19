@@ -155,8 +155,8 @@ t)
 (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 #+END_SRC
 
-还有一个包叫做 smartparens， 测试下来和 paredit 差不多，快捷键之类的虽然有和
-paredit 类似的，但是要自己配置，比较麻烦。
+还有一个包叫做 smartparens， 测试下来和 paredit 差不多，快捷键之类的有和
+paredit 类似的，要自己配置，并且　smartparens 的开发比较活跃，因此更换如下。
 #+BEGIN_SRC emacs-lisp
 (require-package 'smartparens)
 (require-package 'rainbow-delimiters)
@@ -328,9 +328,12 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 很不错管理工程的东西，对于含有 =.git= 的目录直接当做一个工程来管理．
 #+BEGIN_SRC emacs-lisp
 (require-package 'projectile)
-(add-hook 'python-mode-hook 'projectile-on)
-(setq projectile-completion-system 'grizzl)
+(require-package 'helm-projectile)
+(require-package 'grizzl)
 
+(projectile-global-mode)
+
+(setq projectile-completion-system 'grizzl)
 #+END_SRC
 * linum-relative
 #+BEGIN_SRC emacs-lisp
@@ -428,7 +431,6 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 
 (add-hook 'prog-mode-hook 'flycheck-mode)
 
-(require-package 'grizzl)
 (setq flycheck-completion-system 'grizzl)
 #+END_SRC
 ** diminish: 清理　modeline.
@@ -438,7 +440,7 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
  (eval-after-load 'diminish-autoloads
    '(eval-after-load 'simple
      '(progn
-       (diminish 'auto-fill-function (concat " " [#xF036]))
+       (diminish 'auto-fill-function)
        (when (string< emacs-version "24.3.50")
           (diminish 'global-visual-line-mode))
         (diminish 'visual-line-mode))))
@@ -463,7 +465,7 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 
  ;; Use the tags icon for `gtags-mode'.
  (add-hook 'gtags-mode-hook '(lambda ()
-   (diminish 'gtags-mode (concat " " [#xF02C]))))
+   (diminish 'gtags-mode )))
 
  (eval-after-load "outline"
    '(diminish 'outline-minor-mode))
