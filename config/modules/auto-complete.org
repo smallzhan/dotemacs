@@ -6,7 +6,6 @@
 
 (require 'auto-complete-config)
 
-(add-to-list 'ac-dictionary-directories (concat my-emacs-path "ac-dict"))
 (setq ac-auto-start 3)
 (setq ac-trigger-commands-on-completing nil)
 (setq ac-dwim t)
@@ -15,6 +14,15 @@
 (setq ac-delay 0.5)
 
 (setq ac-use-quick-help nil)
-(ac-config-default)
 
+(define-key ac-mode-map (kbd "M-/") 'ac-fuzzy-complete)
+(dolist (ac-mode '(text-mode org-mode))
+  (add-to-list 'ac-modes ac-mode))
+(dolist (ac-mode-hook '(text-mode-hook org-mode-hook prog-mode-hook))
+  (add-hook ac-mode-hook
+              (lambda ()
+                (setq ac-fuzzy-enable t)
+                (add-to-list 'ac-sources 'ac-source-files-in-current-dir)
+                (add-to-list 'ac-sources 'ac-source-filename))))
+(ac-config-default)
 #+END_SRC

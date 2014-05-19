@@ -370,6 +370,7 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (require 'dired+)
 
 (require-package 'magit)
+(delete 'Git vc-handled-backends)
 
 (require-package 'powerline)
 (powerline-default-theme)
@@ -426,6 +427,9 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
      (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
 
 (add-hook 'prog-mode-hook 'flycheck-mode)
+
+(require-package 'grizzl)
+(setq flycheck-completion-system 'grizzl)
 #+END_SRC
 ** diminish: 清理　modeline.
 #+BEGIN_SRC emacs-lisp
