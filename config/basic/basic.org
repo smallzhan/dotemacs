@@ -185,9 +185,6 @@
 
 (setq eshell-prompt-regexp "^[^#$\n]*[#$] ")
 
-(setq eshell-aliases-file "eshellalias")
-(defalias 'v 'find-file)
-(defalias 'vo 'find-file-other-window)
 
 (add-hook 'emacs-startup-hook #'(lambda ()
                                  (let ((default-directory (getenv "HOME")))
@@ -305,6 +302,10 @@ For usage, execute without arguments."
   '(require 'eshell-autojump nil t))
 
 
+(setq eshell-aliases-file "eshellalias")
+(defalias 'v 'find-file)
+(defalias 'vo 'find-file-other-window)
+(defalias 'eshell/vim 'eshell/vi)
 #+END_SRC
 * 其他设置
 
