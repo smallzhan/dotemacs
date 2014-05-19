@@ -161,7 +161,6 @@
                   '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))))
 ;;     (add-to-list 'eshell-output-filter-functions 'eshell-handle-ansi-color)))
 
-
 (defun eshell/rpwd2home ()
     (let ((abs-path (eshell/pwd))
           (home-dir (getenv "HOME")))

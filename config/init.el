@@ -17,8 +17,8 @@
 ;;(load-file (concat my-lisp-path "cedet-1.1/common/cedet.el"))
 
 (add-to-list 'load-path my-lisp-path)
-(setq my-conf-path (concat my-emacs-path "config/"))
-(setq my-config-dir (concat my-emacs-path "config/"))
+(defconst my-conf-path (concat my-emacs-path "config/"))
+(defconst my-config-dir (concat my-emacs-path "config/"))
 
 ;;(mapc 'load (directory-files my-conf-path t "\\.el\\'"))
 
@@ -29,7 +29,8 @@
 (unless (fboundp 'org-babel-load-file)
   (require 'org)
   (require 'ob)
-  (message "no org")
 )
+
 (org-babel-load-file (concat my-config-dir "config.org"))
+
 (put 'dired-find-alternate-file 'disabled nil)

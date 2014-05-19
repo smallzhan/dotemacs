@@ -8,15 +8,16 @@
 (require-package 'elpy)
 
 (elpy-enable)
-
-(elpy-use-ipython)
+(when (executable-find "ipython")
+  (elpy-use-ipython))
 
 (elpy-clean-modeline)
+
 (setq elpy-default-minor-modes
-  '(flymake-mode
-	highlight-indentation-mode
-	yas-minor-mode
-	auto-complete-mode))
+   (remove 'flymake-mode
+      elpy-default-minor-modes))
+
+(add-to-list 'elpy-default-minor-modes 'flycheck-mode)
 #+END_SRC
 
 * 其他乱78糟的设置

@@ -370,6 +370,9 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (require 'dired+)
 
 (require-package 'magit)
+
+(require-package 'powerline)
+(powerline-default-theme)
 #+END_SRC
 
 ** uniquify
@@ -412,59 +415,89 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 					auto-mode-alist))
 	  ))
 #+END_SRC
+** flycheck
+#+BEGIN_SRC emacs-lisp
+(require-package 'flycheck)
+(require-package 'flycheck-color-mode-line)
+
+(eval-after-load "flycheck"
+ '(progn
+     (setq flycheck-checkers (delq 'emacs-lisp-checkdoc flycheck-checkers))
+     (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)))
+
+(add-hook 'prog-mode-hook 'flycheck-mode)
+#+END_SRC
 ** diminish: 清理　modeline.
 #+BEGIN_SRC emacs-lisp
-(require-package 'diminish)
-;; Use align-left icon for `auto-fill-mode'. 需要安装 awesome 字体
-(eval-after-load 'diminish-autoloads
-  '(eval-after-load 'simple
-    '(progn
-      (diminish 'auto-fill-function (concat " " [#xF036]))
-      (when (string< emacs-version "24.3.50")
-         (diminish 'global-visual-line-mode))
-       (diminish 'visual-line-mode))))
+ (require-package 'diminish)
+ ;; Use align-left icon for `auto-fill-mode'. 需要安装 awesome 字体
+ (eval-after-load 'diminish-autoloads
+   '(eval-after-load 'simple
+     '(progn
+       (diminish 'auto-fill-function (concat " " [#xF036]))
+       (when (string< emacs-version "24.3.50")
+          (diminish 'global-visual-line-mode))
+        (diminish 'visual-line-mode))))
 
-;; Use thumbs-up / thumbs-down for flymake status.
-;; We need to reimplement `flymake-report-status' to make this happen.
-(eval-after-load 'flymake
-  '(defun flymake-report-status (e-w &optional status)
-  "Show status in mode line."
-  (when e-w
-    (setq flymake-mode-line-e-w e-w))
-  (when status
-    (setq flymake-mode-line-status status))
-  (let* ((mode-line " "))
-    (if (> (length flymake-mode-line-e-w) 0)
-      (setq mode-line (concat mode-line [#xF165] flymake-mode-line-e-w))
-    (setq mode-line (concat mode-line [#xF164])))
-  (setq mode-line (concat mode-line flymake-mode-line-status))
-  (setq flymake-mode-line mode-line)
-  (force-mode-line-update))))
+ ;; ;; Use thumbs-up / thumbs-down for flymake status.
+ ;; ;; We need to reimplement `flymake-report-status' to make this happen.
+ ;; (eval-after-load 'flymake
+ ;;   '(defun flymake-report-status (e-w &optional status)
+ ;;   "Show status in mode line."
+ ;;   (when e-w
+ ;;     (setq flymake-mode-line-e-w e-w))
+ ;;   (when status
+ ;;     (setq flymake-mode-line-status status))
+ ;;   (let* ((mode-line " "))
+ ;;     (if (> (length flymake-mode-line-e-w) 0)
+ ;;       (setq mode-line (concat mode-line [#xF165] flymake-mode-line-e-w))
+ ;;     (setq mode-line (concat mode-line [#xF164])))
+ ;;   (setq mode-line (concat mode-line flymake-mode-line-status))
+ ;;   (setq flymake-mode-line mode-line)
+ ;;   (force-mode-line-update))))
 
-;; Use the tags icon for `gtags-mode'.
-(add-hook 'gtags-mode-hook '(lambda ()
-  (diminish 'gtags-mode (concat " " [#xF02C]))))
 
-(eval-after-load "outline"
-  '(diminish 'outline-minor-mode))
+ ;; Use the tags icon for `gtags-mode'.
+ (add-hook 'gtags-mode-hook '(lambda ()
+   (diminish 'gtags-mode (concat " " [#xF02C]))))
 
-(eval-after-load "eldoc"
-  '(diminish 'eldoc-mode))
+ (eval-after-load "outline"
+   '(diminish 'outline-minor-mode))
 
-;; diminish third-party mode
-(eval-after-load "elisp-slime-nav"
+ (eval-after-load "eldoc"
+   '(diminish 'eldoc-mode))
+
+ ;; diminish third-party mode
+ (eval-after-load "elisp-slime-nav"
   '(diminish 'elisp-slime-nav-mode))
 
-(eval-after-load "helm"
-  '(diminish 'helm-mode))
+ (eval-after-load "helm"
+   '(diminish 'helm-mode))
+
+(eval-after-load "auto-complete"
+  '(diminish 'auto-complete-mode " Ⓐ"))
+
+(eval-after-load "yas-minor-mode"
+  '(diminish 'yas-minor-mode))
+
+(eval-after-load "yasnippet"
+  '(diminish 'yas-minor-mode " Ⓨ"))
 
 (eval-after-load "projectile"
-  '(diminish 'projectile-mode "Prjl"))
+  '(diminish 'projectile-mode  " Ⓟ"))
+
+;; (eval-after-load "smartparens"
+;;  '(diminish 'smartparens-mode " (Ⓢ)"))
 
 (eval-after-load "undo-tree"
   '(diminish 'undo-tree-mode))
 
-(eval-after-load "rainbow-mode"
-  '(diminish 'rainbow-mode))
+(eval-after-load 'flycheck
+  '(diminish 'flycheck-mode))
 
+(eval-after-load "rainbow-mode"
+   '(diminish 'rainbow-mode))
+
+(eval-after-load "magit"
+'(diminish 'magit-auto-revert-mode))
 #+END_SRC

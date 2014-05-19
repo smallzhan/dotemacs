@@ -1,8 +1,9 @@
 ;;; tango-dark-theme.el --- Tango-based custom theme for faces
 
-;; Copyright (C) 2010-2012 Free Software Foundation, Inc.
+;; Copyright (C) 2010-2014 Free Software Foundation, Inc.
 
-;; Authors: Chong Yidong <cyd@stupidchicken>
+;; Authors: Guoqiang Jin <ustczhan@gmail.com>
+;;          Chong Yidong <cyd@stupidchicken>
 ;;          Jan Moringen <jan.moringen@uni-bielefeld.de>
 
 ;; This file is part of GNU Emacs.
@@ -24,6 +25,10 @@
 
 ;; The colors in this theme come from the Tango palette, which is in
 ;; the public domain: http://tango.freedesktop.org/
+
+;;; Changlog
+
+;; 2014-05-19(Guoqiang Jin):  add color faces for flycheck and rainbow-delimeters.
 
 ;;; Code:
 
@@ -244,10 +249,26 @@ Semantic, and Ansi-Color faces are included.")
    `(ediff-fine-diff-B ((,class (:background ,choc-3))))
    `(ediff-even-diff-B ((,class (:background ,alum-5.5))))
    `(ediff-odd-diff-B ((,class (:background ,alum-5.5))))
+    ;;;;; flycheck
+   `(flycheck-error
+     ((((supports :underline (:style wave)))
+       (:underline (:style wave :color ,red-0) :inherit unspecified))
+      (t (:foreground ,red-0 :weight bold :underline t))))
+   `(flycheck-warning
+     ((((supports :underline (:style wave)))
+       (:underline (:style wave :color "#F0DFAF") :inherit unspecified))
+      (t (:foreground "#F0DFAF" :weight bold :underline t))))
+   `(flycheck-info
+     ((((supports :underline (:style wave)))
+       (:underline (:style wave :color "#93E0E3") :inherit unspecified))
+      (t (:foreground "#93E0E3" :weight bold :underline t))))
+   `(flycheck-fringe-error ((t (:foreground ,red-0 :weight bold))))
+   `(flycheck-fringe-warning ((t (:foreground "#F0DFAF" :weight bold))))
+   `(flycheck-fringe-info ((t (:foreground "#93E0E3" :weight bold))))
    ;; Flyspell faces
    `(flyspell-duplicate ((,class (:underline ,orange-1))))
    `(flyspell-incorrect ((,class (:underline ,red-1))))
-   ;; Semantic faces
+   ;; ess ecb faces
    `(ess-jb-comment-face ((t (:background "#2e3436" :foreground "#888a85" :slant italic))))
    `(ess-jb-hide-face ((t (:background "#2e3436" :foreground "#243436"))))
    `(ess-jb-h1-face ((t (:height 1.6 :foreground "dodger blue" :slant normal))))
@@ -255,11 +276,26 @@ Semantic, and Ansi-Color faces are included.")
    `(ess-jb-h3-face ((t (:height 1.2 :foreground "#edd400" :slant normal))))
    `(ecb-default-highlight-face ((t (:background "#729fcf"))))
    `(ecb-tag-header-face ((t (:background "#f57900"))))
+   ;; magit
    `(magit-header ((t (:foreground "#edd400"))))
    `(magit-diff-add ((t (:foreground "#729fcf" :background "#222"))))
    ;;`(magit-item-highlight ((t (:weight extra-bold :inverse-video t))))
    `(magit-item-highlight ((,class (:background , alum-5.5))))
    `(magit-diff-del ((,class (:background "#222"))))
+   ;;; rainbow-delimiters
+   `(rainbow-delimiters-depth-1-face ((t (:foreground ,alum-1))))
+   `(rainbow-delimiters-depth-2-face ((t (:foreground "#BFEBBF"))))
+   `(rainbow-delimiters-depth-3-face ((t (:foreground "#D0BF8F"))))
+   `(rainbow-delimiters-depth-4-face ((t (:foreground "#93E0E3"))))
+   `(rainbow-delimiters-depth-5-face ((t (:foreground "#9FC59F"))))
+   `(rainbow-delimiters-depth-6-face ((t (:foreground "#94BFF3"))))
+   `(rainbow-delimiters-depth-7-face ((t (:foreground "#E0CF9F"))))
+   `(rainbow-delimiters-depth-8-face ((t (:foreground "#8FB28F"))))
+   `(rainbow-delimiters-depth-9-face ((t (:foreground "#6CA0A3"))))
+   `(rainbow-delimiters-depth-10-face ((t (:foreground "#DFAF8F"))))
+   `(rainbow-delimiters-depth-11-face ((t (:foreground "#7F9F7F"))))
+   `(rainbow-delimiters-depth-12-face ((t (:foreground "#366060"))))
+   ;;; semantic mode
    `(semantic-decoration-on-includes ((,class (:underline ,alum-4))))
    `(semantic-decoration-on-private-members-face
      ((,class (:background ,plum-3))))
