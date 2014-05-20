@@ -120,6 +120,11 @@
 (setq adaptive-fill-first-line-regexp "^\\* *$")
 
 
+;; Auto refresh buffers
+(global-auto-revert-mode 1)
+;; Also auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
 
 ;;(global-set-key (quote [8388640]) (quote set-mark-command))
  ;;绑定 set-mark-command 到s-<SPC>
