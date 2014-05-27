@@ -11,8 +11,8 @@ ERC 是 emacs 内置的 irc 聊天软件，还有一个是 rcirc， 不过貌似
 (require 'erc-fill)
 (require 'erc-autoaway)
 (require 'erc-log)
-(require 'erc-nick-colors)
-                                        ;(require 'ssl)
+;; (require 'erc-nick-colors)
+;; (require 'ssl)
 
 (load-file (concat my-emacs-dir  "erc/emacs-erc-passwd.el"))
 (erc-netsplit-mode nil)                 ; I don't need this.
@@ -23,9 +23,9 @@ ERC 是 emacs 内置的 irc 聊天软件，还有一个是 rcirc， 不过貌似
 (setq erc-away-nickname "zhan")
 (setq erc-user-full-name "Guoqiang Jin")
 
-;(setq erc-auto-set-away t)
-;(setq erc-auto-discard-away t)
-;(setq erc-autoaway-idle-seconds 600)
+;; (setq erc-auto-set-away t)
+;; (setq erc-auto-discard-away t)
+;; (setq erc-autoaway-idle-seconds 600)
 
 (erc-services-mode 1)
 (setq erc-prompt-for-nickserv-password nil)
@@ -45,10 +45,13 @@ ERC 是 emacs 内置的 irc 聊天软件，还有一个是 rcirc， 不过貌似
 (setq erc-ignore-list nil)
 (setq erc-hide-list
       '("JOIN" "PART" "QUIT" "MODE" "NICK"))
+  (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT"))
+
+ (setq erc-input-line-position -2)
 
 (erc-match-mode 1)
 (setq erc-current-nick-highlight-type 'nick-or-keyword)
-(setq erc-keywords '("zhan" "smallzhan" "鲇鱼"))
+(setq erc-keywords '("\\bzhan\\b" "\\bsmallzhan\\b" "鲇鱼"))
 (setq erc-pals nil)
 (defface erc-query-buffer-face '((t (:bold t :foreground "magenta")))
   "ERC face for your query buffers."
@@ -73,10 +76,10 @@ ERC 是 emacs 内置的 irc 聊天软件，还有一个是 rcirc， 不过貌似
                                      'front-nonsticky t))))
 
 (setq erc-autojoin-channels-alist '(("freenode.net"
-                                        ;"#emacs" "#scheme" "#ubuntu-cn")))
-                                     "#ubuntu-cn" "#ppmm" "#gentoo-cn" "#emacs")
-;                                   ("irc.linuxfire.com.cn" "#linuxfire")
-                                    ("oftc.net" "#emacs-cn")))
+                                     "#ubuntu-cn" "#gentoo-cn" "#emacs")
+									;; ("irc.linuxfire.com.cn" "#linuxfire")
+                                  ;;  ("oftc.net" "#emacs-cn")
+									))
 
 (setq erc-quit-reason-various-alist
       '(("bye" "Goodbye Everyone...")
@@ -106,58 +109,59 @@ ERC 是 emacs 内置的 irc 聊天软件，还有一个是 rcirc， 不过貌似
 (defun erc-start ()
   (interactive)
   (erc :server "ipv6.chat.freenode.net" :port 6667 :nick erc-nick :password freenodepw)
- ; (erc :server "irc.linuxfire.com.cn" :port 6668 :nick erc-nick :password firepw)
-  (erc :server "irc.oftc.net" :port 7000 :nick erc-nick :password oftcpw))
+  ;; (erc :server "irc.linuxfire.com.cn" :port 6668 :nick erc-nick :password firepw)
+  ;; (erc :server "irc.oftc.net" :port 7000 :nick erc-nick :password oftcpw)
+  )
 
 (defun erc-cmd-HOWMANY (&rest ignore)
-    "Display how many users (and ops) the current channel has."
-    (erc-display-message nil 'notice (current-buffer)
-                         (let ((hash-table (with-current-buffer
-                                               (erc-server-buffer)
-                                             erc-server-users))
-                               (users 0)
-                               (ops 0))
-                           (maphash (lambda (k v)
-                                      (when (member (current-buffer)
-                                                    (erc-server-user-buffers v))
-                                        (incf users))
-                                      (when (erc-channel-user-op-p k)
-                                        (incf ops)))
-                                    hash-table)
-                           (format
-                            "There are %s users (%s ops) on the current channel"
-                            users ops))))
+  "Display how many users (and ops) the current channel has."
+  (erc-display-message nil 'notice (current-buffer)
+					   (let ((hash-table (with-current-buffer
+											 (erc-server-buffer)
+										   erc-server-users))
+							 (users 0)
+							 (ops 0))
+						 (maphash (lambda (k v)
+									(when (member (current-buffer)
+												  (erc-server-user-buffers v))
+									  (incf users))
+									(when (erc-channel-user-op-p k)
+									  (incf ops)))
+								  hash-table)
+						 (format
+						  "There are %s users (%s ops) on the current channel"
+						  users ops))))
 
 (defun erc-cmd-SHOW (&rest form)
-    "Eval FORM and send the result and the original form as:
+  "Eval FORM and send the result and the original form as:
  FORM => (eval FORM)."
-    (let* ((form-string (mapconcat 'identity form " "))
-           (result
-            (condition-case err
-                (eval (read-from-whole-string form-string))
-              (error
-               (format "Error: %s" error)))))
-      (erc-send-message (format "%s => %S" form-string result))))
+  (let* ((form-string (mapconcat 'identity form " "))
+		 (result
+		  (condition-case err
+			  (eval (read-from-whole-string form-string))
+			(error
+			 (format "Error: %s" error)))))
+	(erc-send-message (format "%s => %S" form-string result))))
 
 
                                         ;(message "world")
-(add-hook 'erc-mode-hook
-            '(lambda ()
-               (require 'erc-pcomplete)
-               (pcomplete-erc-setup)
-               (erc-completion-mode 1)))
+;; (add-hook 'erc-mode-hook
+;; 		  '(lambda ()
+;; 			 (require 'erc-pcomplete)
+;; 			 (pcomplete-erc-setup)
+;; 			 (erc-completion-mode 1)))
 (add-hook 'erc-mode-hook 'erc-add-scroll-to-bottom)
-  (setq erc-auto-query 'buffer)
-  ;;(require 'smiley)
-  ;;(add-to-list 'smiley-regexp-alist '("\\(:-?]\\)\\W" 1 "forced"))
-  ;;(add-to-list 'smiley-regexp-alist '("\\s-\\(:-?/\\)\\W" 1 "wry"))
-  ;;(add-to-list 'smiley-regexp-alist '("\\(:-?(\\)\\W" 1 "sad"))
-  ;;(add-to-list 'smiley-regexp-alist '("\\((-?:\\)\\W" 1 "reverse-smile"))
-  ;;(add-to-list 'smiley-regexp-alist '("\\(:-?D\\)\\W" 1 "grin"))
-  ;;(add-to-list 'smiley-regexp-alist '("\\(:-?P\\)\\W" 1 "poke"))
-  ;;(message "smile")
-  ;;(setq erc-sound-path '("~/.erc/sounds")
-  ;;(setq erc-default-sound "~/.erc/sounds/login.wav")
+(setq erc-auto-query 'buffer)
+;;(require 'smiley)
+;;(add-to-list 'smiley-regexp-alist '("\\(:-?]\\)\\W" 1 "forced"))
+;;(add-to-list 'smiley-regexp-alist '("\\s-\\(:-?/\\)\\W" 1 "wry"))
+;;(add-to-list 'smiley-regexp-alist '("\\(:-?(\\)\\W" 1 "sad"))
+;;(add-to-list 'smiley-regexp-alist '("\\((-?:\\)\\W" 1 "reverse-smile"))
+;;(add-to-list 'smiley-regexp-alist '("\\(:-?D\\)\\W" 1 "grin"))
+;;(add-to-list 'smiley-regexp-alist '("\\(:-?P\\)\\W" 1 "poke"))
+;;(message "smile")
+;;(setq erc-sound-path '("~/.erc/sounds")
+;;(setq erc-default-sound "~/.erc/sounds/login.wav")
                                         ;(setq erc-play-command "aplay")
                                         ;(message "play")
                                         ;(add-hook 'erc-text-matched-hook
@@ -169,23 +173,67 @@ ERC 是 emacs 内置的 irc 聊天软件，还有一个是 rcirc， 不过貌似
                                         ;             (play-sound-file "/home/zhan/.erc/sounds/send.wav")))))
 
 
-  ;; (add-hook 'erc-send-pre-hook 'erc-maybe-h4x0r)
+;; (add-hook 'erc-send-pre-hook 'erc-maybe-h4x0r)
 
-  ;; (define-minor-mode erc-h4x0r-mode
-  ;;   "Toggle automatic usage of h4x0r code for everything you type in ERC.")
+;; (define-minor-mode erc-h4x0r-mode
+;;   "Toggle automatic usage of h4x0r code for everything you type in ERC.")
 
-  ;; (defun erc-maybe-h4x0r (ignore)
-  ;;   "Change the text to h4x0r code, if `erc-h4x0r-mode' is non-nil."
-  ;;   (when erc-h4x0r-mode
-  ;;     (with-temp-buffer
-  ;;    (insert str)
-  ;;    (erc-h4x0r)
-  ;;    (setq str (buffer-string)))))
+;; (defun erc-maybe-h4x0r (ignore)
+;;   "Change the text to h4x0r code, if `erc-h4x0r-mode' is non-nil."
+;;   (when erc-h4x0r-mode
+;;     (with-temp-buffer
+;;    (insert str)
+;;    (erc-h4x0r)
+;;    (setq str (buffer-string)))))
 
-  ;; (defun erc-h4x0r ()
-  ;;   "Transform the buffer into h4x0r code."
-  ;;   (h4x0r-region (point-min) (point-max)))
+;; (defun erc-h4x0r ()
+;;   "Transform the buffer into h4x0r code."
+;;   (h4x0r-region (point-min) (point-max)))
 
-  ;; (autoload 'h4x0r-region "h4x0r")
+;; (autoload 'h4x0r-region "h4x0r")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; erc color nicks
+(defmacro unpack-color (color red green blue &rest body)
+  `(let ((,red   (car ,color))
+         (,green (car (cdr ,color)))
+         (,blue  (car (cdr (cdr ,color)))))
+     ,@body))
+
+(defun rgb-to-html (color)
+  (unpack-color color red green blue
+   (concat "#" (format "%02x%02x%02x" red green blue))))
+
+(defun hexcolor-luminance (color)
+  (unpack-color color red green blue
+   (floor (+ (* 0.299 red) (* 0.587 green) (* 0.114 blue)))))
+
+(defun invert-color (color)
+  (unpack-color color red green blue
+   `(,(- 255 red) ,(- 255 green) ,(- 255 blue))))
+
+(defun erc-get-color-for-nick (nick dark)
+  (let* ((hash     (md5 (downcase nick)))
+         (red      (mod (string-to-number (substring hash 0 10) 16) 256))
+         (blue     (mod (string-to-number (substring hash 10 20) 16) 256))
+         (green    (mod (string-to-number (substring hash 20 30) 16) 256))
+         (color    `(,red ,green ,blue)))
+    (rgb-to-html (if (if dark (< (hexcolor-luminance color) 85)
+                       (> (hexcolor-luminance color) 170))
+                     (invert-color color)
+                   color))))
+
+(defun erc-highlight-nicknames ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "\\w+" nil t)
+      (let* ((bounds (bounds-of-thing-at-point 'word))
+             (nick   (buffer-substring-no-properties (car bounds) (cdr bounds))))
+        (when (erc-get-server-user nick)
+          (put-text-property
+           (car bounds) (cdr bounds) 'face
+           (cons 'foreground-color (erc-get-color-for-nick nick 't))))))))
+
+(add-hook 'erc-insert-modify-hook 'erc-highlight-nicknames)
 
 #+END_SRC
