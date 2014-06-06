@@ -502,11 +502,14 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
   '(diminish 'flycheck-mode))
 
 (eval-after-load "rainbow-mode"
-   '(diminish 'rainbow-mode))
+  '(diminish 'rainbow-mode))
 
 (eval-after-load 'auto-revert-mode
-   '(diminish 'auto-revert-mode))
+  '(diminish 'auto-revert-mode))
 
 (eval-after-load "magit"
-'(diminish 'magit-auto-revert-mode))
+  '(diminish 'magit-auto-revert-mode))
+
+(eval-after-load "abbrev"
+  '(diminish 'abbrev-mode))
 #+END_SRC

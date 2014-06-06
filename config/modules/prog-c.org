@@ -133,10 +133,12 @@ gtags 主要用于浏览代码的，加上 pulse 可以很容易的显示目前�
 #+END_SRC
 
 * auto-complete 设定
+** auto-complete-clang-async 方式
 采用 auto-complete-clang-async 来设置 clang 的补全。
 从 Oh-my-emacs 中拿来的 pkg-config 的设置以及 clang 的补全设置。
+这个包更新太不积极了。暂时搁置。
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun ome-pkg-config-enable-clang-flag (pkg-config-lib)
   "This function will add necessary header file path of a
 specified by `pkg-config-lib' to `ac-clang-flags', which make it
@@ -146,8 +148,8 @@ completionable by auto-complete-clang"
       (if (= (shell-command
               (format "pkg-config %s" pkg-config-lib))
              0)
-          (setq ac-clang-flags
-                (append ac-clang-flags
+          (setq ac-clang-cflags
+                (append ac-clang-cflags
                         (split-string
                          (shell-command-to-string
                           (format "pkg-config --cflags-only-I %s"
@@ -155,42 +157,79 @@ completionable by auto-complete-clang"
         (message "Error, pkg-config lib %s not found." pkg-config-lib))
     (message "Error: pkg-config tool not found.")))
 
-(defun ome-auto-complete-clang-setup ()
-  (require-package 'auto-complete-clang-async)
-  (require 'auto-complete-clang-async)
-  (setq command "echo | g++ -v -x c++ -E - 2>&1 |
-                 grep -A 20 starts | grep include | grep -v search")
-  (setq ac-clang-flags
-        (mapcar (lambda (item)
-                  (concat "-I" item))
-                (split-string
-                 (shell-command-to-string command))))
-  ;; completion for C/C++ macros.
-  (push "-code-completion-macros" ac-clang-flags)
-  (push "-code-completion-patterns" ac-clang-flags)
-  (dolist (mode-hook '(c-mode-hook c++-mode-hook))
-    (add-hook mode-hook
-              (lambda ()
-                (add-to-list 'ac-sources 'ac-source-clang)))))
+;; (defun ome-auto-complete-clang-setup ()
+;;   (require-package 'auto-complete-clang-async)
+;;   (require 'auto-complete-clang-async)
+;;   (setq command "echo | g++ -v -x c++ -E - 2>&1 |
+;;                  grep -A 20 starts | grep include | grep -v search")
+;;   (setq ac-clang-cflags
+;;         (mapcar (lambda (item)
+;;                   (concat "-I" item))
+;;                 (split-string
+;;                  (shell-command-to-string command))))
+;;   ;; completion for C/C++ macros.
+;;   (push "-code-completion-macros" ac-clang-cflags)
+;;   (push "-code-completion-patterns" ac-clang-cflags)
+;;   (dolist (mode-hook '(c-mode-hook c++-mode-hook))
+;;     (add-hook mode-hook
+;;               (lambda ()
+;;                 (add-to-list 'ac-sources 'ac-source-clang-async)))))
+;;
+;; (when (eq system-type 'gnu/linux)
+;;  (setq ac-clang-complete-executable (concat my-emacs-path "bin/clang-complete"))
+;;  (ome-auto-complete-clang-setup))
 
-(when (eq system-type 'gnu/linux)
- (setq ac-clang-complete-executable (concat my-emacs-path "clang-complete"))
- (ome-auto-complete-clang-setup))
-
+(require-package 'auto-complete-clang-async)
 
 (defun my/load-clang-completion()
   (interactive)
   (when (not (eq system-type 'windows-nt))
-	(setq ac-clang-complete-executable (concat my-emacs-path "clang-complete"))
+    (require 'auto-complete-clang-async)
+	(setq ac-clang-complete-executable (concat my-emacs-path "bin/clang-complete"))
 	(setq ac-sources '(ac-source-clang-async))
 	(ac-clang-launch-completion-process)))
 
 (defun my/unload-clang-completion()
   (interactive)
-  (when (not (eq system-tyle 'windows-nt))
+  (when (not (eq system-type 'windows-nt))
 	(setq ac-sources '(ac-source-gtags))
 	(ac-clang-shutdown-process)))
 #+END_SRC
+** irony-mode 方式
+irony 一方面功能比 async 多，不过还是先观望一阵子。不在 melpa 里面，不过作者更新
+很勤快，应该很快就完整起来了，虽然现在用起来还有点怪异。先试试呗。
+#+BEGIN_SRC emacs-lisp
+;; (require-package 'irony-mode)
+(add-to-list 'load-path (concat my-lisp-path "irony-mode/"))
+
+;; (require 'auto-complete)
+;; (require 'yasnippet)
+
+
+;; the ac plugin will be activated in each buffer using irony-mode
+;;(irony-enable 'ac)             ; hit C-RET to trigger completion
+
+(setq irony-server-install-prefix my-emacs-path)
+
+(defun my-c++-hooks ()
+  (require 'irony) ;Note: hit `C-c C-b' to open build menu
+  (require 'irony-pp)
+  (require 'ac-irony)
+  ;; "Enable the hooks in the preferred order: 'yas -> auto-complete -> irony'."
+  ;; be cautious, if yas is not enabled before (auto-complete-mode 1), overlays
+  ;; *may* persist after an expansion.
+  (yas/minor-mode-on)
+  (auto-complete-mode 1)
+  (add-to-list 'ac-sources 'ac-source-irony)
+  ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: php-mode
+  (when (member major-mode irony-supported-major-modes)
+    (irony-mode 1)))
+
+(add-hook 'c++-mode-hook 'my-c++-hooks)
+(add-hook 'c-mode-hook 'my-c++-hooks)
+
+#+END_SRC
+
 * 编辑 makefile 的设定
 #+BEGIN_SRC emacs-lisp
 (add-hook 'makefile-mode-hook

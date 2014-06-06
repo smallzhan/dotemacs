@@ -1,7 +1,7 @@
 ;;=========================================================
 ;;============关于 custom 的配置=============================
 ;;=========================================================
-;;Time-stamp: <smallqiang 2014-05-26 21:08:31>
+;;Time-stamp: <smallqiang 2014-06-05 11:38:55>
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -12,6 +12,7 @@
  '(custom-enabled-themes (quote (tangotango)))
  '(custom-safe-themes (quote ("c57df0604a534991aed8e3240cc28b22c678d8e575a218f2d8eae8428743c869" default)))
  '(elpy-rpc-backend "jedi")
+ ;;'(irony-server-executable "/home/smallqiang/myEmacs/bin/irony-server" nil (irony))
  '(menu-bar-mode nil)
  '(safe-local-variable-values (quote ((python-shell-completion-string-code . "';'.join(get_ipython().Completer.all_completions('''%s'''))
 ") (python-shell-completion-module-string-code . "';'.join(module_completion('''%s'''))
