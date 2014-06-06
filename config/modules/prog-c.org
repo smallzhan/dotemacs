@@ -198,7 +198,7 @@ completionable by auto-complete-clang"
 ** irony-mode 方式
 irony 一方面功能比 async 多，不过还是先观望一阵子。不在 melpa 里面，不过作者更新
 很勤快，应该很快就完整起来了，虽然现在用起来还有点怪异。先试试呗。
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; (require-package 'irony-mode)
 (add-to-list 'load-path (concat my-lisp-path "irony-mode/"))
 
@@ -229,7 +229,32 @@ irony 一方面功能比 async 多，不过还是先观望一阵子。不在 mel
 (add-hook 'c-mode-hook 'my-c++-hooks)
 
 #+END_SRC
+这个是老版本的配置，感觉老版本很多方面还是很好用的。
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path (concat my-lisp-path "irony-mode/"))
 
+
+
+(defun my-c++-hooks ()
+  "Enable the hooks in the preferred order: 'yas -> auto-complete -> irony'."
+  ;; be cautious, if yas is not enabled before (auto-complete-mode 1), overlays
+  ;; *may* persist after an expansion.
+  (require 'irony)
+  (require 'irony-pp)
+
+  (setq irony-server-executable (expand-file-name (concat my-emacs-path "bin/irony-server")))
+  (irony-enable 'ac)
+  (yas/minor-mode-on)
+  (auto-complete-mode 1)
+
+  ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: php-mode
+  (when (member major-mode irony-known-modes)
+    (irony-mode 1)))
+
+(add-hook 'c++-mode-hook 'my-c++-hooks)
+(add-hook 'c-mode-hook 'my-c++-hooks)
+
+#+END_SRC
 * 编辑 makefile 的设定
 #+BEGIN_SRC emacs-lisp
 (add-hook 'makefile-mode-hook
