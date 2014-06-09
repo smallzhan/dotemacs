@@ -393,7 +393,7 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
   )
 
 ;; Rename the buffer as part of the cmake-mode
-
+(require-package 'cmake-mode)
 (defun cmake-rename-buffer ()
   "Renames a CMakeLists.txt buffer to cmake-<directory name>."
   (interactive)
@@ -410,14 +410,14 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
   )
 
 (add-hook 'cmake-mode-hook (function cmake-rename-buffer))
-(if (eq system-type 'windows-nt)
-	(progn
-	  (require 'cmake-mode)
-	  (setq auto-mode-alist
-			(append '(("CMakeLists\\.txt\\'" . cmake-mode)
-					  ("\\.cmake\\'" . cmake-mode))
-					auto-mode-alist))
-	  ))
+;; (if (eq system-type 'windows-nt)
+;; 	(progn
+;; 	  (require 'cmake-mode)
+;; 	  (setq auto-mode-alist
+;; 			(append '(("CMakeLists\\.txt\\'" . cmake-mode)
+;; 					  ("\\.cmake\\'" . cmake-mode))
+;; 					auto-mode-alist))
+;; 	  ))
 #+END_SRC
 ** flycheck
 #+BEGIN_SRC emacs-lisp
