@@ -1,0 +1,8 @@
+#+TITLE: 自动补全 auto-complete 设定
+* 简单的配置
+ 其实简单配置就够了，其他的部分都放到分别的配置里面去了
+#+BEGIN_SRC emacs-lisp
+(require-package 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+
+#+END_SRC

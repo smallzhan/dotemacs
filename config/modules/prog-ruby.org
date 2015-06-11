@@ -35,7 +35,7 @@
 
 * auto-complete 的配置
   采用 rcodetools， 貌似效果一般般
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun my-ruby-mode-setup()
   (setq ac-sources (append
 					'(ac-source-yasnippet

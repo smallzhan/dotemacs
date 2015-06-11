@@ -86,7 +86,7 @@
 #+BEGIN_SRC emacs-lisp
 ;; (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
@@ -98,7 +98,7 @@
 ;;   (package-install-from-buffer  (package-buffer-info) 'single))
 #+END_SRC
 ** 一些简单配置
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq url-http-attempt-keepalives nil)
 
 (defadvice package-compute-transaction
@@ -238,17 +238,17 @@ single file by simply (ome-load \"ome-module.org\" \"part1\"
 (my-org-load "basic/basic.org")
 (my-org-load "basic/own.org")
 (my-org-load "basic/other.org")
-(my-org-load "modules/auto-complete.org")
+(my-org-load "modules/company.org")
 (my-org-load "modules/yasnippet.org")
 (my-org-load "modules/prog-elisp.org")
 (my-org-load "modules/prog-c.org")
 (my-org-load "modules/prog-py.org")
 (my-org-load "modules/prog-tex.org")
-(my-org-load "modules/prog-ros.org")
+;;(my-org-load "modules/prog-ros.org")
 (my-org-load "modules/prog-scheme.org")
-(my-org-load "modules/prog-go.org")
+;;(my-org-load "modules/prog-go.org")
 (my-org-load "modules/orgmode.org")
-(my-org-load "modules/erc.org")
+;;(my-org-load "modules/erc.org")
 (my-org-load "modules/calendar.org")
 (my-org-load "modules/keybinding.org")
 

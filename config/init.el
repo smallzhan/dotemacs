@@ -22,7 +22,7 @@
 
 ;;(mapc 'load (directory-files my-conf-path t "\\.el\\'"))
 
-;(require 'package)
+;;(require 'package)
 (setq package-user-dir (concat my-config-dir "elpa"))
 (package-initialize)
 

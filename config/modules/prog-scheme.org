@@ -43,23 +43,23 @@ Note:
 #+NAME: geiser
 #+BEGIN_SRC emacs-lisp :file
   (require-package 'geiser)
-  (require-package 'ac-geiser)
+ ;; (require-package 'ac-geiser)
 
   (defun ome-geiser-setup ()
     (setq geiser-default-implementation 'guile)
     (setq geiser-guile-load-init-file-p t))
 
-  (defun ome-ac-geiser-setup ()
-    (add-hook 'geiser-mode-hook 'ac-geiser-setup)
-    (add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
-    (eval-after-load "auto-complete"
-      '(add-to-list 'ac-modes 'geiser-repl-mode)))
+ ;; (defun ome-ac-geiser-setup ()
+ ;;   (add-hook 'geiser-mode-hook 'ac-geiser-setup)
+ ;;   (add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
+ ;;   (eval-after-load "auto-complete"
+ ;;     '(add-to-list 'ac-modes 'geiser-repl-mode)))
 
-  (when (or (executable-find "guile") (executable-find "racket"))
-    (progn
-      (ome-geiser-setup)
-      (ome-ac-geiser-setup)))
-  ;; (ome-install 'quack)
+ ;; (when (or (executable-find "guile") (executable-find "racket"))
+ ;;   (progn
+ ;;     (ome-geiser-setup)
+ ;;     (ome-ac-geiser-setup)))
+ ;; ;; (ome-install 'quack)
 #+END_SRC
 
 Actually, the official SLIME contrib has some swank backends for scheme

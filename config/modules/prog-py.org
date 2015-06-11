@@ -4,22 +4,29 @@
 在 elpy 的强势下，其他一切的 python 配置都没啥了，包括格式检查，文档，补全等等
 
 #+NAME: elpy
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (require-package 'elpy)
 
 (elpy-enable)
 (when (executable-find "ipython")
   (elpy-use-ipython))
 
-(elpy-clean-modeline)
+;;(elpy-clean-modeline)
 
-(setq elpy-default-minor-modes
-   (remove 'flymake-mode
-      elpy-default-minor-modes))
+;;(setq elpy-default-minor-modes
+;;   (remove 'flymake-mode
+;;      elpy-default-minor-modes))
 
-(add-to-list 'elpy-default-minor-modes 'flycheck-mode)
+;;(add-to-list 'elpy-default-minor-modes 'flycheck-mode)
 #+END_SRC
-
+* Anaconda-mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook 'eldoc-mode)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-anaconda))
+;(add-hook 'python-mode-hook 'ac-anaconda-setup)
+#+END_SRC
 * 其他乱78糟的设置
 #+NAME:misc
 #+BEGIN_SRC emacs-lisp
@@ -74,5 +81,6 @@ the new line indented."
   (insert "import ipdb; ipdb.set_trace()")
   (highlight-lines-matching-regexp "^[ ]*import ipdb; ipdb.set_trace()"))
 
-(define-key python-mode-map (kbd "C-c t") 'python-add-breakpoint)
+(eval-after-load 'python-mode
+  '(define-key python-mode-map (kbd "C-c t") 'python-add-breakpoint))
 #+END_SRC
