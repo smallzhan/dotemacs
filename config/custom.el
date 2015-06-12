@@ -1,7 +1,7 @@
 ;;=========================================================
 ;;============关于 custom 的配置=============================
 ;;=========================================================
-;;Time-stamp: <smallqiang 2015-06-11 17:21:18>
+;;Time-stamp: <smallqiang 2015-06-11 19:04:43>
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -11,7 +11,7 @@
  '(custom-enabled-themes (quote (tangotango)))
  '(custom-safe-themes
    (quote
-	("23d796396662b82b8ec669a2a77b9fe3af7e4a1a05b27e1943f1197f2edaf8ad" default)))
+	("2ec7c739f9afc3500523f80eb1e46ade6d015b2cf339992b4307d31615bf8b49" default)))
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
@@ -21,4 +21,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:background nil)))))

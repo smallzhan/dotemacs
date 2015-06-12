@@ -48,7 +48,7 @@
 (setq visible-bell t)
 
 
-(icomplete-mode 1)
+(icomplete-mode -1)
 (auto-compression-mode 1)
 (setq apropos-do-all t)
 ;(partial-completion-mode 1)
@@ -196,8 +196,8 @@
                                    (command-execute 'eshell)
                                    (bury-buffer))))
 
+(require-package 'pcmpl-git)
 (require-package 'pcomplete-extension)
-(require 'pcomplete-extension)
 
 (defun eshell/deb (&rest args)
   (eshell-eval-using-options
@@ -311,6 +311,12 @@ For usage, execute without arguments."
 (defalias 'v 'find-file)
 (defalias 'vo 'find-file-other-window)
 (defalias 'eshell/vim 'eshell/vi)
+
+ (add-hook 'eshell-mode-hook
+           #'(lambda ()
+               (define-key eshell-mode-map
+                 (kbd "M-p")
+                 'helm-eshell-history)))
 #+END_SRC
 * 其他设置
 

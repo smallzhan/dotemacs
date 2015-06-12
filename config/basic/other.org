@@ -111,6 +111,10 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
 
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-X") 'execute-extended-command)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
 (helm-mode 1)
 
 ;(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
@@ -118,8 +122,9 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
 ;(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 
-(setq helm-M-x-fuzzy-match t)
-(setq helm-buffers-fuzzy-matching t
+(setq helm-M-x-fuzzy-match t
+      helm-buffers-fuzzy-matching t
+      helm-apropos-fuzzy-match t
       helm-recentf-fuzzy-match    t)
 ;;(require 'helm-C-x-b)
 
@@ -143,7 +148,31 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
       helm-ff-file-name-history-use-recentf t)
 
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map
+                [remap eshell-pcomplete]
+                'helm-esh-pcomplete)))(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map
+                [remap eshell-pcomplete]
+                'helm-esh-pcomplete)))
 
+(if (executable-find "ack-grep")
+  (setq helm-grep-default-command
+          "ack-grep -Hn --smart-case --no-group %e %p %f"
+          helm-grep-default-recurse-command
+          "ack-grep -H --smart-case --no-group %e %p %f")
+  (setq helm-grep-default-command
+          "grep --color=always -d skip %e -n%cH -e %p %f"
+          helm-grep-default-recurse-command
+          "grep --color=always -d recurse %e -n%cH -e %p %f"))
+
+(require-package 'helm-ls-git)
+(setq helm-ls-git-grep-command
+      "git grep -n%cH --color=always --full-name -e %p %f")
+
+(helm-autoresize-mode 1)
 ;;(setq helm-locate-command
 ;;        (case system-type
 ;;          ('gnu/linux "locate -i -r %s")
@@ -501,16 +530,16 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
    '(diminish 'helm-mode))
 
 (eval-after-load "auto-complete"
-  '(diminish 'auto-complete-mode " Ⓐ"))
+  '(diminish 'auto-complete-mode " A"))
 
 (eval-after-load "yas-minor-mode"
   '(diminish 'yas-minor-mode))
 
 (eval-after-load "yasnippet"
-  '(diminish 'yas-minor-mode " Ⓨ"))
+  '(diminish 'yas-minor-mode " Y"))
 
 (eval-after-load "projectile"
-  '(diminish 'projectile-mode  " Ⓟ"))
+  '(diminish 'projectile-mode  " Pj"))
 
 ;; (eval-after-load "smartparens"
 ;;  '(diminish 'smartparens-mode " (Ⓢ)"))
@@ -532,4 +561,11 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 
 (eval-after-load "abbrev"
   '(diminish 'abbrev-mode))
+
+(eval-after-load "company"
+  '(diminish 'company-mode " Cmp"))
+
+(add-hook 'emacs-lisp-mode-hook
+  (lambda()
+    (setq mode-name "el")))
 #+END_SRC

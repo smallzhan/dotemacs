@@ -48,9 +48,14 @@ Semantic, and Ansi-Color faces are included.")
       (red-1 "#ef2929")  (red-2 "#cc0000")  (red-3 "#a40000")
       (alum-1 "#eeeeec") (alum-2 "#d3d7cf") (alum-3 "#babdb6")
       (alum-4 "#888a85") (alum-5 "#555753") (alum-6 "#2e3436")
+
       ;; Not in Tango palette; used for better contrast.
       (cham-0 "#b4fa70") (blue-0 "#8cc4ff") (plum-0 "#e6a8df")
-      (red-0 "#ff4b4b")  (alum-5.5 "#41423f") (alum-7 "#212526"))
+	  (white-1 "#c6c6c6") (white-2 "#c6c6c6") (white-3 "#b2b2b2") (black-1 "#a8a8a8") (black-2 "#8a8a8a")
+	  (yellow-00 "#ffffaf")  (green-0 "#d7ff5f")
+	  (black-2-5 "#6c6c6c") (black-3 "#4e4e4e") (black-4 "#3a3a3a") (black-5 "#303030") (black-6 "#000000")
+	  (red-0 "#ff4b4b")  (alum-5.5 "#41423f") (alum-7 "#212526"))
+
 
   (custom-theme-set-faces
    'tangotango
@@ -76,10 +81,20 @@ Semantic, and Ansi-Color faces are included.")
    `(trailing-whitespace ((,class (:background ,red-3))))
    ;; Mode line faces
    `(mode-line ((,class
-				 (:foreground "#bbbbbc" :background "#222222"
-							  :box (:line-width 1 :color nil :style released-button)))))
-   `(mode-line-inactive ((,class (:foreground "#bbbbbc" :background "#555753"))))
-   `(mode-line-buffer-id ((,class (:bold t :foreground "orange" :background nil))))
+				 (:foreground "#eeeeec" :background "#111111"
+							  :box (:line-width 1 :color ,alum-6)))))
+   `(mode-line-inactive ((,class (:foreground ,alum-5 :background "#1F2427"
+											  :box (:line-width 1 :color "#1F2427"))
+								 )))
+   `(mode-line-buffer-id ((,class (:bold t :foreground ,orange-2 :background nil))))
+
+
+   ;;   `(mode-line (:foreground aluminium-1 :background black
+   ;;                          :box (:line-width 1 :color aluminium-6)))
+   ;; `(mode-line-inactive (:foreground aluminium-5 :background "#1F2427"
+   ;;                                   :box (:line-width 1 :color background)))
+   ;; `(mode-line-buffer-id (:bold t :foreground orange-2))
+
    `(region ((t (:background "dark slate blue"))))
    `(link ((t (:underline t :foreground "dodger blue"))))
    `(custom-link ((t (:inherit 'link))))
@@ -236,7 +251,7 @@ Semantic, and Ansi-Color faces are included.")
 							 :foreground "#888a85" :background "#333333"))))
    `(org-meta-line ((t (:inherit font-lock-comment-face :weight normal))))
    `(org-checkbox ((t (:background "#2b2b2b" :foreground "white" :bold t
-                                   :box (:line-width 1 :style released-button)))))
+								   :box (:line-width 1 :style released-button)))))
    `(org-upcoming-deadline ((,class (:inherit font-lock-keyword-face))))
    ;; SMerge faces
    `(smerge-refined-change ((,class (:background ,blue-3))))
@@ -251,17 +266,17 @@ Semantic, and Ansi-Color faces are included.")
    `(ediff-odd-diff-B ((,class (:background ,alum-5.5))))
     ;;;;; flycheck
    `(flycheck-error
-     ((((supports :underline (:style wave)))
-       (:underline (:style wave :color ,red-0) :inherit unspecified))
-      (t (:foreground ,red-0 :weight bold :underline t))))
+	 ((((supports :underline (:style wave)))
+	   (:underline (:style wave :color ,red-0) :inherit unspecified))
+	  (t (:foreground ,red-0 :weight bold :underline t))))
    `(flycheck-warning
-     ((((supports :underline (:style wave)))
-       (:underline (:style wave :color "#F0DFAF") :inherit unspecified))
-      (t (:foreground "#F0DFAF" :weight bold :underline t))))
+	 ((((supports :underline (:style wave)))
+	   (:underline (:style wave :color "#F0DFAF") :inherit unspecified))
+	  (t (:foreground "#F0DFAF" :weight bold :underline t))))
    `(flycheck-info
-     ((((supports :underline (:style wave)))
-       (:underline (:style wave :color "#93E0E3") :inherit unspecified))
-      (t (:foreground "#93E0E3" :weight bold :underline t))))
+	 ((((supports :underline (:style wave)))
+	   (:underline (:style wave :color "#93E0E3") :inherit unspecified))
+	  (t (:foreground "#93E0E3" :weight bold :underline t))))
    `(flycheck-fringe-error ((t (:foreground ,red-0 :weight bold))))
    `(flycheck-fringe-warning ((t (:foreground "#F0DFAF" :weight bold))))
    `(flycheck-fringe-info ((t (:foreground "#93E0E3" :weight bold))))
@@ -298,35 +313,50 @@ Semantic, and Ansi-Color faces are included.")
    ;;; semantic mode
    `(semantic-decoration-on-includes ((,class (:underline ,alum-4))))
    `(semantic-decoration-on-private-members-face
-     ((,class (:background ,plum-3))))
+	 ((,class (:background ,plum-3))))
    `(semantic-decoration-on-protected-members-face
-     ((,class (:background ,choc-3))))
+	 ((,class (:background ,choc-3))))
    `(semantic-decoration-on-unknown-includes
-     ((,class (:background ,red-3))))
+	 ((,class (:background ,red-3))))
    `(semantic-decoration-on-unparsed-includes
-     ((,class (:background ,alum-5.5))))
+	 ((,class (:background ,alum-5.5))))
    `(semantic-tag-boundary-face ((,class (:overline ,blue-1))))
    `(semantic-unmatched-syntax-face ((,class (:underline ,red-1))))
-   `(company-preview
-	 ((t (:foreground "darkgray" :underline t))))
-   `(company-preview-common
-	 ((t (:inherit company-preview))))
-   `(company-tooltip
-	 ((t (:background "lightgray" :foreground "black"))))
-   `(company-tooltip-selection
-   ((t (:background "steelblue" :foreground "white"))))
-   `(company-tooltip-common
-	 ((((type x)) (:inherit company-tooltip :weight bold))
-	  (t (:inherit company-tooltip))))
-   `(company-tooltip-common-selection
-	 ((((type x)) (:inherit company-tooltip-selection :weight bold))
-    (t (:inherit company-tooltip-(setq  )election))))
+
+   ;;company
+   `(company-echo ((,class (:background nil :foreground ,white-1))))
+   `(company-echo-common ((,class (:background ,black-3 :foreground ,red-0))))
+   `(company-preview ((,class (:background ,black-5 :foreground ,plum-2))))
+   `(company-preview-common ((,class (:background ,black-5 :foreground ,plum-2))))
+   `(company-preview-search ((,class (:background ,black-4 :foreground ,plum-2 :bold t))))
+   `(company-scrollbar-bg ((,class (:background ,black-3))))
+   `(company-scrollbar-fg ((,class (:background "#1F2427"))))
+   `(company-template-field ((,class (:background ,yellow-00 :foreground ,black-4))))
+   `(company-tooltip ((,class (:background ,black-3 :foreground ,blue-1))))
+   `(company-tooltip-annotation ((,class (:background ,black-4 :foreground ,red-0))))
+   `(company-tooltip-common ((,class (:background ,black-2-5 :foreground ,blue-0))))
+   `(company-tooltip-common-selection ((,class (:background ,blue-3 :foreground ,blue-0 :bold t))))
+   `(company-tooltip-mouse ((,class (:background ,green-0 :foreground ,black-5))))
+   `(company-tooltip-selection ((,class (:background ,blue-3 :foreground ,blue-0))))
+
+   ;; helm
+   `(helm-source-header ((,class (:inherit success))))
+   `(helm-visible-mark ((,class (:inherit region :foreground ,alum-3))))
+   `(helm-header ((,class (:inherit mode-line))))
+   `(helm-candidate-number ((,class (:inherit highlight))))
+   `(helm-selection ((,class (:inherit secondary-selection))))
+   `(helm-match ((,class (:inherit warning))))
+   `(helm-separator ((,class (:inherit message-separator))))
+   `(helm-action ((,class (:foreground ,blue-1))))
+   `(helm-ff-directory ((,class (:foreground ,blue-1 :background nil :underline nil))))
+   `(helm-ff-file ((,class (:inherit link :foreground ,plum-1 :underline nil))))
+   `(helm-grep-file ((,class (:inherit link :foreground ,plum-1 :underline t))))
    )
 
-  (custom-theme-set-variables
-   'tangotango
-   `(ansi-color-names-vector [,alum-7 ,red-0 ,cham-0 ,butter-1
-									  ,blue-1 ,plum-1 ,blue-0 ,alum-1])))
+   (custom-theme-set-variables
+	'tangotango
+	`(ansi-color-names-vector [,alum-7 ,red-0 ,cham-0 ,butter-1
+									   ,blue-1 ,plum-1 ,blue-0 ,alum-1])))
 
 (provide-theme 'tangotango)
 
