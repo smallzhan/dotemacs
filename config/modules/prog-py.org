@@ -21,6 +21,9 @@
 #+END_SRC
 * Anaconda-mode
 #+BEGIN_SRC emacs-lisp
+(require-package 'anaconda-mode)
+(require-package 'company-anaconda)
+
 (add-hook 'python-mode-hook 'anaconda-mode)
 (add-hook 'python-mode-hook 'eldoc-mode)
 (eval-after-load 'company

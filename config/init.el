@@ -10,7 +10,7 @@
 ;                 'bopomofo (font-spec :family "WenQuanYi Micro Hei" :size 16))
 
 (defconst  my-emacs-path "~/myEmacs/")
-(defconst  my-emacs-dir "~/.emacs.d/")
+(defconst  my-emacs-dir "~/myEmacs/.emacs.d/")
 ;(defconst my-emacs-path "/media/Works/smallqiang/myEmacs/")
 ;(defconst my-emacs-dir "/media/Works/smallqiang/.emacs.d/")
 (defconst  my-lisp-path (concat my-emacs-path "site-lisp/"))

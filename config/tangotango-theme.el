@@ -1,6 +1,6 @@
 ;;; tango-dark-theme.el --- Tango-based custom theme for faces
 
-;; Copyright (C) 2010-2014 Free Software Foundation, Inc.
+;; Copyright (C) 2010-2015 Free Software Foundation, Inc.
 
 ;; Authors: Guoqiang Jin <ustczhan@gmail.com>
 ;;          Chong Yidong <cyd@stupidchicken>
@@ -28,7 +28,9 @@
 
 ;;; Changlog
 
-;; 2014-05-19(Guoqiang Jin):  add color faces for flycheck and rainbow-delimeters.
+;; 2015-06-15(Guoqiang Jin): add color faces for company and helm
+;; 2014-05-19(Guoqiang Jin): add color faces for flycheck and rainbow-delimeters.
+
 
 ;;; Code:
 
@@ -51,9 +53,6 @@ Semantic, and Ansi-Color faces are included.")
 
       ;; Not in Tango palette; used for better contrast.
       (cham-0 "#b4fa70") (blue-0 "#8cc4ff") (plum-0 "#e6a8df")
-	  (white-1 "#c6c6c6") (white-2 "#c6c6c6") (white-3 "#b2b2b2") (black-1 "#a8a8a8") (black-2 "#8a8a8a")
-	  (yellow-00 "#ffffaf")  (green-0 "#d7ff5f")
-	  (black-2-5 "#6c6c6c") (black-3 "#4e4e4e") (black-4 "#3a3a3a") (black-5 "#303030") (black-6 "#000000")
 	  (red-0 "#ff4b4b")  (alum-5.5 "#41423f") (alum-7 "#212526"))
 
 
@@ -115,15 +114,8 @@ Semantic, and Ansi-Color faces are included.")
    `(error ((,class (:foreground ,red-0))))
    `(warning ((,class (:foreground ,orange-1))))
    `(success ((,class (:foreground ,cham-1))))
+
    ;; Font lock faces
-   ;; `(font-lock-builtin-face ((,class (:foreground ,plum-1))))
-   ;; `(font-lock-comment-face ((,class (:foreground ,cham-2))))
-   ;; `(font-lock-constant-face ((,class (:foreground ,plum-0))))
-   ;; `(font-lock-function-name-face ((,class (:foreground ,butter-1))))
-   ;; `(font-lock-keyword-face ((,class (:foreground ,cham-0))))
-   ;; `(font-lock-string-face ((,class (:foreground ,choc-1))))
-   ;; `(font-lock-type-face ((,class (:foreground ,blue-0))))
-   ;; `(font-lock-variable-name-face ((,class (:foreground ,orange-1))))
    `(font-lock-builtin-face ((t (:foreground "#729fcf"))))
    `(font-lock-comment-face ((t (:foreground "#888a85"))))
    `(font-lock-constant-face ((t (:foreground "#8ae234"))))
@@ -324,20 +316,17 @@ Semantic, and Ansi-Color faces are included.")
    `(semantic-unmatched-syntax-face ((,class (:underline ,red-1))))
 
    ;;company
-   `(company-echo ((,class (:background nil :foreground ,white-1))))
-   `(company-echo-common ((,class (:background ,black-3 :foreground ,red-0))))
-   `(company-preview ((,class (:background ,black-5 :foreground ,plum-2))))
-   `(company-preview-common ((,class (:background ,black-5 :foreground ,plum-2))))
-   `(company-preview-search ((,class (:background ,black-4 :foreground ,plum-2 :bold t))))
-   `(company-scrollbar-bg ((,class (:background ,black-3))))
-   `(company-scrollbar-fg ((,class (:background "#1F2427"))))
-   `(company-template-field ((,class (:background ,yellow-00 :foreground ,black-4))))
-   `(company-tooltip ((,class (:background ,black-3 :foreground ,blue-1))))
-   `(company-tooltip-annotation ((,class (:background ,black-4 :foreground ,red-0))))
-   `(company-tooltip-common ((,class (:background ,black-2-5 :foreground ,blue-0))))
-   `(company-tooltip-common-selection ((,class (:background ,blue-3 :foreground ,blue-0 :bold t))))
-   `(company-tooltip-mouse ((,class (:background ,green-0 :foreground ,black-5))))
-   `(company-tooltip-selection ((,class (:background ,blue-3 :foreground ,blue-0))))
+   `(company-tooltip ((t (:foreground ,alum-2 :background ,alum-5.5))))
+   `(company-tooltip-annotation ((t (:foreground ,plum-0 :background ,alum-5.5))))
+   `(company-tooltip-selection ((t (:foreground ,alum-2 :background ,alum-7))))
+   `(company-tooltip-mouse ((t (:background ,alum-7))))
+   `(company-tooltip-common ((t (:foreground ,cham-0))))
+   `(company-tooltip-common-selection ((t (:foreground ,cham-0))))
+   `(company-scrollbar-fg ((t (:background ,alum-7))))
+   `(company-scrollbar-bg ((t (:background ,alum-5))))
+   `(company-preview ((t (:background ,cham-0))))
+   `(company-preview-common ((t (:foreground ,cham-0 :background ,alum-7))))
+
 
    ;; helm
    `(helm-source-header ((,class (:inherit success))))
@@ -353,10 +342,10 @@ Semantic, and Ansi-Color faces are included.")
    `(helm-grep-file ((,class (:inherit link :foreground ,plum-1 :underline t))))
    )
 
-   (custom-theme-set-variables
-	'tangotango
-	`(ansi-color-names-vector [,alum-7 ,red-0 ,cham-0 ,butter-1
-									   ,blue-1 ,plum-1 ,blue-0 ,alum-1])))
+  (custom-theme-set-variables
+   'tangotango
+   `(ansi-color-names-vector [,alum-7 ,red-0 ,cham-0 ,butter-1
+									  ,blue-1 ,plum-1 ,blue-0 ,alum-1])))
 
 (provide-theme 'tangotango)
 

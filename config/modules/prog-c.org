@@ -139,6 +139,7 @@ gtags 主要用于浏览代码的，加上 pulse 可以很容易的显示目前�
 irony 一方面功能比 async 多，不过还是先观望一阵子。不在 melpa 里面，不过作者更新
 很勤快，应该很快就完整起来了，虽然现在用起来还有点怪异。先试试呗。
 #+BEGIN_SRC emacs-lisp
+(require-package 'irony)
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
 (add-hook 'objc-mode-hook 'irony-mode)
@@ -153,7 +154,7 @@ irony 一方面功能比 async 多，不过还是先观望一阵子。不在 mel
 (add-hook 'irony-mode-hook 'my-irony-mode-hook)
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-(require 'irony-eldoc)
+;;(require-package 'irony-eldoc)
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-irony))
 

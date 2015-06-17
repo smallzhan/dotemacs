@@ -1,0 +1,24 @@
+#+TITLE: Javascripe 编程设定
+* Js2-mode
+JS2-mode 是写 javascript 的一个简单mode，包括基本 mode 和一个补全插件，补全插件
+虽然叫 ac-js2 不过也支持 company-mode
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(require-package 'js2-mode)
+(require-package 'ac-js2)
+
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+
+#+END_SRC
+* Tern
+Tern 是一个 javascript 的分析引擎，对 node 之类的支持比较好，试用了一下，挺好。
+
+#+BEGIN_SRC emacs-lisp
+(require-package 'tern)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+
+(require-package 'company-tern)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-tern))
+#+END_SRC

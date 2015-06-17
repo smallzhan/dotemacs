@@ -115,6 +115,13 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
 (global-set-key (kbd "M-X") 'execute-extended-command)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 
+(define-key helm-command-map (kbd "o")     'helm-occur)
+(define-key helm-command-map (kbd "g")     'helm-do-grep)
+;;(define-key helm-command-map (kbd "C-c w") 'helm-wikipedia-suggest)
+(define-key helm-command-map (kbd "SPC")   'helm-all-mark-rings)
+
+(define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+
 (helm-mode 1)
 
 ;(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
@@ -128,17 +135,6 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
       helm-recentf-fuzzy-match    t)
 ;;(require 'helm-C-x-b)
 
-(add-hook 'eshell-mode-hook
-          #'(lambda ()
-              (define-key eshell-mode-map
-                [remap eshell-pcomplete]
-                'helm-esh-pcomplete)))
-
- (add-hook 'eshell-mode-hook
-           #'(lambda ()
-               (define-key eshell-mode-map
-                 (kbd "M-p")
-                 'helm-eshell-history)))
 
 (setq helm-locate-command "locate -e -b %s -r %s")
 
@@ -148,15 +144,6 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
       helm-ff-file-name-history-use-recentf t)
 
-(add-hook 'eshell-mode-hook
-          #'(lambda ()
-              (define-key eshell-mode-map
-                [remap eshell-pcomplete]
-                'helm-esh-pcomplete)))(add-hook 'eshell-mode-hook
-          #'(lambda ()
-              (define-key eshell-mode-map
-                [remap eshell-pcomplete]
-                'helm-esh-pcomplete)))
 
 (if (executable-find "ack-grep")
   (setq helm-grep-default-command
@@ -378,11 +365,10 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 #+BEGIN_SRC emacs-lisp
 (require-package 'projectile)
 (require-package 'helm-projectile)
-(require-package 'grizzl)
 
 (projectile-global-mode)
 
-(setq projectile-completion-system 'grizzl)
+(setq projectile-completion-system 'helm)
 #+END_SRC
 * linum-relative
 #+BEGIN_SRC emacs-lisp
@@ -395,23 +381,23 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 
 (setq tramp-default-method "ssh")
 
-(require 'sdcv-mode)
-(setq sdcv-dictionary-list '("牛津英汉双解美化版" "朗道英汉字典5.0"))
-(global-set-key (kbd "s-d") 'sdcv-search-current-word)
+;; (require 'sdcv-mode)
+;; (setq sdcv-dictionary-list '("牛津英汉双解美化版" "朗道英汉字典5.0"))
+;; (global-set-key (kbd "s-d") 'sdcv-search-current-word)
 
 
 ;; (require 'smodels-mode)
 
 
 ;; these are the lines i use to set up correct auto-ing
-(autoload 'bison-mode "bison-mode.el")
-(add-to-list 'auto-mode-alist '("\\.y$" . bison-mode))
+;; (autoload 'bison-mode "bison-mode.el")
+;; (add-to-list 'auto-mode-alist '("\\.y$" . bison-mode))
 
 ;(autoload 'flex-mode "flex-mode")
 ;(add-to-list 'auto-mode-alist '("\\.l$" . flex-mode))
 
 (require-package 'guru-mode)
-(guru-mode 1)
+(add-hook 'prog-mode-hook 'guru-mode)
 
 (require-package 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
@@ -564,6 +550,9 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 
 (eval-after-load "company"
   '(diminish 'company-mode " Cmp"))
+
+(eval-after-load "guru-mode"
+  '(diminish 'guru-mode))
 
 (add-hook 'emacs-lisp-mode-hook
   (lambda()
