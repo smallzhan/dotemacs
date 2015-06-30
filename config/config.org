@@ -243,6 +243,7 @@ single file by simply (ome-load \"ome-module.org\" \"part1\"
 ;;(my-org-load "modules/prog-ros.org")
 (my-org-load "modules/prog-scheme.org")
 ;;(my-org-load "modules/prog-go.org")
+(my-org-load "modules/prog-js.org")
 (my-org-load "modules/orgmode.org")
 ;;(my-org-load "modules/erc.org")
 (my-org-load "modules/calendar.org")
