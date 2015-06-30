@@ -443,8 +443,8 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (delete 'Git vc-handled-backends)
 (global-set-key (kbd "C-x g") 'magit-status)
 
-(require-package 'powerline)
-(powerline-default-theme)
+;;(require-package 'powerline)
+;;(powerline-default-theme)
 #+END_SRC
 
 ** uniquify

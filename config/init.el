@@ -33,4 +33,7 @@
 
 (org-babel-load-file (concat my-config-dir "config.org"))
 
+(when (eq system-type 'darwin)
+  (require 'prelude-osx))
+
 (put 'dired-find-alternate-file 'disabled nil)

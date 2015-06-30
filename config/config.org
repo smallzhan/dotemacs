@@ -16,7 +16,7 @@
 
 * 简介
 * 字体设置
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun my-default-font()
   (interactive)
   (if (eq system-type 'windows-nt)
@@ -43,6 +43,22 @@
    (select-frame new-frame)
    (tool-bar-mode  0)
    (my-default-font)))
+#+END_SRC
+下面这个抄来的代码可以实现中文恰好是两个英文的宽度。实际上最重要的是下面的那个
+1.2 的参数。
+#+BEGIN_SRC emacs-lisp
+(when (display-graphic-p)
+  (setq fonts
+        (cond ((eq system-type 'darwin)     '("Menlo"     "STXihei"))
+              ((eq system-type 'gnu/linux)  '("DejaVu Sans Mono"     "WenQuanYi Zen Hei"))
+              ((eq system-type 'windows-nt) '("Consolas"  "Microsoft Yahei"))))
+
+;;  (setq face-font-rescale-alist '(("STXihei" . 1.2) ("Microsoft Yahei" . 1.2) ("WenQuanYi Zen Hei" . 1.2)))
+  (set-face-attribute 'default nil :font
+                      (format "%s:pixelsize=%d" (car fonts) 12))
+  (dolist (charset '(kana han symbol cjk-misc bopomofo))
+    (set-fontset-font (frame-parameter nil 'font) charset
+                      (font-spec :family (car (cdr fonts))))))
 #+END_SRC
 * 预定义环境变量
 #+BEGIN_SRC emacs-lisp
@@ -240,6 +256,7 @@ single file by simply (ome-load \"ome-module.org\" \"part1\"
 (my-org-load "modules/prog-c.org")
 (my-org-load "modules/prog-py.org")
 (my-org-load "modules/prog-tex.org")
+(my-org-load "modules/prog-js.org")
 ;;(my-org-load "modules/prog-ros.org")
 (my-org-load "modules/prog-scheme.org")
 ;;(my-org-load "modules/prog-go.org")

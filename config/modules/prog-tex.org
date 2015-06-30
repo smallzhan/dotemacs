@@ -19,8 +19,9 @@
 
 (setq-default TeX-master nil)
 
-(autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
-(autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" t)
+(require-package 'cdlatex)
+;;(autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
+;;(autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" t)
 (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
 (add-hook 'LaTeX-mode-hook
       (function (lambda ()
