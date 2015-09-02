@@ -21,8 +21,11 @@
 #+END_SRC
 * Anaconda-mode
 #+BEGIN_SRC emacs-lisp
+;;(setq python-shell-virtualenv-path "/path/to/virtualenv")
+
 (require-package 'anaconda-mode)
 (require-package 'company-anaconda)
+(require-package 'pyvenv)
 
 (add-hook 'python-mode-hook 'anaconda-mode)
 (add-hook 'python-mode-hook 'eldoc-mode)

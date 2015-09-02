@@ -340,7 +340,7 @@ emacs rocks 链接见 http://emacsrocks.com/e13.html
 * ace-jump-mode
 ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。emacs rocks 也对其进
 行了介绍，见 http://emacsrocks.com/e10.html
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (require-package 'ace-jump-mode)
 (autoload
   'ace-jump-mode
@@ -364,6 +364,12 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
   '(ace-jump-mode-enable-mark-sync))
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
+#+END_SRC
+据说 ace-jump-mode 不维护了, 所以用 avy-mode 了
+#+BEGIN_SRC emacs-lisp
+(require-package 'avy)
+(global-set-key (kbd "C-c j") 'avy-goto-word-or-subword-1)
+(require-package 'ace-window)
 #+END_SRC
 * projectile
 很不错管理工程的东西，对于含有 =.git= 的目录直接当做一个工程来管理．
@@ -574,9 +580,6 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 
 (eval-after-load 'auto-revert-mode
   '(diminish 'auto-revert-mode))
-
-(eval-after-load "magit"
-  '(diminish 'magit-auto-revert-mode))
 
 (eval-after-load "abbrev"
   '(diminish 'abbrev-mode))
