@@ -14,15 +14,18 @@
 ;(defconst my-emacs-path "/media/Works/smallqiang/myEmacs/")
 ;(defconst my-emacs-dir "/media/Works/smallqiang/.emacs.d/")
 (defconst  my-lisp-path (concat my-emacs-path "site-lisp/"))
-;;(load-file (concat my-lisp-path "cedet-1.1/common/cedet.el"))
 
 (add-to-list 'load-path my-lisp-path)
 (defconst my-conf-path (concat my-emacs-path "config/"))
 (defconst my-config-dir (concat my-emacs-path "config/"))
 
-;;(mapc 'load (directory-files my-conf-path t "\\.el\\'"))
 
-;;(require 'package)
+(setq custom-theme-directory my-config-dir)
+(setq bookmark-defaul-file (concat my-emacs-path ".emacs.bmk")) ;书签文件
+(setq custom-file (concat my-config-dir "custom.el"))
+(load custom-file 'noerror)
+
+
 (setq package-user-dir (concat my-config-dir "elpa"))
 (package-initialize)
 

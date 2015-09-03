@@ -62,11 +62,7 @@
 #+END_SRC
 * 预定义环境变量
 #+BEGIN_SRC emacs-lisp
-(setq bookmark-default-file (concat my-emacs-path ".emacs.bmk")) ;书签文件
 
-
-(setq custom-file (concat my-config-dir "custom.el"))
-(setq custom-theme-directory my-config-dir)
 ;;(setq gnus-init-file "~/.emacs.d/my-gnus.el") ;gnus启动的默认配置文件
 
 ;; (setq Info-default-directory-list
@@ -265,6 +261,4 @@ single file by simply (ome-load \"ome-module.org\" \"part1\"
 ;;(my-org-load "modules/erc.org")
 (my-org-load "modules/calendar.org")
 (my-org-load "modules/keybinding.org")
-
-(load custom-file 'noerror)
 #+END_SRC
