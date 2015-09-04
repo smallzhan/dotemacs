@@ -1,5 +1,6 @@
 #+TITLE: 其他内置模块等简单的设定
-主要配置内置模块的设定，其中涉及的函数，包等都是 emacs 自带的。
+主要配置内置模块的设定，其中涉及的函数，包等都是 emacs 自带或可以简单
+package-install 的。
 * IDO
 ido 已经成 emacs 内置的玩意了，不过需要一点简单配置才好用。暂时替换成 helm 配置
 性和可扩展性更强更好玩
@@ -196,7 +197,7 @@ t)
 (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 #+END_SRC
 
-还有一个包叫做 smartparens， 测试下来和 paredit 差不多，快捷键之类的有和
+smartparens 测试下来和 paredit 差不多，快捷键之类的有和
 paredit 类似的，要自己配置，并且　smartparens 的开发比较活跃，因此更换如下。
 #+BEGIN_SRC emacs-lisp
 (require-package 'smartparens)
@@ -288,7 +289,6 @@ paredit 类似的，要自己配置，并且　smartparens 的开发比较活跃
 #+BEGIN_SRC emacs-lisp
 (require-package 'expand-region)
 ;;(require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
 
 (defun er/add-text-mode-expansions ()
   (make-variable-buffer-local 'er/try-expand-list)
@@ -298,6 +298,8 @@ paredit 类似的，要自己配置，并且　smartparens 的开发比较活跃
                               mark-page))))
 
 (add-hook 'text-mode-hook 'er/add-text-mode-expansions)
+
+(global-set-key (kbd "C-=") 'er/expand-region)
 #+END_SRC
 * multiple-cursors
 从 emacs rocks 里面看来的，可以标记并编辑一样的文字。还是很有用的。
@@ -307,37 +309,43 @@ emacs rocks 链接见 http://emacsrocks.com/e13.html
 (require-package 'multiple-cursors)
 
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-line-like-this)
+(global-set-key (kbd "C-c m e") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+#+END_SRC
 
+下面代码可以在　multiple-cursors 中实现　C-s 和　C-r 的增量搜索, 从
+[[http://www.jeffchu.com/posts/2013/01/2013-01-29-multiple-cursors-mode.html][jeffchu的blog]]
+抄来的,用起来感觉古里古怪的,去掉
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (defvar jc/mc-search--last-term nil)
 
-;; 下面代码可以在　multiple-cursors 中实现　C-s 和　C-r 的增量搜索
-(defun jc/mc-search (search-command)
-  ;; Read new search term when not repeated command or applying to fake cursors
-  (when (and (not mc--executing-command-for-fake-cursor)
-             (not (eq last-command 'jc/mc-search-forward))
-             (not (eq last-command 'jc/mc-search-backward)))
-    (setq jc/mc-search--last-term (read-from-minibuffer "Search(regex): ")))
-  (funcall search-command jc/mc-search--last-term))
+  (defun jc/mc-search (search-command)
+    ;; Read new search term when not repeated command or applying to fake cursors
+    (when (and (not mc--executing-command-for-fake-cursor)
+               (not (eq last-command 'jc/mc-search-forward))
+               (not (eq last-command 'jc/mc-search-backward)))
+      (setq jc/mc-search--last-term (read-from-minibuffer "Search(regex): ")))
+    (funcall search-command jc/mc-search--last-term))
 
-(defun jc/mc-search-forward ()
-  "Simplified version of forward search that supports multiple cursors"
-  (interactive)
-  (jc/mc-search 'search-forward-regexp))
+  (defun jc/mc-search-forward ()
+    "Simplified version of forward search that supports multiple cursors"
+    (interactive)
+    (jc/mc-search 'search-forward-regexp))
 
-(defun jc/mc-search-backward ()
-  "Simplified version of backward search that supports multiple cursors"
-  (interactive)
-  (jc/mc-search 'search-backward-regexp))
+  (defun jc/mc-search-backward ()
+    "Simplified version of backward search that supports multiple cursors"
+    (interactive)
+    (jc/mc-search 'search-backward-regexp))
 
-(add-hook 'multiple-cursors-mode-enabled-hook
-          (lambda()
-            (local-set-key (kbd "C-s") 'jc/mc-search-forward)
-            (local-set-key (kbd "C-r") 'jc/mc-search-backward)))
+  (add-hook 'multiple-cursors-mode-enabled-hook
+            (lambda()
+              (local-set-key (kbd "C-s") 'jc/mc-search-forward)
+              (local-set-key (kbd "C-r") 'jc/mc-search-backward)))
 #+END_SRC
-* ace-jump-mode
+* ace-jump-mode || avy
 ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。emacs rocks 也对其进
 行了介绍，见 http://emacsrocks.com/e10.html
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -349,9 +357,6 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
   t)
 ;; you can select the key you prefer to
 (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-
-
-
 ;;
 ;; enable a more powerful jump back function from ace jump mode
 ;;
@@ -365,7 +370,7 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
 
 #+END_SRC
-据说 ace-jump-mode 不维护了, 所以用 avy-mode 了
+据说 ace-jump-mode 不维护了, 所以用 avy 了
 #+BEGIN_SRC emacs-lisp
 (require-package 'avy)
 (global-set-key (kbd "C-c j") 'avy-goto-word-or-subword-1)
@@ -380,10 +385,6 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (projectile-global-mode)
 
 (setq projectile-completion-system 'helm)
-#+END_SRC
-* linum-relative
-#+BEGIN_SRC emacs-lisp
-(require-package 'linum-relative)
 #+END_SRC
 * dired
 #+BEGIN_SRC emacs-lisp
@@ -443,16 +444,31 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (add-hook 'html-mode-hook 'emmet-mode)
 (add-hook 'css-mode-hook  'emmet-mode)
 
-
-
 (require-package 'magit)
 (delete 'Git vc-handled-backends)
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
 
-;;(require-package 'powerline)
-;;(powerline-default-theme)
+(require-package 'undo-tree)
+(global-undo-tree-mode)
+
+(require-package 'linum-relative)
+
 #+END_SRC
+** Dash || Zeal
+Dash 是 mac 下面浏览 API 的, Zeal 是 linux 下的山寨版, windows 下也能用.
+官方默认是用 C-c d 作为快捷键, 为了保持和 AndroidStudio 一致, 修改为 C-S-d.
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'darwin)
+  (require-package 'dash-at-point)
+  (global-set-key (kbd "C-S-d") 'dash-at-point)
+)
 
+(when (eq system-type 'gnu/linux)
+  (require-package 'zeal-at-point)
+  (global-set-key (kbd "C-S-d") 'zeal-at-point)
+)
+#+END_SRC
 ** uniquify
 
 uniquify 主要是进行名字重复化的一个调整，例如开了两个 buffer 名字都叫 foo，他可
@@ -505,6 +521,7 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 
 (add-hook 'prog-mode-hook 'flycheck-mode)
 
+(require-package 'grizzl)
 (setq flycheck-completion-system 'grizzl)
 #+END_SRC
 ** diminish: 清理　modeline.
@@ -598,4 +615,17 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
   (lambda()
     (setq mode-name "js")))
 
+#+END_SRC
+** ediff
+不要将 ediff 的那个窗口另外开一个 frame 来表示。并且 ediff 左右分栏。
+#+BEGIN_SRC emacs-lisp
+(require 'ediff)
+;; don't start another frame
+;; this is done by default in preluse
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+;; put windows side by side
+(setq ediff-split-window-function (quote split-window-horizontally))
+;;revert windows on exit - needs winner mode
+(winner-mode)
+(add-hook 'ediff-after-quit-hook-internal 'winner-undo)
 #+END_SRC

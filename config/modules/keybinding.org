@@ -61,3 +61,6 @@
  ((string-equal system-type "gnu/linux")
   t ) )
 #+END_SRC
+*** package-install 来的那些货的绑定
+基本上都放在各自的包的部分了, 这样方便通过 :tangle no 来将其注释掉. 否则不使用某
+个包的时候还要来这里注释快捷键. 具体见 [[file:~/myEmacs/config/basic/other.org][other.org]]

@@ -87,13 +87,6 @@ that was stored with ska-point-to-register."
           (end (line-end-position arg)))
       (copy-region-as-kill beg end))))
 
-;; (defun my-kill (&optional arg region)
-;;   "`kill-region' if the region is active, otherwise `backward-kill-word'"
-;;   (interactive
-;;    (list (prefix-numeric-value current-prefix-arg) (use-region-p)))
-;;   (if region (kill-region (region-beginning) (region-end))
-;; 	(kill-whole-line arg)))
-
 (defun my-kill (&optional arg region)
   "`kill-region' if the region is active, otherwise `backward-kill-word'"
   (interactive
