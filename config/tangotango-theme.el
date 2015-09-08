@@ -340,6 +340,11 @@ Semantic, and Ansi-Color faces are included.")
    `(helm-ff-directory ((,class (:foreground ,blue-1 :background nil :underline nil))))
    `(helm-ff-file ((,class (:inherit link :foreground ,plum-1 :underline nil))))
    `(helm-grep-file ((,class (:inherit link :foreground ,plum-1 :underline t))))
+
+   `(swiper-minibufer-match-face-1 ((, class (:background "#dddddd"))))
+   `(swiper-minibuffer-match-face-2 ((,class (:background "#bbbbbb" :weight bold))))
+   `(swiper-minibuffer-match-face-3 ((,class (:background "#bbbbff" :weight bold))))
+   `(swiper-minibuffer-match-face-4 ((,class (:background "#ffbbff" :weight bold))))
    )
 
   (custom-theme-set-variables
