@@ -170,9 +170,10 @@ ido 寻找文件之类的看起来还是不错，不过另一方面， =helm= �
 
   (helm-autoresize-mode 1)
 
-  (require-package 'swiper-helm)
-  (global-set-key (kbd "C-s") 'swiper-helm)
-  (global-set-key (kbd "C-r") 'swiper-helm)
+;  (require-package 'swiper-helm)
+(require-package 'swiper)
+  (global-set-key (kbd "C-s") 'swiper)
+  (global-set-key (kbd "C-r") 'swiper)
 
   (require-package 'helm-projectile)
   (setq projectile-completion-system 'helm)

@@ -1,7 +1,7 @@
 ;;=========================================================
 ;;============关于 custom 的配置=============================
 ;;=========================================================
-;;Time-stamp: <guoqiang 2015-09-06 12:50:55>
+;;Time-stamp: <guoqiang 2015-09-11 00:03:00>
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -11,7 +11,7 @@
  '(custom-enabled-themes (quote (tangotango)))
  '(custom-safe-themes
    (quote
-	("d6bb035c861c43421da24bb69d06a65c945c1ee2f38e7e9749fcfd10e6627690" default)))
+	("41ff656ce344a7d09904ad4c6dff8074b5177d5c3d5d46f64fea5cb29623534b" "d6bb035c861c43421da24bb69d06a65c945c1ee2f38e7e9749fcfd10e6627690" default)))
  '(org-export-backends (quote (ascii beamer html icalendar latex md gfm))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
