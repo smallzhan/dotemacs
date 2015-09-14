@@ -5,6 +5,7 @@
 #+BEGIN_SRC emacs-lisp
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "M-i") 'imenu)
 
 (global-set-key [f1] 'ispell-word)         ;拼写检查
 (global-set-key [(shift f1)] 'ispell-region)
@@ -26,26 +27,28 @@
 #+END_SRC
 ** [[file:../basic/own.org][own.org]] 中的函数的相关设置
 #+BEGIN_SRC emacs-lisp
-(global-set-key "%" 'match-paren)
+  (global-set-key "%" 'match-paren)
 
-(global-set-key [(control ?\.)] 'ska-point-to-register)
-(global-set-key [(control ?\,)] 'ska-jump-to-register)
+  (global-set-key (kbd "C-.") 'ska-point-to-register)
+  (global-set-key (kbd "C-,") 'ska-jump-to-register)
 
-;; (global-set-key "(" (lambda()(interactive)(dwim-paren-region "(" "(" ")")))
-;; (global-set-key ")" (lambda()(interactive)(dwim-paren-region ")" "(" ")")))
-;; (global-set-key "{" (lambda()(interactive)(dwim-paren-region "{" "{" "}")))
-;; (global-set-key "}" (lambda()(interactive)(dwim-paren-region "}" "{" "}")))
-;; (global-set-key "[" (lambda()(interactive)(dwim-paren-region "[" "[" "]")))
-;; (global-set-key "]" (lambda()(interactive)(dwim-paren-region "]" "[" "]")))
+  ;; (global-set-key "(" (lambda()(interactive)(dwim-paren-region "(" "(" ")")))
+  ;; (global-set-key ")" (lambda()(interactive)(dwim-paren-region ")" "(" ")")))
+  ;; (global-set-key "{" (lambda()(interactive)(dwim-paren-region "{" "{" "}")))
+  ;; (global-set-key "}" (lambda()(interactive)(dwim-paren-region "}" "{" "}")))
+  ;; (global-set-key "[" (lambda()(interactive)(dwim-paren-region "[" "[" "]")))
+  ;; (global-set-key "]" (lambda()(interactive)(dwim-paren-region "]" "[" "]")))
 
-(global-set-key (kbd "M-w") 'my-copy)
-(global-set-key (kbd "C-w") 'my-kill)
-(global-set-key (kbd "M-n") 'my-mark-line)
-(global-set-key "\M-;" 'my-comment-dwim-line)
+  (global-set-key (kbd "M-w") 'my-copy)
+  (global-set-key (kbd "C-w") 'my-kill)
+  (global-set-key (kbd "M-n") 'my-mark-line)
+  (global-set-key (kbd "M-;") 'my-comment-dwim-line)
 
-(global-set-key (kbd "C-x 4 c") (quote change-split-type-3))
-(global-set-key (kbd "C-x 4 r")  (quote roll-v-3))
-(global-set-key (kbd "C-c z") (quote shell))
+  (global-set-key (kbd "C-x 4 c") (quote change-split-type-3))
+  (global-set-key (kbd "C-x 4 r")  (quote roll-v-3))
+  (global-set-key (kbd "C-c z") (quote eshell))
+
+  (global-set-key (kbd "C-c e") 'eval-and-replace)
 #+END_SRC
 
 ** 其他.
