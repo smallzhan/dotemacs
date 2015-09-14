@@ -31,6 +31,9 @@
 (add-hook 'python-mode-hook 'eldoc-mode)
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-anaconda))
+
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i")
 ;(add-hook 'python-mode-hook 'ac-anaconda-setup)
 #+END_SRC
 * 其他乱78糟的设置
