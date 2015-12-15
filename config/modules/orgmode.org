@@ -233,7 +233,23 @@ org-expiry-inactive-timestamps t ; Don't have everything in the agenda view
 ;; Bind this to a reasonable key
 (define-key org-capture-mode-map "\C-c\C-t" 'mrb/add-tags-in-capture)
 #+END_SRC
+** deft
+deft 可以作为 org-mode 的一个补充，考虑到 org-capture 都是在对 tips 之类的已经形
+成一个分类之后的操作，比如 journel，notes 什么的，虽然结合 refile 可以做到将
+tips 归类，不过还是有时候就想先记录一下东西不想归类的场合，这个就是 deft 的用武
+之地了。
+#+BEGIN_SRC emacs-lisp
+(require-package 'deft)
 
+(setq deft-text-mode 'org-mode)
+(setq deft-extension "org")
+(setq deft-directory (concat org-directory "deft/"))
+(setq deft-use-filename-as-title t)
+(setq deft-recursive t)
+
+(global-set-key (kbd "C-c d") 'deft)
+(setq deft-auto-save-interval 10.0)
+#+END_SRC
 * 时间管理
 org-mode 有强大的时间管理功能，不管是记录当前时间，还是记录在一个项目上工作的时
 间。这里的很大部分代码是在网上收录的。

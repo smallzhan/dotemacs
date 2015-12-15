@@ -606,8 +606,8 @@ uniquify 主要是进行名字重复化的一个调整，例如开了两个 buff
 
 (add-hook 'prog-mode-hook 'flycheck-mode)
 
-(require-package 'grizzl)
-(setq flycheck-completion-system 'grizzl)
+;; (require-package 'grizzl)
+;; (setq flycheck-completion-system 'grizzl)
 #+END_SRC
 ** diminish: 清理　modeline.
 #+BEGIN_SRC emacs-lisp

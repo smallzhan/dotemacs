@@ -142,8 +142,7 @@
         eshell-save-history-on-exit t
         eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'")
 
-  (eval-after-load 'esh-opt
-    '(progn
+  (with-eval-after-load 'esh-opt
        (require 'em-cmpl)
        (require 'em-prompt)
        (require 'em-term)
@@ -163,7 +162,7 @@
        (add-to-list 'eshell-command-completions-alist
                     '("gunzip" "gz\\'"))
        (add-to-list 'eshell-command-completions-alist
-                    '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'"))))
+                    '("tar" "\\(\\.tar|\\.tgz\\|\\.tar\\.gz\\)\\'")))
 
   (require-package 'eshell-prompt-extras)
   (with-eval-after-load "esh-opt"
