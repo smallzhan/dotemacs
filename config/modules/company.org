@@ -5,4 +5,8 @@
 (require-package 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 
+;;(require 'company)
+
+;;(add-to-list 'company-backends 'company-sourcekit)
+;;(setq sourcekit-verbose t)
 #+END_SRC

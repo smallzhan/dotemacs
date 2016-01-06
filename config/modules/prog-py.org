@@ -6,18 +6,18 @@
 #+NAME: elpy
 #+BEGIN_SRC emacs-lisp :tangle no
 (require-package 'elpy)
+(require-package 'flycheck)
+(require-package 'py-autopep8)
 
 (elpy-enable)
 (when (executable-find "ipython")
   (elpy-use-ipython))
 
-;;(elpy-clean-modeline)
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
-;;(setq elpy-default-minor-modes
-;;   (remove 'flymake-mode
-;;      elpy-default-minor-modes))
-
-;;(add-to-list 'elpy-default-minor-modes 'flycheck-mode)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 #+END_SRC
 * Anaconda-mode
 #+BEGIN_SRC emacs-lisp
@@ -26,9 +26,11 @@
 (require-package 'anaconda-mode)
 (require-package 'company-anaconda)
 (require-package 'pyvenv)
+(require-package 'py-autopep8)
 
 (add-hook 'python-mode-hook 'anaconda-mode)
 (add-hook 'python-mode-hook 'eldoc-mode)
+(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-anaconda))
 

@@ -22,7 +22,7 @@
 
 (global-set-key (kbd "<f11>") (lambda () (interactive) (switch-to-buffer-other-window "*scratch*")))
 
-(global-set-key (kbd "<f12>") 'org-remember)
+;;(global-set-key (kbd "<f12>") 'org-remember)
 
 #+END_SRC
 ** [[file:../basic/own.org][own.org]] 中的函数的相关设置

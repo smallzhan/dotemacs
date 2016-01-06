@@ -9,12 +9,14 @@
 ** 预先环境设置
 #+NAME: pre-basic
 #+BEGIN_SRC emacs-lisp
-(require 'org-install)
-(require 'ob-tangle)
-
-(require 'ox-latex)
-
 (require-package 'org-plus-contrib)
+
+;;(require 'org-install)
+;;(require 'ob-tangle)
+
+;;(require 'ox-latex)
+
+
 (require-package 'htmlize)
 (require 'htmlize)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -245,10 +247,14 @@ tips 归类，不过还是有时候就想先记录一下东西不想归类的场
 (setq deft-extension "org")
 (setq deft-directory (concat org-directory "deft/"))
 (setq deft-use-filename-as-title t)
+(setq deft-use-filter-string-for-filename t)
 (setq deft-recursive t)
 
 (global-set-key (kbd "C-c d") 'deft)
 (setq deft-auto-save-interval 10.0)
+
+(setq deft-file-naming-rules '((nospace . "-")
+                               (case-fn . downcase)))
 #+END_SRC
 * 时间管理
 org-mode 有强大的时间管理功能，不管是记录当前时间，还是记录在一个项目上工作的时
@@ -542,7 +548,7 @@ http://doc.norang.ca/org-mode.html
 ** 输出到 latex
 #+NAME: export-latex
 #+BEGIN_SRC emacs-lisp
-
+(require 'ox-latex)
 (require 'reftex)
 (defun org-mode-reftex-setup ()
   (load-library "reftex")
@@ -714,7 +720,7 @@ http://doc.norang.ca/org-mode.html
 (defvar jekyll-post-ext ".org"
   "File extension of Jekyll posts.")
 (defvar jekyll-post-template
-  "#+BEGIN_HTML\n---\nlayout: post\ntitle: %s\nexcerpt: \ncategories:\n  -  \ntags:\n  -  \n---\n#+END_HTML\n\n* "
+  "#+BEGIN_HTML\n---\nlayout: post\ntitle: %s\ncomments: true\nexcerpt: \ncategories:\n  -  \ntags:\n  -  \n---\n#+END_HTML\n\n* "
   "Default template for Jekyll posts. %s will be replace by the post title.")
 
 (defun jekyll-make-slug (s)
@@ -812,6 +818,29 @@ org-babel 就是在 org 文件中嵌入各种其他编程语言，本文核心�
    (C . nil)
    (latex . t)
    ))
+#+END_SRC
+* org-ref 设置
+org ref 是用来在 org-mode 下面处理参考文献的库，有各种各样的工具，还是很方便的。
+#+BEGIN_SRC emacs-lisp
+(setq reftex-default-bibliography `(,(concat org-directory "bib/ref.bib")))
+
+;; see org-ref for use of these variables
+(setq org-ref-bibliography-notes (concat org-directory "bib/notes.org")
+      org-ref-default-bibliography `(,(concat org-directory "bib/ref.bib"))
+      org-ref-pdf-directory (concat org-directory "bib/pdfs"))
+
+(setq helm-bibtex-bibliography (concat org-directory "bib/ref.bib"))
+(setq helm-bibtex-library-path (concat org-directory "bib/pdfs"))
+
+;; open pdf with system pdf viewer (works on mac)
+(setq helm-bibtex-pdf-open-function
+  (lambda (fpath)
+    (start-process "open" "*open*" "open" fpath)))
+
+;; alternative
+;; (setq helm-bibtex-pdf-open-function 'org-open-file)
+
+(setq helm-bibtex-notes-path (concat org-directory "bib/helm-notes"))
 #+END_SRC
 * 其他杂项
 很多东西，主要处理日程的，还包括工作以及时间的统计
