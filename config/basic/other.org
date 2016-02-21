@@ -534,6 +534,10 @@ ace-jump-mode 可以更快的在文本之间进行 jump，比 C-s 快多了。em
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup)
 
+(require-package 'magit-gitflow)
+(require 'magit-gitflow)
+(add-hook 'magit-mode-hook 'turn-on-magit-gitflow)
+
 (require-package 'undo-tree)
 (global-undo-tree-mode)
 

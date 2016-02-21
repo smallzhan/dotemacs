@@ -4,7 +4,7 @@
 在 elpy 的强势下，其他一切的 python 配置都没啥了，包括格式检查，文档，补全等等
 
 #+NAME: elpy
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
 (require-package 'elpy)
 (require-package 'flycheck)
 (require-package 'py-autopep8)
@@ -20,7 +20,7 @@
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 #+END_SRC
 * Anaconda-mode
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ;;(setq python-shell-virtualenv-path "/path/to/virtualenv")
 
 (require-package 'anaconda-mode)
