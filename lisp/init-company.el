@@ -5,7 +5,7 @@
              company-manual-begin
              company-grab-line
              company-complete-common-or-cycle)
-  :hook (doom-first-input . global-company-mode)
+  :hook (after-init . global-company-mode)
   :init
   (setq company-minimum-prefix-length 2
         company-tooltip-limit 14
@@ -68,8 +68,8 @@
   (setq company-box-show-single-candidate t
         company-box-backends-colors nil
         company-box-icons-alist 'company-box-icons-all-the-icons
-        ;; company-box-icons-functions
-        ;;(cons #'+company-box-icons--nox company-box-icons-functions)
+        company-box-icons-functions
+        (cons #'+company-box-icons--nox company-box-icons-functions)
         company-box-icons-all-the-icons
         `((Unknown . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))
           (Text . ,(all-the-icons-faicon "text-width" :height 0.8 :v-adjust -0.02))

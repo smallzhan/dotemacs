@@ -10,7 +10,8 @@
 
   (if IS-WINDOWS
       (setq rime-share-data-dir "~/.doom.d/extensions/emacs-rime/data"))
-  (setq rime-user-data-dir "~/.emacs.d/rime")
+  (setq rime-user-data-dir "~/.emacs.d/rime"
+        rime--module-path (expand-file-name (concat "lib/librime-emacs" module-file-suffix) rime-user-data-dir))
   (setq rime-posframe-properties
         (list :background-color "#333333"
               :foreground-color "#dcdccc"
@@ -115,7 +116,7 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
                   ;;rime-predicate-after-alphabet-char-p
                   ;;rime-predicate-auto-english-p
                   rime-predicate-hydra-p))
-                  
+
   (setq-default rime-inline-predicates
                 '(rime-predicate-space-after-cc-p
                   rime-predicate-current-uppercase-letter-p))
@@ -182,10 +183,10 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
     ;;        (setf (alist-get key ivy-re-builders-alist)
     ;;              #'ivy--regex-pinyin))))
     ;;  ivy-re-builders-alist)
-    
 
 
 
-  
+
+
 (provide 'init-chinese)
 ;;; init-chinese.el ends here

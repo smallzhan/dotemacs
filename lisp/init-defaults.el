@@ -134,7 +134,7 @@
 ;;(add-hook 'text-mode-hook 'display-line-numbers-mode)
 ;;(add-hook 'conf-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'subword-mode)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (setq time-stamp-active t)
 (setq time-stamp-warn-inactive t)
@@ -191,59 +191,8 @@
 (defvar +proxy-host "localhost")
 (defvar +proxy-port 1089)
 
-(cond
- (IS-WINDOWS
-  (setq w32-lwindow-modifier 'super
-        w32-apps-modifier 'hyper)
-  (w32-register-hot-key [s-t]))
- (IS-MAC
-  (setq max-option-modifier 'meta
-        mac-command-modifier 'super)
-  (bind-keys ([(super a)] . mark-whole-buffer)
-             ([(super c)] . kill-ring-save)
-             ([(super l)] . goto-line)
-             ([(super q)] . save-buffers-kill-emacs)
-             ([(super s)] . save-buffer)
-             ([(super v)] . yank)
-             ([(super w)] . delete-frame)
-             ([(super z)] . undo))))
 
 
-
-(use-package gcmh
-  :init
-  (setq gcmh-idle-delay 5
-        gcmh-high-cons-threshold #x1000000)
-  (gcmh-mode 1))
-
-(use-package recentf
-  :bind (("C-x C-r" . recentf-open-files))
-  :hook (after-init . recentf-mode)
-  :init (setq recentf-max-saved-items 300
-              recentf-exclude
-              '("\\.?cache" ".cask" "url" "COMMIT_EDITMSG\\'" "bookmarks"
-                "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
-                "\\.?ido\\.last$" "\\.revive$" "/G?TAGS$" "/.elfeed/"
-                "^/tmp/" "^/var/folders/.+$" "^/ssh:" "/persp-confs/"
-                (lambda (file) (file-in-directory-p file package-user-dir))))
-  :config
-  (push (expand-file-name recentf-save-file) recentf-exclude)
-  (add-to-list 'recentf-filename-handlers #'abbreviate-file-name))
-
-(use-package savehist
-  :hook (after-init . savehist-mode)
-  :init (setq enable-recursive-minibuffers t ; Allow commands in minibuffers
-              history-length 1000
-              savehist-additional-variables '(mark-ring
-                                              global-mark-ring
-                                              search-ring
-                                              regexp-search-ring
-                                              extended-command-history)
-              savehist-autosave-interval 300))
-
-(use-package so-long
-    :ensure nil
-    :hook (after-init . global-so-long-mode)
-    :config (setq so-long-threshold 400))
 
 (provide 'init-defaults)
+;;; init-defaults.el ends here

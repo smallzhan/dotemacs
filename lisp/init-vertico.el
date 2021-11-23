@@ -1,10 +1,12 @@
 ;;; init-vertico.el -*- lexical-binding: t; -*-
 ;; Enable vertico
+
 (use-package vertico
+  :straight (:files ("*.el" "extensions/*.el"))
   :init
   (vertico-mode)
   :config
-  
+
   ;; Different scroll margin
   (setq vertico-scroll-margin 0)
 
@@ -15,9 +17,21 @@
   (setq vertico-resize nil)
 
   ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-  (setq vertico-cycle t))
-  ;;(add-hook 'minibuffer-setup-hook #'vertico-repeat-save))
-  
+  (setq vertico-cycle t)
+  (setq completion-in-region-function
+        (lambda (&rest args)
+          (apply (if vertico-mode
+                     #'consult-completion-in-region
+                   #'completion--in-region)
+                 args)))
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+  (define-key vertico-map "?" #'minibuffer-completion-help)
+  (define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
+  (define-key vertico-map (kbd "M-TAB") #'minibuffer-complete)
+  (define-key vertico-map [backspace] #'vertico-directory-delete-char))
+
+
 (use-package orderless
   :config
   (defvar +orderless-dispatch-alist
@@ -211,12 +225,12 @@
           (when-let (project (project-current))
             (car (project-roots project))))))
   ;;;; 2. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-root-function #'projectile-project-root)
+;; (autoload 'projectile-project-root "projectile")
+;; (setq consult-project-root-function #'projectile-project-root)
   ;;;; 3. vc.el (vc-root-dir)
-  ;; (setq consult-project-root-function #'vc-root-dir)
+;; (setq consult-project-root-function #'vc-root-dir)
   ;;;; 4. locate-dominating-file
-  ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
 
 ;; Enable richer annotations using the Marginalia package
 (use-package marginalia

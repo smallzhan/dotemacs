@@ -39,8 +39,10 @@
 
 (defconst +my-org-dir (file-truename (expand-file-name "~/Nutstore/Notes/org/")))
 
-(require 'init-package)
+
 (require 'init-defaults)
+(require 'init-package)
+(require 'init-basic)
 (require 'init-ui)
 
 (require 'init-vertico)
@@ -48,3 +50,10 @@
 (require 'init-chinese)
 (require 'init-company)
 (require 'init-org)
+
+(require 'init-lsp)
+(require 'init-rust2)
+(require 'init-python)
+
+(require 'init-git)
+(require 'init-highlight)
