@@ -6,9 +6,10 @@
              color-rg-search-input-in-project
              color-rg-search-input-in-current-file
              color-rg-search-symbol-in-current-file)
-  :config
+  :init 
   (setq color-rg-kill-temp-buffer-p nil
         color-rg-mac-load-path-from-shell nil)
+  :config
   (setq color-rg-ignore-dir-list '("node_modules" "dist" "__pycache__"))
 
   (setq rg-glob-fmt
@@ -416,6 +417,26 @@ string of results."
                       (IS-LINUX "parinfer-rust-linux.so")
                       (IS-WINDOWS "parinfer-rust-windows.dll")))
         parinfer-rust-auto-download t))
+
+(use-package tree-sitter-langs :defer t)
+
+(use-package tree-sitter
+  :defer t
+  :hook (prog-mode . tree-sitter-mode)
+  :hook (tree-sitter-after-on . tree-sitter-hl-mode)
+  :config
+  (require 'tree-sitter-langs)
+  (defun tree-sitter-fail-gracefully-a (orig-fn &rest args)
+    "Don't break with errors when current major mode lacks tree-sitter support."
+    (condition-case e
+        (apply orig-fn args)
+      (error
+       (unless (string-match-p (concat "^Cannot find shared library\\|"
+                                       "^No language registered\\|"
+                                       "cannot open shared object file")
+                            (error-message-string e))
+         (signal (car e) (cadr e))))))
+   (advice-add 'tree-sitter-mode :around #'tree-sitter-fail-gracefully-a))
 
 (provide 'init-edit)
 ;;; init-edit.el ends here

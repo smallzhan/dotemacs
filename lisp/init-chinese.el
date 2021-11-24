@@ -120,7 +120,7 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
   (setq-default rime-inline-predicates
                 '(rime-predicate-space-after-cc-p
                   rime-predicate-current-uppercase-letter-p))
-  (load "im-cursor-chg")
+  (require 'im-cursor-chg)
   (cursor-chg-mode 1)
   :bind
   ("M-l" . #'+rime-convert-string-at-point)

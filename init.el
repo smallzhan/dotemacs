@@ -54,6 +54,7 @@
 (require 'init-lsp)
 (require 'init-rust2)
 (require 'init-python)
+(require 'init-tex)
 
 (require 'init-git)
 (require 'init-highlight)

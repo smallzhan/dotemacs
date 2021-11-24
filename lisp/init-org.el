@@ -2,12 +2,6 @@
 (use-package ox-gfm
   :defer t)
 
-
-(use-package cdlatex
-  :defer t
-  :hook (org-mode . turn-on-org-cdlatex))
-
-
 (use-package org-pomodoro
   :defer t
   :init (when IS-MAC
@@ -291,6 +285,9 @@
   ;;(load! "+protocol")
   ;;  (load! "next-spec-day")
   (require 'next-spec-day)
+  (require 'init-org+jekyll)
+  (require 'init-org+latex)
+  (require 'init-org+html)
 
   (defvar bh/keep-clock-running nil)
 

@@ -1,12 +1,13 @@
 ;; -*- lexical-binding: t; -*-
 
-(use-package! tree-sitter
+
+(use-package tree-sitter
   :defer t
   :hook (prog-mode . tree-sitter-mode)
   :hook (tree-sitter-after-on . tree-sitter-hl-mode)
   :config
   (require 'tree-sitter-langs)
-  (defadvice! doom-tree-sitter-fail-gracefully-a (orig-fn &rest args)
+  (defadvice doom-tree-sitter-fail-gracefully-a (orig-fn &rest args)
     "Don't break with errors when current major mode lacks tree-sitter support."
     :around #'tree-sitter-mode
     (condition-case e
