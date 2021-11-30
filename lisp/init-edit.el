@@ -438,5 +438,8 @@ string of results."
          (signal (car e) (cadr e))))))
    (advice-add 'tree-sitter-mode :around #'tree-sitter-fail-gracefully-a))
 
+
+(use-package format-all)
+
 (provide 'init-edit)
 ;;; init-edit.el ends here

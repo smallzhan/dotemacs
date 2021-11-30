@@ -22,12 +22,19 @@
 
 (defvar default-fonts '("JetBrains Mono" "Fira Code" "SF Mono"))
 ;;font
-(if IS-MAC
-    (set-face-attribute 'default nil :font (nth (random (length default-fonts)) default-fonts))
-  (set-face-attribute 'default nil :font  "DejaVu Sans Mono"))
-(set-face-attribute 'default nil :height (cond (IS-MAC 130)
-                                               (IS-WINDOWS 110)
-                                               (t 120)))
+(setq default-font (nth (random (length default-fonts)) default-fonts))
+(if IS-WINDOWS
+    (setq default-font "DejaVu Sans Mono"))
+
+(set-face-attribute 'default nil :font (format "%s:pixelsize=%d" default-font (if IS-WINDOWS 14 13)))
+;; if IS-MAC
+;;     (setq font (nth (random (length default-fonts)) default-fonts))
+;;   (setq font "DejaVu Sans Mono"
+;;     (set-face-attribute 'default nil :font (nth (random (length default-fonts)) default-fonts)))
+;;   (set-face-attribute 'default nil :font  "DejaVu Sans Mono"))
+;; (set-face-attribute 'default nil :height (cond (IS-MAC 130)
+;;                                                ;;(IS-WINDOWS 110)
+;;                                                (t 100)))
 
 ;;(setq doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 14))
                                         ;(set-default-font "Sarasa Mono SC 14")
