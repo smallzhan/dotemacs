@@ -43,35 +43,66 @@
 (use-package thing-edit
   :straight (thing-edit :type git :host github :repo "manateelazycat/thing-edit"))
 
-(use-package awesome-pair
-:straight (awesome-pair :type git :host github :repo "manateelazycat/awesome-pair")
-:bind (:map awesome-pair-mode-map
-       ("(" . awesome-pair-open-round)
-       ("[" . awesome-pair-open-bracket)
-       ("{" . awesome-pair-open-curly)
-       (")" . awesome-pair-close-round)
-       ("]" . awesome-pair-close-bracket)
-       ("}" . awesome-pair-close-curly)
-       ("=" . awesome-pair-equal)
+(use-package grammatical-edit
+  :straight (grammatical-edit :type git :host github :repo "manateelazycat/grammatical-edit")
+  :bind (:map grammatical-edit-mode-map
+              ("(" . grammatical-edit-open-round)
+              ("[" . grammatical-edit-open-bracket)
+              ("{" . grammatical-edit-open-curly)
+              (")" . grammatical-edit-close-round)
+              ("]" . grammatical-edit-close-bracket)
+              ("}" . grammatical-edit-close-curly)
+              ("=" . grammatical-edit-equal)
 
-       ("%" . awesome-pair-match-paren)
-       ("\"" . awesome-pair-double-quote)
-       ("SPC" . awesome-pair-space)
+              ("%" . grammatical-edit-match-paren)
+              ("\"" . grammatical-edit-double-quote)
 
-       ("M-o" . awesome-pair-backward-delete)
-       ("C-d" . awesome-pair-forward-delete)
-       ("C-k" . awesome-pair-kill)
+              ("SPC" . grammatical-edit-space)
+              ("RET" . grammatical-edit-newline)
 
-       ("M-\"" . awesome-pair-wrap-double-quote)
-       ("M-[" . awesome-pair-wrap-bracket)
-       ("M-{" . awesome-pair-wrap-curly)
-       ("M-(" . awesome-pair-wrap-round)
-       ("M-)" . awesome-pair-unwrap)
-       ("M-p" . awesome-pair-jump-right)
-       ("M-n" . awesome-pair-jump-left)
-       ("M-:" . awesome-pair-jump-out-pair-and-newline))
+              ("M-o" . grammatical-edit-backward-delete)
+              ("C-d" . grammatical-edit-forward-delete)
+              ("C-k" . grammatical-edit-kill)
 
-:hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . awesome-pair-mode))
+              ("M-\"" . grammatical-edit-wrap-double-quote)
+              ("M-[" . grammatical-edit-wrap-bracket)
+              ("M-{" . grammatical-edit-wrap-curly)
+              ("M-(" . grammatical-edit-wrap-round)
+              ("M-)" . grammatical-edit-unwrap)
+
+              ("M-p" . grammatical-edit-jump-right)
+              ("M-n" . grammatical-edit-jump-left)
+              ("M-:" . grammatical-edit-jump-out-pair-and-newline))
+  :hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
+;; (use-package awesome-pair
+;; :straight (awesome-pair :type git :host github :repo "manateelazycat/awesome-pair")
+;; :bind (:map awesome-pair-mode-map
+;;        ("(" . awesome-pair-open-round)
+;;        ("[" . awesome-pair-open-bracket)
+;;        ("{" . awesome-pair-open-curly)
+;;        (")" . awesome-pair-close-round)
+;;        ("]" . awesome-pair-close-bracket)
+;;        ("}" . awesome-pair-close-curly)
+;;        ("=" . awesome-pair-equal)
+;; 
+;;        ("%" . awesome-pair-match-paren)
+;;        ("\"" . awesome-pair-double-quote)
+;;        ("SPC" . awesome-pair-space)
+;; 
+;;        ("M-o" . awesome-pair-backward-delete)
+;;        ("C-d" . awesome-pair-forward-delete)
+;;        ("C-k" . awesome-pair-kill)
+;; 
+;;        ("M-\"" . awesome-pair-wrap-double-quote)
+;;        ("M-[" . awesome-pair-wrap-bracket)
+;;        ("M-{" . awesome-pair-wrap-curly)
+;;        ("M-(" . awesome-pair-wrap-round)
+;;        ("M-)" . awesome-pair-unwrap)
+;;        ("M-p" . awesome-pair-jump-right)
+;;        ("M-n" . awesome-pair-jump-left)
+;;        ("M-:" . awesome-pair-jump-out-pair-and-newline))
+;; 
+;; :hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . awesome-pair-mode))
 
 ;; (use-package! counsel-etags
 ;;   ;;:ensure t
@@ -234,12 +265,12 @@
 string of results."
     (let ((command-string
            (format "%s -x -n %s %s --data-dir %s"
-		   sdcv-program
-		   (mapconcat (lambda (dict)
-				(concat "-u \"" dict "\""))
-			      dictionary-list " ")
-		   (format "\"%s\"" word)
-		   sdcv-dictionary-data-dir)))
+                   sdcv-program
+                   (mapconcat (lambda (dict)
+                                (concat "-u \"" dict "\""))
+                              dictionary-list " ")
+                   (format "\"%s\"" word)
+                   sdcv-dictionary-data-dir)))
       ;; (message command-string)
       (sdcv-filter
        (shell-command-to-string command-string)))))
@@ -268,13 +299,13 @@ string of results."
   (global-set-key (kbd "C-c c j") #'citre-jump)
   (global-set-key (kbd "C-c c J") #'citre-jump-back)
   (global-set-key (kbd "C-c c p") #'citre-ace-peek))
-  ;;:config
-  ;;(setq
-   ;; Set this if readtags is not in your path.
-   ;; citre-readtags-program "/path/to/readtags"
-   ;; Set this if you use project management plugin like projectile.  It's
-   ;; only used to display paths relatively, and doesn't affect actual use.
-   ;;citre-project-root-function #'project-root))
+;;:config
+;;(setq
+;; Set this if readtags is not in your path.
+;; citre-readtags-program "/path/to/readtags"
+;; Set this if you use project management plugin like projectile.  It's
+;; only used to display paths relatively, and doesn't affect actual use.
+;;citre-project-root-function #'project-root))
 
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -434,12 +465,14 @@ string of results."
        (unless (string-match-p (concat "^Cannot find shared library\\|"
                                        "^No language registered\\|"
                                        "cannot open shared object file")
-                            (error-message-string e))
+                               (error-message-string e))
          (signal (car e) (cadr e))))))
-   (advice-add 'tree-sitter-mode :around #'tree-sitter-fail-gracefully-a))
-
+  (advice-add 'tree-sitter-mode :around #'tree-sitter-fail-gracefully-a)
+  (tree-sitter-load 'elisp "elisp")
+  (add-to-list 'tree-sitter-major-mode-language-alist '(emacs-lisp-mode . elisp)))
 
 (use-package format-all)
+
 
 (provide 'init-edit)
 ;;; init-edit.el ends here

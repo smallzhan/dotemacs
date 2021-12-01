@@ -16,5 +16,8 @@
        (unless (string-match-p (concat "^Cannot find shared library\\|"
                                        "^No language registered\\|"
                                        "cannot open shared object file")
-                            (error-message-string e))
-            (signal (car e) (cadr e)))))))
+                               (error-message-string e))
+         (signal (car e) (cadr e))))))
+  
+  (tree-sitter-load 'elisp "elisp")
+  (add-to-list 'tree-sitter-major-mode-language-alist '(emacs-lisp-mode . elisp)))

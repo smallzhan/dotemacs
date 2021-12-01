@@ -81,7 +81,7 @@
  ;; Firefox as default browser
  browse-url-browser-function 'browse-url-firefox
  ;; Custom file path
- custom-file (expand-file-name "custom.el" user-emacs-directory)
+ ;; custom-file (expand-file-name "custom.el" user-emacs-directory)
  ;; prefer y or n
  y-or-n-p-use-read-key t
  ;; always follow link
@@ -125,8 +125,8 @@
 (setq user-full-name "Guoqiang Jin"
       user-mail-address "ustczhan@gmail.com")
 
-(add-hook 'prog-mode-hook 'visual-line-mode)
-(add-hook 'conf-mode-hook 'visual-line-mode)
+;;(add-hook 'prog-mode-hook 'visual-line-mode)
+;;(add-hook 'conf-mode-hook 'visual-line-mode)
 (add-hook 'prog-mode-hook 'hl-line-mode)
 (add-hook 'conf-mode-hook 'hl-line-mode)
 (add-hook 'text-mode-hook 'hl-line-mode)
