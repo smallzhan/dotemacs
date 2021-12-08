@@ -73,17 +73,20 @@
   (defvar modeline-backup-format nil)
   (defun enable-awesome-tray-mode()
     (interactive)
+    (set-face-attribute 'header-line nil :inherit 'unspecified)
     (setq modeline-backup-format mode-line-format
-          mode-line-format "")
+          mode-line-format '(" "))
     (setq awesome-tray-mode-line-active-color (face-attribute 'highlight :background))
     (awesome-tray-mode +1))
   (defun disable-awesome-tray-mode()
     (interactive)
+    (set-face-attribute 'header-line nil :inherit 'mode-line)
     (setq mode-line-format modeline-backup-format
           modeline-backup-format nil)
     (awesome-tray-mode -1))
-
+  
   (add-hook 'emacs-startup-hook #'enable-awesome-tray-mode)
+  (add-hook 'after-load-theme-hook #'enable-awesome-tray-mode)
 
   (defun awesome-tray-module-datetime-info ()
     (let ((system-time-locale "C"))

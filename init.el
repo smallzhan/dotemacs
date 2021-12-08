@@ -59,4 +59,7 @@
 (require 'init-git)
 (require 'init-highlight)
 
+(require 'init-dired) 
+(require 'init-window)
+(require 'init-binding) 
 

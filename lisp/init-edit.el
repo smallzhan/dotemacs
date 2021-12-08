@@ -43,37 +43,7 @@
 (use-package thing-edit
   :straight (thing-edit :type git :host github :repo "manateelazycat/thing-edit"))
 
-(use-package grammatical-edit
-  :straight (grammatical-edit :type git :host github :repo "manateelazycat/grammatical-edit")
-  :bind (:map grammatical-edit-mode-map
-              ("(" . grammatical-edit-open-round)
-              ("[" . grammatical-edit-open-bracket)
-              ("{" . grammatical-edit-open-curly)
-              (")" . grammatical-edit-close-round)
-              ("]" . grammatical-edit-close-bracket)
-              ("}" . grammatical-edit-close-curly)
-              ("=" . grammatical-edit-equal)
 
-              ("%" . grammatical-edit-match-paren)
-              ("\"" . grammatical-edit-double-quote)
-
-              ("SPC" . grammatical-edit-space)
-              ("RET" . grammatical-edit-newline)
-
-              ("M-o" . grammatical-edit-backward-delete)
-              ("C-d" . grammatical-edit-forward-delete)
-              ("C-k" . grammatical-edit-kill)
-
-              ("M-\"" . grammatical-edit-wrap-double-quote)
-              ("M-[" . grammatical-edit-wrap-bracket)
-              ("M-{" . grammatical-edit-wrap-curly)
-              ("M-(" . grammatical-edit-wrap-round)
-              ("M-)" . grammatical-edit-unwrap)
-
-              ("M-p" . grammatical-edit-jump-right)
-              ("M-n" . grammatical-edit-jump-left)
-              ("M-:" . grammatical-edit-jump-out-pair-and-newline))
-  :hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
 ;; (use-package awesome-pair
 ;; :straight (awesome-pair :type git :host github :repo "manateelazycat/awesome-pair")
 ;; :bind (:map awesome-pair-mode-map
@@ -278,14 +248,14 @@ string of results."
 
 
 
-;; (use-package puni
-;;    :straight (puni :type git :host github :repo "Amaikinono/puni")
-;;    :defer t
-;;    :hook ((prog-mode
-;;            sgml-mode
-;;            nxml-mode
-;;            tex-mode
-;;            eval-expression-minibuffer-setup) . puni-mode))
+(use-package puni
+   :straight (puni :type git :host github :repo "Amaikinono/puni")
+   :defer t
+   :hook ((prog-mode
+           sgml-mode
+           nxml-mode
+           tex-mode
+           eval-expression-minibuffer-setup) . puni-mode))
 
 
 
@@ -294,11 +264,11 @@ string of results."
   :defer t
   :init
   ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config)
+  (require 'citre-config))
   ;; Bind your frequently used commands.
-  (global-set-key (kbd "C-c c j") #'citre-jump)
-  (global-set-key (kbd "C-c c J") #'citre-jump-back)
-  (global-set-key (kbd "C-c c p") #'citre-ace-peek))
+  ;; (global-set-key (kbd "C-c c j") #'citre-jump)
+  ;; (global-set-key (kbd "C-c c J") #'citre-jump-back)
+  ;; (global-set-key (kbd "C-c c p") #'citre-ace-peek))
 ;;:config
 ;;(setq
 ;; Set this if readtags is not in your path.
@@ -323,8 +293,14 @@ string of results."
    ;;'("k" . kill-this-buffer)
    '("p" . project-find-file)
    '("d" . dired)
-   '("b" . switch-to-buffer)
+   '("b" . consult-buffer)
+   '("r" . elfeed-dashboard)
    ;; '("r" . deadgrep)
+   '("o" . "C-c o")
+   '("c" . "C-c c")
+   '("t" . "C-c t")
+   '("s" . "C-c s")
+   
    '("f" . find-file)
    '("i" . imenu)
    '("1" . meow-digit-argument)
@@ -429,7 +405,7 @@ string of results."
                                        (motion . "[M]")
                                        (keypad . "[K]")
                                        (insert . "[I]")
-                                       (bmacro . "[B]")))
+                                       (beacon . "[B]")))
   (add-to-list 'meow-mode-state-list '(color-rg-mode . motion))
   (add-to-list 'meow-mode-state-list '(elfeed-dashboard-mode . motion)))
 
@@ -468,11 +444,45 @@ string of results."
                                (error-message-string e))
          (signal (car e) (cadr e))))))
   (advice-add 'tree-sitter-mode :around #'tree-sitter-fail-gracefully-a)
+     
   (tree-sitter-load 'elisp "elisp")
   (add-to-list 'tree-sitter-major-mode-language-alist '(emacs-lisp-mode . elisp)))
+  
+;; (use-package grammatical-edit
+;;   ;;:after tree-sitter
+;;   :straight (grammatical-edit :type git :host github :repo "manateelazycat/grammatical-edit")
+;;   :bind (:map grammatical-edit-mode-map
+;;               ("(" . grammatical-edit-open-round)
+;;               ("[" . grammatical-edit-open-bracket)
+;;               ("{" . grammatical-edit-open-curly)
+;;               (")" . grammatical-edit-close-round)
+;;               ("]" . grammatical-edit-close-bracket)
+;;               ("}" . grammatical-edit-close-curly)
+;;               ("=" . grammatical-edit-equal)
+;; 
+;;               ("%" . grammatical-edit-match-paren)
+;;               ("\"" . grammatical-edit-double-quote)
+;; 
+;;               ("SPC" . grammatical-edit-space)
+;;               ("RET" . grammatical-edit-newline)
+;; 
+;;               ("M-o" . grammatical-edit-backward-delete)
+;;               ("C-d" . grammatical-edit-forward-delete)
+;;               ("C-k" . grammatical-edit-kill)
+;; 
+;;               ("M-\"" . grammatical-edit-wrap-double-quote)
+;;               ("M-[" . grammatical-edit-wrap-bracket)
+;;               ("M-{" . grammatical-edit-wrap-curly)
+;;               ("M-(" . grammatical-edit-wrap-round)
+;;               ("M-)" . grammatical-edit-unwrap)
+;; 
+;;               ("M-p" . grammatical-edit-jump-right)
+;;               ("M-n" . grammatical-edit-jump-left)
+;;               ("M-:" . grammatical-edit-jump-out-pair-and-newline))
+;;   :hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
 
 (use-package format-all)
 
 
 (provide 'init-edit)
-;;; init-edit.el ends here
+;;; init-edit.el ends herer

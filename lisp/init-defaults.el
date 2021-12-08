@@ -173,7 +173,8 @@
       adaptive-fill-first-line-regexp "^* *$"
       sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*"
       sentence-end-double-space nil
-      word-wrap-by-category t)
+      word-wrap-by-category t
+      initial-major-mode 'fundamental-mode)
 
 ;; kmacro keys
 (global-set-key (kbd "C-,") 'kmacro-start-macro-or-insert-counter)

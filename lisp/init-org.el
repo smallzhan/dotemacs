@@ -520,13 +520,53 @@
 ;;   :after org-roam
 ;;   :config
 ;;   (require 'org-ref))
+(use-package elfeed
+  :defer t
+  :config
+  (setq elfeed-show-entry-switch #'pop-to-buffer
+        elfeed-show-entry-delete #'+rss/delete-pane)
+  
+  (defun +rss/delete-pane ()
+   "Delete the *elfeed-entry* split pane."
+   (interactive)
+   (let* ((buf (get-buffer "*elfeed-entry*"))
+          (window (get-buffer-window buf)))
+     (delete-window window)
+     (when (buffer-live-p buf)
+       (kill-buffer buf))))
+  
+  (defun elfeed-search-show-entry-pre (&optional lines)
+   "Returns a function to scroll forward or back in the Elfeed
+  search results, displaying entries without switching to them."
+       (lambda (times)
+         (interactive "p")
+         (forward-line (* times (or lines 0)))
+         (recenter)
+         (call-interactively #'elfeed-search-show-entry)
+         (select-window (previous-window))
+         (unless elfeed-search-remain-on-entry (forward-line -1))))
+  
+  (define-key elfeed-search-mode-map (kbd "n") (elfeed-search-show-entry-pre +1))
+  (define-key elfeed-search-mode-map (kbd "p") (elfeed-search-show-entry-pre -1))
+  (define-key elfeed-search-mode-map (kbd "M-RET") (elfeed-search-show-entry-pre)))
+ 
+
+ 
+(use-package elfeed-org
+  :after elfeed
+  :commands elfeed-org
+  :preface
+  (setq rmh-elfeed-org-files (list "elfeed.org"))
+  :config
+  (elfeed-org))
 
 
 (use-package elfeed-dashboard
   :defer t
-  :after elfeed
+  ;;:after elfeed
   :commands elfeed-dashboard
   :config
+  (require 'elfeed)
   (setq elfeed-dashboard-file (concat org-directory "elfeed-dashboard.org"))
   ;; update feed counts on elfeed-quit
   (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
