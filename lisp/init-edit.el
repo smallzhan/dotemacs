@@ -248,14 +248,14 @@ string of results."
 
 
 
-(use-package puni
-   :straight (puni :type git :host github :repo "Amaikinono/puni")
-   :defer t
-   :hook ((prog-mode
-           sgml-mode
-           nxml-mode
-           tex-mode
-           eval-expression-minibuffer-setup) . puni-mode))
+;; (use-package puni
+;;    :straight (puni :type git :host github :repo "Amaikinono/puni")
+;;    :defer t
+;;    :hook ((prog-mode
+;;            sgml-mode
+;;            nxml-mode
+;;            tex-mode
+;;            eval-expression-minibuffer-setup) . puni-mode))
 
 
 
@@ -448,38 +448,38 @@ string of results."
   (tree-sitter-load 'elisp "elisp")
   (add-to-list 'tree-sitter-major-mode-language-alist '(emacs-lisp-mode . elisp)))
   
-;; (use-package grammatical-edit
-;;   ;;:after tree-sitter
-;;   :straight (grammatical-edit :type git :host github :repo "manateelazycat/grammatical-edit")
-;;   :bind (:map grammatical-edit-mode-map
-;;               ("(" . grammatical-edit-open-round)
-;;               ("[" . grammatical-edit-open-bracket)
-;;               ("{" . grammatical-edit-open-curly)
-;;               (")" . grammatical-edit-close-round)
-;;               ("]" . grammatical-edit-close-bracket)
-;;               ("}" . grammatical-edit-close-curly)
-;;               ("=" . grammatical-edit-equal)
-;; 
-;;               ("%" . grammatical-edit-match-paren)
-;;               ("\"" . grammatical-edit-double-quote)
-;; 
-;;               ("SPC" . grammatical-edit-space)
-;;               ("RET" . grammatical-edit-newline)
-;; 
-;;               ("M-o" . grammatical-edit-backward-delete)
-;;               ("C-d" . grammatical-edit-forward-delete)
-;;               ("C-k" . grammatical-edit-kill)
-;; 
-;;               ("M-\"" . grammatical-edit-wrap-double-quote)
-;;               ("M-[" . grammatical-edit-wrap-bracket)
-;;               ("M-{" . grammatical-edit-wrap-curly)
-;;               ("M-(" . grammatical-edit-wrap-round)
-;;               ("M-)" . grammatical-edit-unwrap)
-;; 
-;;               ("M-p" . grammatical-edit-jump-right)
-;;               ("M-n" . grammatical-edit-jump-left)
-;;               ("M-:" . grammatical-edit-jump-out-pair-and-newline))
-;;   :hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
+(use-package grammatical-edit
+  ;;:after tree-sitter
+  :straight (grammatical-edit :type git :host github :repo "manateelazycat/grammatical-edit")
+  :bind (:map grammatical-edit-mode-map
+              ("(" . grammatical-edit-open-round)
+              ("[" . grammatical-edit-open-bracket)
+              ("{" . grammatical-edit-open-curly)
+              (")" . grammatical-edit-close-round)
+              ("]" . grammatical-edit-close-bracket)
+              ("}" . grammatical-edit-close-curly)
+              ("=" . grammatical-edit-equal)
+
+              ("%" . grammatical-edit-match-paren)
+              ("\"" . grammatical-edit-double-quote)
+
+              ("SPC" . grammatical-edit-space)
+              ("RET" . grammatical-edit-newline)
+
+              ("M-o" . grammatical-edit-backward-delete)
+              ("C-d" . grammatical-edit-forward-delete)
+              ("C-k" . grammatical-edit-kill)
+
+              ("M-\"" . grammatical-edit-wrap-double-quote)
+              ("M-[" . grammatical-edit-wrap-bracket)
+              ("M-{" . grammatical-edit-wrap-curly)
+              ("M-(" . grammatical-edit-wrap-round)
+              ("M-)" . grammatical-edit-unwrap)
+
+              ("M-p" . grammatical-edit-jump-right)
+              ("M-n" . grammatical-edit-jump-left)
+              ("M-:" . grammatical-edit-jump-out-pair-and-newline))
+  :hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
 
 (use-package format-all)
 
