@@ -22,20 +22,16 @@
 
 
   :config
-  ;;(set-repl-handler! 'python-mode #'+python/open-repl :persist t)
-  ;;(set-docsets! '(python-mode inferior-python-mode) "Python 3" "NumPy" "SciPy" "Pandas")
 
-  ;; Stop the spam!
-  (setq python-indent-guess-indent-offset-verbose nil)
-
-  ;; Default to Python 3. Prefer the versioned Python binaries since some
-  ;; systems stupidly make the unversioned one point at Python 2.
   (when (and (executable-find "python3")
              (string= python-shell-interpreter "python"))
-    (setq python-shell-interpreter "python3")))
+    (setq python-shell-interpreter "python3"))
+  (define-key python-mode-map (kbd "DEL") nil))
 
-(use-package live-py-mode)
+(use-package live-py-mode :defer t)
+(use-package pyimport :defer t)
 
+(use-package py-isort :defer t)
 
 (provide 'init-python)
 ;;; init-python.el ends here
