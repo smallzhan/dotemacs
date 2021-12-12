@@ -1,4 +1,4 @@
-;;; init-bindings.el  -*- lexical-binding: t; -*- 
+;;; init-bindings.el  -*- lexical-binding: t; -*-
 
 (use-package which-key
   :hook (after-init . which-key-mode)
@@ -23,10 +23,10 @@
     (define-key keymap (kbd "T") #'org-clock-mark-default-task)
     (define-key keymap (kbd "m") #'org-pomodoro)
     (define-key keymap (kbd "v") #'org-search-view)
-    (define-key keymap (kbd "c") #'delete-window)
-    (define-key keymap (kbd "o") #'delete-other-windows)
     (define-key keymap (kbd "pi") #'bh/punch-in)
     (define-key keymap (kbd "po") #'bh/punch-out)
+    (define-key keymap (kbd "pf") #'org-publish-current-file)
+    (define-key keymap (kbd "pp") #'org-publish-current-project)
     (define-key keymap (kbd "rn") #'org-roam-node-find)
     (define-key keymap (kbd "rf") #'org-roam-ref-find)
     (define-key keymap (kbd "rc") #'org-roam-capture)
@@ -37,7 +37,7 @@
     (define-key keymap (kbd "rr") #'org-roam-buffer-toggle)
     (define-key keymap (kbd "rt") #'org-roam-dailies-goto-today)
     (define-key keymap (kbd "ry") #'org-roam-dailies-find-yesterday)
-       
+
     keymap))
 
 ;; define an alias for your keymap
@@ -46,30 +46,29 @@
 (global-set-key (kbd "C-c o") 'app-org-keymap)
 
 
-(defvar app-code-keymap
+(defvar app-edit-keymap
   (let ((keymap (make-keymap)))
     (define-key keymap (kbd "c") #'compile)
     (define-key keymap (kbd "C") #'recompile)
     (define-key keymap (kbd "d") #'xref-find-definitions)
-    (define-key keymap (kbd "D") #'xref-find-references)
+    (define-key keymap (kbd "x") #'xref-find-references)
     (define-key keymap (kbd "f") #'format-all-buffer)
     (define-key keymap (kbd "r") #'format-all-region)
     (define-key keymap (kbd "w") #'delete-trailing-whitespace)
-    (define-key keymap (kbd "i") #'nox-find-implementation)
-    (define-key keymap (kbd "D") #'nox-find-typeDefinition)
+    (define-key keymap (kbd "i") #'eglot-find-implementation)
+    (define-key keymap (kbd "D") #'eglot-find-typeDefinition)
     (define-key keymap (kbd "s") #'ff-find-other-file)
     (define-key keymap (kbd "j") #'citre-jump)
     (define-key keymap (kbd "b") #'citre-jump-back)
     (define-key keymap (kbd "p") #'citre-ace-peek)
-    (define-key keymap (kbd "b") #'citar-open-entry)
-    
-    
+    (define-key keymap (kbd "t") #'citar-open-entry)
+
     ;;(define-key keymap (kbd "c") #'compile)
     ;;(define-key keymap (kbd "c") #'compile)
     keymap))
 
-(defalias 'app-code-keymap app-code-keymap)
-(global-set-key (kbd "C-c c") 'app-code-keymap)
+(defalias 'app-edit-keymap app-edit-keymap)
+(global-set-key (kbd "C-c e") 'app-edit-keymap)
 
 (defvar app-search-keymap
   (let ((keymap (make-keymap)))
@@ -78,7 +77,7 @@
     (define-key keymap (kbd "f") #'color-rg-search-input-in-current-file)
     (define-key keymap (kbd "e") #'color-rg-search-symbol-in-current-file)
     (define-key keymap (kbd "g") #'consult-git-grep)
-    (define-key keymap (kbd "p") #'consult-ripgrep)
+    (define-key keymap (kbd "P") #'consult-ripgrep)
     (define-key keymap (kbd "l") #'consult-line)
     (define-key keymap (kbd "k") #'consult-keep-lines)
     (define-key keymap (kbd "z") #'lazy-search)
@@ -86,7 +85,9 @@
     (define-key keymap (kbd "i") #'consult-imenu)
     (define-key keymap (kbd "d") #'sdcv-search-input)
     (define-key keymap (kbd "t") #'sdcv-search-pointer+)
-    
+    (define-key keymap (kbd "o") #'consult-org-agenda)
+    (define-key keymap (kbd "n") #'consult-narrow)
+    (define-key keymap (kbd "p") #'consult-find)
     keymap))
 
 (defalias 'app-search-keymap app-search-keymap)
@@ -96,6 +97,7 @@
   (let ((keymap (make-keymap)))
     (define-key keymap (kbd "s") #'flyspell-mode)
     (define-key keymap (kbd "f") #'flycheck-mode)
+    (defind-key keymap (kbd "m") #'flymake-mode)
     (define-key keymap (kbd "F") #'toggle-frame-fullscreen)
     (define-key keymap (kbd "v") #'visual-line-mode)
     (define-key keymap (kbd "h") #'hl-line-mode)

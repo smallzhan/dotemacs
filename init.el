@@ -44,15 +44,16 @@
 (require 'init-package)
 (require 'init-basic)
 (require 'init-ui)
+(require 'init-project) 
 
 (require 'init-vertico)
 (require 'init-edit)
 (require 'init-chinese)
-(require 'init-company)
+;;(require 'init-company)
 (require 'init-org)
 
 (require 'init-lsp)
-(require 'init-rust2)
+(require 'init-rust)
 (require 'init-python)
 (require 'init-tex)
 

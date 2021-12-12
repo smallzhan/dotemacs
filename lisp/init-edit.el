@@ -297,7 +297,7 @@ string of results."
    '("r" . elfeed-dashboard)
    ;; '("r" . deadgrep)
    '("o" . "C-c o")
-   '("c" . "C-c c")
+   '("e" . "C-c e")
    '("t" . "C-c t")
    '("s" . "C-c s")
    

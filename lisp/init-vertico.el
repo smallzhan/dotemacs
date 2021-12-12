@@ -211,26 +211,8 @@
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
-  (setq consult-narrow-key "<") ;; (kbd "C-+")
-
-  ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
-  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-
-  ;; Optionally configure a function which returns the project root directory.
-  ;; There are multiple reasonable alternatives to chose from.
-  ;;;; 1. project.el (project-roots)
-  (setq consult-project-root-function
-        (lambda ()
-          (when-let (project (project-current))
-            (car (project-roots project))))))
-  ;;;; 2. projectile.el (projectile-project-root)
-;; (autoload 'projectile-project-root "projectile")
-;; (setq consult-project-root-function #'projectile-project-root)
-  ;;;; 3. vc.el (vc-root-dir)
-;; (setq consult-project-root-function #'vc-root-dir)
-  ;;;; 4. locate-dominating-file
-;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+  (setq consult-narrow-key "<")) ;; (kbd "C-+")
+  
 
 ;; Enable richer annotations using the Marginalia package
 (use-package marginalia
@@ -275,4 +257,32 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 
+(use-package corfu
+  :custom
+  (corfu-auto t)
+  :init
+  (corfu-global-mode)
+  :config
+  ;;; all the icons formatter for corfu
+  (require 'kind-all-the-icons)
+  (add-to-list 'corfu-margin-formatters 
+               #'kind-all-the-icons-margin-formatter))
+
+(use-package dabbrev
+  ;; Swap M-/ and C-M-/
+  :bind (("M-/" . dabbrev-completion)
+         ("C-M-/" . dabbrev-expand)))
+
+(use-package all-the-icons-completion
+  :config
+  (all-the-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+
+
 (provide 'init-vertico)
+;;; init-vertico.el ends here
+
+
+
+
+
