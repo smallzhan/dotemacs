@@ -24,17 +24,8 @@
   (defvar my--ediff-saved-wconf nil)
   (setq ediff-diff-options "-w" ; turn off whitespace checking
         ediff-split-window-function #'split-window-horizontally
-        ediff-window-setup-function #'ediff-setup-windows-plain)
-  (defun my-ediff-save-wconf-h ()
-    (setq my--ediff-saved-wconf (current-window-configuration)))
-  (defun my-ediff-restore-wconf-h ()
-    (when (window-configuration-p my--ediff-saved-wconf)
-      (set-window-configuration my--ediff-saved-wconf)))
-  (add-hook 'ediff-before-setup-hook #'my-ediff-save-wconf-h)
-  (add-hook 'ediff-quit-hook #'my-ediff-restore-wconf-h)
-  (add-hook 'ediff-suspend-hook #'my-ediff-restore-wconf-h))
-
-
+        ediff-window-setup-function #'ediff-setup-windows-plain))
+  
 ;; (use-package git-timemachine
 ;;   :config
 ;;   (defun my-git-timemachine-show-selected-revision ()
@@ -62,3 +53,4 @@
 
 (provide 'init-git)
 ;;; init-git.el ends here
+(set-buffer)
