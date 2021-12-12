@@ -62,5 +62,7 @@
 
 (require 'init-dired) 
 (require 'init-window)
+(require 'init-eaf)
+
 (require 'init-binding) 
 

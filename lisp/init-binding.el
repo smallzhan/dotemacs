@@ -97,7 +97,7 @@
   (let ((keymap (make-keymap)))
     (define-key keymap (kbd "s") #'flyspell-mode)
     (define-key keymap (kbd "f") #'flycheck-mode)
-    (defind-key keymap (kbd "m") #'flymake-mode)
+    (define-key keymap (kbd "m") #'flymake-mode)
     (define-key keymap (kbd "F") #'toggle-frame-fullscreen)
     (define-key keymap (kbd "v") #'visual-line-mode)
     (define-key keymap (kbd "h") #'hl-line-mode)

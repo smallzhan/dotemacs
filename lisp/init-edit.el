@@ -407,7 +407,9 @@ string of results."
                                        (insert . "[I]")
                                        (beacon . "[B]")))
   (add-to-list 'meow-mode-state-list '(color-rg-mode . motion))
-  (add-to-list 'meow-mode-state-list '(elfeed-dashboard-mode . motion)))
+  (add-to-list 'meow-mode-state-list '(elfeed-dashboard-mode . motion))
+  (add-to-list 'meow-mode-state-list '(eaf-mode . motion)))
+  
 
 (use-package parinfer-rust-mode
   :when (bound-and-true-p module-file-suffix)
@@ -446,7 +448,11 @@ string of results."
   (advice-add 'tree-sitter-mode :around #'tree-sitter-fail-gracefully-a)
      
   (tree-sitter-load 'elisp "elisp")
-  (add-to-list 'tree-sitter-major-mode-language-alist '(emacs-lisp-mode . elisp)))
+  (dolist (mode '(emacs-lisp-mode
+                  inferior-emacs-lisp-mode
+                  lisp-interaction-mode))
+   (add-to-list 'tree-sitter-major-mode-language-alist `(,mode . elisp))))
+  
   
 (use-package grammatical-edit
   ;;:after tree-sitter
@@ -479,7 +485,7 @@ string of results."
               ("M-p" . grammatical-edit-jump-right)
               ("M-n" . grammatical-edit-jump-left)
               ("M-:" . grammatical-edit-jump-out-pair-and-newline))
-  :hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
+  :hook ((prog-mode inferior-emacs-lisp-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
 
 (use-package format-all)
 

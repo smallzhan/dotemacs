@@ -26,67 +26,57 @@
                  args)))
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
-  (define-key vertico-map "?" #'minibuffer-completion-help)
-  (define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
-  (define-key vertico-map (kbd "M-TAB") #'minibuffer-complete)
   (define-key vertico-map [backspace] #'vertico-directory-delete-char))
 
 
 (use-package orderless
   :config
-  (defvar +orderless-dispatch-alist
-    '((?% . char-fold-to-regexp)
-      (?! . orderless-without-literal)
-      (?`. orderless-initialism)
-      (?= . orderless-literal)
-      (?~ . orderless-flex)))
-  ;; Recognizes the following patterns:
-  ;; * ~flex flex~
-  ;; * =literal literal=
-  ;; * %char-fold char-fold%
-  ;; * `initialism initialism`
-  ;; * !without-literal without-literal!
-  ;; * .ext (file extension)
-  ;; * regexp$ (regexp matching at end)
-  (defun +orderless-dispatch (pattern index _total)
-    (cond
-     ;; Ensure that $ works with Consult commands, which add disambiguation suffixes
-     ((string-suffix-p "$" pattern)
-      `(orderless-regexp . ,(concat (substring pattern 0 -1) "[\x100000-\x10FFFD]*$")))
-     ;; File extensions
-     ((and
-       ;; Completing filename or eshell
-       (or minibuffer-completing-file-name
-           (derived-mode-p 'eshell-mode))
-       ;; File extension
-       (string-match-p "\\`\\.." pattern))
-      `(orderless-regexp . ,(concat "\\." (substring pattern 1) "[\x100000-\x10FFFD]*$")))
-     ;; Ignore single !
-     ((string= "!" pattern) `(orderless-literal . ""))
-     ;; Prefix and suffix
-     ((if-let (x (assq (aref pattern 0) +orderless-dispatch-alist))
-          (cons (cdr x) (substring pattern 1))
-        (when-let (x (assq (aref pattern (1- (length pattern))) +orderless-dispatch-alist))
-          (cons (cdr x) (substring pattern 0 -1)))))))
-
-  ;; Define orderless style with initialism by default
-  (orderless-define-completion-style +orderless-with-initialism
-    (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp)))
-
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        ;;; Enable partial-completion for files.
-        ;;; Either give orderless precedence or partial-completion.
-        ;;; Note that completion-category-overrides is not really an override,
-        ;;; but rather prepended to the default completion-styles.
-        ;; completion-category-overrides '((file (styles orderless partial-completion))) ;; orderless is tried first
-        completion-category-overrides '((file (styles partial-completion)) ;; partial-completion is tried first
-                                        ;; enable initialism by default for symbols
-                                        (command (styles +orderless-with-initialism))
-                                        (variable (styles +orderless-with-initialism))
-                                        (symbol (styles +orderless-with-initialism)))
-        orderless-component-separator #'orderless-escapable-split-on-space ;; allow escaping space with backslash!
-        orderless-style-dispatchers '(+orderless-dispatch)))
+   (defun +vertico-orderless-dispatch (pattern _index _total)
+     (cond
+      ;; Ensure $ works with Consult commands, which add disambiguation suffixes
+      ((string-suffix-p "$" pattern)
+       `(orderless-regexp . ,(concat (substring pattern 0 -1) "[\x100000-\x10FFFD]*$")))
+      ;; Ignore single !
+      ((string= "!" pattern) 
+       `(orderless-literal . ""))
+      ;; Without literal
+      ((string-prefix-p "!" pattern) 
+       `(orderless-without-literal . ,(substring pattern 1)))
+      ;; Character folding
+      ((string-prefix-p "%" pattern) 
+       `(char-fold-to-regexp . ,(substring pattern 1)))
+      ((string-suffix-p "%" pattern) 
+       `(char-fold-to-regexp . ,(substring pattern 0 -1)))
+      ;; Initialism matching
+      ((string-prefix-p "`" pattern) 
+       `(orderless-initialism . ,(substring pattern 1)))
+      ((string-suffix-p "`" pattern) 
+       `(orderless-initialism . ,(substring pattern 0 -1)))
+      ;; Literal matching
+      ((string-prefix-p "=" pattern) 
+       `(orderless-literal . ,(substring pattern 1)))
+      ((string-suffix-p "=" pattern) 
+       `(orderless-literal . ,(substring pattern 0 -1)))
+      ;; Flex matching
+      ((string-prefix-p "~" pattern) 
+       `(orderless-flex . ,(substring pattern 1)))
+      ((string-suffix-p "~" pattern) 
+       `(orderless-flex . ,(substring pattern 0 -1)))))
+  
+   (setq completion-styles '(orderless)
+         completion-category-defaults nil
+         completion-category-overrides '((file (styles orderless partial-completion)))
+         orderless-style-dispatchers '(+vertico-orderless-dispatch))
+         
+  ;; ...otherwise find-file gets different highlighting than other commands
+   (set-face-attribute 'completions-first-difference nil :inherit nil)
+   ;; doom-themes may add background to orderless-match-face...
+   (set-face-attribute 'orderless-match-face-0 nil :background 'unspecified)
+   (set-face-attribute 'orderless-match-face-1 nil :background 'unspecified)
+   (set-face-attribute 'orderless-match-face-2 nil :background 'unspecified)
+   (set-face-attribute 'orderless-match-face-3 nil :background 'unspecified))
+  
+  
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
@@ -277,6 +267,30 @@
   :config
   (all-the-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+
+;; (defvar orderless-dark-colors '("#51afef" "#ed92f8" "#90d800" "#f0ce43"))
+;; (defvar orderless-light-colors '("#223fbf" "#8f0075" "#145a00" "#804000"))
+;; (defvar orderless-default-colors '("blue" "magenta" "green" "yellow"))
+;; 
+;; (defmacro orderless-define-face (n)
+;;   (let ((darkcolor (nth n orderless-dark-colors))
+;;         (lightcolor (nth n orderless-light-colors))
+;;         (defaultcolor (nth n orderless-default-colors)))
+;;     `(defface ,(intern (concat "t-orderless-match-face-" (int-to-string n)))
+;;        '((default :weight bold)
+;;          (((class color) (min-colors 88) (background dark)) :foreground ,darkcolor)
+;;          (((class color) (min-colors 88) (background light)) :foreground ,lightcolor)
+;;          (t :foreground ,defaultcolor))
+;;        ,(concat "Face for matches of components numbered " (int-to-string n)))))
+;;   
+;; (orderless-define-face 0)
+;; (orderless-define-face 1)
+;; (orderless-define-face 2)
+;; (orderless-define-face 3)
+;; 
+;; (setq orderless-match-faces
+;;       [t-orderless-match-face-0 t-orderless-match-face-1 t-orderless-match-face-2 t-orderless-match-face-3])
+
 
 
 (provide 'init-vertico)

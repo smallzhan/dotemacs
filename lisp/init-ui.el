@@ -1,15 +1,24 @@
 ;;; init-ui.el -*- lexical-binding: t; -*-
 
 ;; theme
-;; cycle by +my/toggle-cycle-theme, binding SPC t t
-(straight-use-package 'doom-themes)
-(load-theme 'doom-one)
+
+(use-package doom-themes)
+;;(use-package zenburn-theme)
+
+;;(load-theme 'doom-one t)
+
+(use-package circadian
+  :config
+  (setq circadian-themes '(("8:00" . doom-one-light)
+                           ("19:30" . doom-one)))
+  (circadian-setup))
 
 ;; disable line-number
 (setq display-line-numbers-type nil)
 (when IS-MAC
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . dark))
+  (add-to-list 'default-frame-alist '(undecorated . t))
+  ;;(add-to-list 'default-frame-alist '(ns-appearance . dark))
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))
   (add-hook 'after-load-theme-hook
             (lambda ()
