@@ -22,7 +22,7 @@
    "The default cursor color.")
 
 ;;; default color maybe changed in themes, need hook at emacs-startup.
-(add-hook 'emacs-startup-hook
+(add-hook 'after-load-theme-hook
           #'(lambda ()
                 (setq im-default-cursor-color
                       (frame-parameter nil 'cursor-color))))

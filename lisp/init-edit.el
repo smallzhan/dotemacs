@@ -20,11 +20,6 @@
   (setq color-rg-search-ignore-rules
         (mapconcat
          (lambda (x) (format rg-glob-fmt x)) color-rg-ignore-dir-list "")))
-;;(remove-hook 'compilation-filter-hook
-;;             #'doom-apply-ansi-color-to-compilation-buffer-h))
-
-                                        ;(use-package! aweshell
-                                        ;  :init (setq aweshell-use-exec-path-from-shell nil))
 
 (use-package auto-save
   :straight (auto-save :type git :host github :repo "manateelazycat/auto-save")
@@ -33,12 +28,9 @@
   :config
   (auto-save-enable))
 
-
-
 (use-package lazy-search
   :straight (lazy-search :type git :host github :repo "manateelazycat/lazy-search")
   :commands lazy-search)
-
 
 (use-package thing-edit
   :straight (thing-edit :type git :host github :repo "manateelazycat/thing-edit"))
@@ -386,7 +378,7 @@ string of results."
    '("%" . meow-query-replace-regexp)
    '("'" . repeat)
    '("\\" . quoted-insert)
-   '("<escape>" . meow-last-buffer)))
+   '("<escape>" . ignore)))
 
 
 

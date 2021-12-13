@@ -3,29 +3,37 @@
 ;; theme
 
 (use-package doom-themes)
-;;(use-package zenburn-theme)
+(use-package timu-spacegrey-theme)
 
-;;(load-theme 'doom-one t)
+(load-theme 'timu-spacegrey t)
 
-(use-package circadian
-  :config
-  (setq circadian-themes '(("8:00" . doom-one-light)
-                           ("19:30" . doom-one)))
-  (circadian-setup))
+
 
 ;; disable line-number
 (setq display-line-numbers-type nil)
 (when IS-MAC
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(undecorated . t))
-  ;;(add-to-list 'default-frame-alist '(ns-appearance . dark))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark))
   (add-to-list 'initial-frame-alist '(fullscreen . maximized))
   (add-hook 'after-load-theme-hook
             (lambda ()
               (let ((bg (frame-parameter nil 'background-mode)))
                 (set-frame-parameter nil 'ns-appearance bg)
-                (setcdr (assq 'ns-appearance default-frame-alist) bg)))))
+                (setcdr (assq 'ns-appearance default-frame-alist) bg))))
+  (add-hook 'ns-system-appearance-change-functions
+          #'(lambda (appearance)
+              (mapc #'disable-theme custom-enabled-themes)
+              (pcase appearance
+                ('light (load-theme 'doom-one-light t))
+                ('dark (load-theme 'doom-one t))))))
 
+(when IS-WINDOWS
+  (use-package circadian)
+  :config
+  (setq circadian-themes '(("8:00" . doom-one-light)
+                           ("19:30" . doom-one)))
+  (circadian-setup))
 
 
 
