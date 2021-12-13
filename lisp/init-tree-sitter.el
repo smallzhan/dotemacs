@@ -19,5 +19,7 @@
                                (error-message-string e))
          (signal (car e) (cadr e))))))
   
+  (add-to-list 'tree-sitter-load-path 
+               (expand-file-name "tree-sitter/bin/" user-emacs-directory))
   (tree-sitter-load 'elisp "elisp")
   (add-to-list 'tree-sitter-major-mode-language-alist '(emacs-lisp-mode . elisp)))
