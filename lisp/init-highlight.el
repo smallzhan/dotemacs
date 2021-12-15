@@ -193,7 +193,8 @@ FACE defaults to inheriting from default and highlight."
   :hook (after-init . global-diff-hl-mode)
   :hook (dired-mode . diff-hl-dired-mode-unless-remote)
   :hook (magit-post-refresh . diff-hl-magit-post-refresh)
-  )
+  :config
+  (setq vc-git-diff-switches '("--histogram")))
 
 ;; Highlight some operations
 (use-package volatile-highlights

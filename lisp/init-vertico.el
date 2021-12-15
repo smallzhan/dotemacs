@@ -67,18 +67,14 @@
          completion-category-defaults nil
          completion-category-overrides '((file (styles orderless partial-completion)))
          orderless-style-dispatchers '(+vertico-orderless-dispatch))
-   ;; only enable orderless at minibuffer (from purcell)
-   (defun sanityinc/use-orderless-in-minibuffer ()
+   
+   (defun my/use-orderless-in-minibuffer ()
     (setq-local completion-styles '(substring orderless)))
-  (add-hook 'minibuffer-setup-hook 'sanityinc/use-orderless-in-minibuffer)
+   (add-hook 'minibuffer-setup-hook #'my/use-orderless-in-minibuffer)
  
-         
   ;; ...otherwise find-file gets different highlighting than other commands
   (set-face-attribute 'completions-first-difference nil :inherit nil))
   
-  
- 
-
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :init
@@ -268,30 +264,6 @@
   :config
   (all-the-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
-
-;; (defvar orderless-dark-colors '("#51afef" "#ed92f8" "#90d800" "#f0ce43"))
-;; (defvar orderless-light-colors '("#223fbf" "#8f0075" "#145a00" "#804000"))
-;; (defvar orderless-default-colors '("blue" "magenta" "green" "yellow"))
-;; 
-;; (defmacro orderless-define-face (n)
-;;   (let ((darkcolor (nth n orderless-dark-colors))
-;;         (lightcolor (nth n orderless-light-colors))
-;;         (defaultcolor (nth n orderless-default-colors)))
-;;     `(defface ,(intern (concat "t-orderless-match-face-" (int-to-string n)))
-;;        '((default :weight bold)
-;;          (((class color) (min-colors 88) (background dark)) :foreground ,darkcolor)
-;;          (((class color) (min-colors 88) (background light)) :foreground ,lightcolor)
-;;          (t :foreground ,defaultcolor))
-;;        ,(concat "Face for matches of components numbered " (int-to-string n)))))
-;;   
-;; (orderless-define-face 0)
-;; (orderless-define-face 1)
-;; (orderless-define-face 2)
-;; (orderless-define-face 3)
-;; 
-;; (setq orderless-match-faces
-;;       [t-orderless-match-face-0 t-orderless-match-face-1 t-orderless-match-face-2 t-orderless-match-face-3])
-
 
 (provide 'init-vertico)
 ;;; init-vertico.el ends here

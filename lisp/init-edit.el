@@ -482,6 +482,9 @@ string of results."
 
 (use-package format-all)
 
+(use-package vundo
+  :straight (vundo :type git :host github :repo "casouri/vundo")
+  :commands vundo)
 
 (provide 'init-edit)
 ;;; init-edit.el ends here

@@ -110,12 +110,12 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(show-paren-mode -1)
+;;(show-paren-mode -1)
 ;;(menu-bar-mode -1)
 ;;(scroll-bar-mode -1)
-(push '(menu-bar-lines . 0)   default-frame-alist)
-(push '(tool-bar-lines . 0)   default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
+;;(push '(menu-bar-lines . 0)   default-frame-alist)
+;;(push '(tool-bar-lines . 0)   default-frame-alist)
+;;(push '(vertical-scroll-bars) default-frame-alist)
 ;; And set these to nil so users don't have to toggle the modes twice to
 ;; reactivate them.
 (setq menu-bar-mode nil
@@ -191,9 +191,6 @@
 
 (defvar +proxy-host "localhost")
 (defvar +proxy-port 1089)
-
-
-
 
 (provide 'init-defaults)
 ;;; init-defaults.el ends here

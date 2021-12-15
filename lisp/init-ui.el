@@ -3,11 +3,6 @@
 ;; theme
 
 (use-package doom-themes)
-(use-package timu-spacegrey-theme)
-
-(load-theme 'timu-spacegrey t)
-
-
 
 ;; disable line-number
 (setq display-line-numbers-type nil)
@@ -146,6 +141,9 @@
       (message "Reset all-the-icons"))))
 
 
+(with-eval-after-load 'fringe
+  (fringe-mode '(4 . 4))
+  (setq-default fringes-outside-margins t))
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
