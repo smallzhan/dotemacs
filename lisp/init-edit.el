@@ -484,4 +484,4 @@ string of results."
 
 
 (provide 'init-edit)
-;;; init-edit.el ends herer
+;;; init-edit.el ends here

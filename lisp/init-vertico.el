@@ -67,18 +67,15 @@
          completion-category-defaults nil
          completion-category-overrides '((file (styles orderless partial-completion)))
          orderless-style-dispatchers '(+vertico-orderless-dispatch))
+   ;; only enable orderless at minibuffer (from purcell)
    (defun sanityinc/use-orderless-in-minibuffer ()
     (setq-local completion-styles '(substring orderless)))
   (add-hook 'minibuffer-setup-hook 'sanityinc/use-orderless-in-minibuffer)
-  ;;(add-hook)
+ 
          
   ;; ...otherwise find-file gets different highlighting than other commands
-  (set-face-attribute 'completions-first-difference nil :inherit nil)
-   ;; doom-themes may add background to orderless-match-face...
-  (set-face-attribute 'orderless-match-face-0 nil :background 'unspecified)
-  (set-face-attribute 'orderless-match-face-1 nil :background 'unspecified)
-  (set-face-attribute 'orderless-match-face-2 nil :background 'unspecified)
-  (set-face-attribute 'orderless-match-face-3 nil :background 'unspecified))
+  (set-face-attribute 'completions-first-difference nil :inherit nil))
+  
   
  
 
