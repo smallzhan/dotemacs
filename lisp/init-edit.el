@@ -438,7 +438,8 @@ string of results."
                                (error-message-string e))
          (signal (car e) (cadr e))))))
   (advice-add 'tree-sitter-mode :around #'tree-sitter-fail-gracefully-a)
-     
+  (add-to-list 'tree-sitter-load-path 
+               (expand-file-name "tree-sitter/bin/" user-emacs-directory))
   (tree-sitter-load 'elisp "elisp")
   (dolist (mode '(emacs-lisp-mode
                   inferior-emacs-lisp-mode

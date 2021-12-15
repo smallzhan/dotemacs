@@ -21,11 +21,11 @@
   ;;      leave it to our :checkers syntax module to do all the set up properly.
   ;;(remove-hook 'rustic-mode-hook #'flycheck-mode)
         ;;(remove-hook 'rustic-mode-hook #'flymake-mode-off)
-  (defun +rustic-setup-eglot()
-   (setq rustic-lsp-client 'eglot)
-   (require 'eglot)
-   (eglot-ensure))
-  (add-hook 'rustic-mode-hook #'+rustic-setup-eglot))
+  (defun +rustic-setup-nox()
+   (setq rustic-lsp-client 'nox)
+   (require 'nox)
+   (nox-ensure))
+  (add-hook 'rustic-mode-hook #'+rustic-setup-nox))
 
   ;; (map! :map rustic-mode-map
   ;;       :localleader

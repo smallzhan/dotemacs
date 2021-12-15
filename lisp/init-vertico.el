@@ -63,20 +63,24 @@
       ((string-suffix-p "~" pattern) 
        `(orderless-flex . ,(substring pattern 0 -1)))))
   
-   (setq completion-styles '(orderless)
+   (setq completion-styles '(flex)
          completion-category-defaults nil
          completion-category-overrides '((file (styles orderless partial-completion)))
          orderless-style-dispatchers '(+vertico-orderless-dispatch))
+   (defun sanityinc/use-orderless-in-minibuffer ()
+    (setq-local completion-styles '(substring orderless)))
+  (add-hook 'minibuffer-setup-hook 'sanityinc/use-orderless-in-minibuffer)
+  ;;(add-hook)
          
   ;; ...otherwise find-file gets different highlighting than other commands
-   (set-face-attribute 'completions-first-difference nil :inherit nil)
+  (set-face-attribute 'completions-first-difference nil :inherit nil)
    ;; doom-themes may add background to orderless-match-face...
-   (set-face-attribute 'orderless-match-face-0 nil :background 'unspecified)
-   (set-face-attribute 'orderless-match-face-1 nil :background 'unspecified)
-   (set-face-attribute 'orderless-match-face-2 nil :background 'unspecified)
-   (set-face-attribute 'orderless-match-face-3 nil :background 'unspecified))
+  (set-face-attribute 'orderless-match-face-0 nil :background 'unspecified)
+  (set-face-attribute 'orderless-match-face-1 nil :background 'unspecified)
+  (set-face-attribute 'orderless-match-face-2 nil :background 'unspecified)
+  (set-face-attribute 'orderless-match-face-3 nil :background 'unspecified))
   
-  
+ 
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
@@ -290,7 +294,6 @@
 ;; 
 ;; (setq orderless-match-faces
 ;;       [t-orderless-match-face-0 t-orderless-match-face-1 t-orderless-match-face-2 t-orderless-match-face-3])
-
 
 
 (provide 'init-vertico)

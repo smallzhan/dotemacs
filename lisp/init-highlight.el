@@ -1,9 +1,6 @@
 ;; init-highlight.el --- Initialize highlighting configurations.	-*- lexical-binding: t -*-
 
 
-
-;;(require 'init-const)
-
 ;; Highlight the current line
 (use-package hl-line
   :ensure nil
@@ -172,9 +169,9 @@ FACE defaults to inheriting from default and highlight."
       (remove-overlays (point-min) (point-max) 'ovrainbow t))
     (advice-add #'rainbow-turn-off :after #'my-rainbow-clear-overlays)))
 
-;; Highlight brackets according to their depth
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+;; ;; Highlight brackets according to their depth
+;; (use-package rainbow-delimiters
+;;   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Highlight TODO and similar keywords in comments and strings
 (use-package hl-todo
@@ -186,58 +183,17 @@ FACE defaults to inheriting from default and highlight."
          ("C-c t i" . hl-todo-insert))
   :hook (after-init . global-hl-todo-mode)
   :config
-  (dolist (keyword '("BUG" "DEFECT" "ISSUE"))
+  (dolist (keyword '("BUG" "DEFECT" "ISSUE" "FIXME"))
     (cl-pushnew `(,keyword . ,(face-foreground 'error)) hl-todo-keyword-faces))
   (dolist (keyword '("WORKAROUND" "HACK" "TRICK"))
     (cl-pushnew `(,keyword . ,(face-foreground 'warning)) hl-todo-keyword-faces)))
 
 ;; Highlight uncommitted changes using VC
 (use-package diff-hl
-  :custom-face
-  (diff-hl-change ((t (:foreground ,(face-background 'highlight) :background nil))))
-  (diff-hl-insert ((t (:inherit diff-added :background nil))))
-  (diff-hl-delete ((t (:inherit diff-removed :background nil))))
-  :bind (:map diff-hl-command-map
-         ("SPC" . diff-hl-mark-hunk))
-  :hook ((after-init . global-diff-hl-mode)
-         (dired-mode . diff-hl-dired-mode))
-  :init (setq diff-hl-draw-borders nil)
-  :config
-  ;; Highlight on-the-fly
-  (diff-hl-flydiff-mode 1)
-
-  ;; Set fringe style
-  (setq-default fringes-outside-margins t)
-
-  ;; Reset faces after changing the color theme
-  (add-hook 'after-load-theme-hook
-            (lambda ()
-              (custom-set-faces
-               `(diff-hl-change ((t (:foreground ,(face-background 'highlight) :background nil))))
-               '(diff-hl-insert ((t (:inherit diff-added :background nil))))
-               '(diff-hl-delete ((t (:inherit diff-removed :background nil)))))))
-
-  (with-no-warnings
-    (defun my-diff-hl-fringe-bmp-function (_type _pos)
-      "Fringe bitmap function for use as `diff-hl-fringe-bmp-function'."
-      (define-fringe-bitmap 'my-diff-hl-bmp
-        (vector (if IS-MAC #b11100000 #b11111100))
-        1 8
-        '(center t)))
-    (setq diff-hl-fringe-bmp-function #'my-diff-hl-fringe-bmp-function)
-
-    (when (or (not (display-graphic-p)) (daemonp))
-      ;; Fall back to the display margin since the fringe is unavailable in tty
-      (diff-hl-margin-mode 1)
-      ;; Avoid restoring `diff-hl-margin-mode'
-      (with-eval-after-load 'desktop
-        (add-to-list 'desktop-minor-mode-table
-                     '(diff-hl-margin-mode nil))))
-
-    ;; Integration with magit
-    (with-eval-after-load 'magit
-      (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
-      (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))))
+  :hook (after-init . global-diff-hl-mode)
+  :hook (dired-mode . diff-hl-dired-mode-unless-remote)
+  :hook (magit-post-refresh . diff-hl-magit-post-refresh)
+  )
 
 ;; Highlight some operations
 (use-package volatile-highlights
