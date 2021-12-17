@@ -57,6 +57,7 @@
     (define-key keymap (kbd "w") #'delete-trailing-whitespace)
     (define-key keymap (kbd "i") #'nox-find-implementation)
     (define-key keymap (kbd "D") #'nox-find-typeDefinition)
+    (define-key keymap (kbd "m") #'nox-show-doc)
     (define-key keymap (kbd "s") #'ff-find-other-file)
     (define-key keymap (kbd "j") #'citre-jump)
     (define-key keymap (kbd "b") #'citre-jump-back)
