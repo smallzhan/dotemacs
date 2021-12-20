@@ -106,7 +106,9 @@
  ;; disable copy region blink
  copy-region-blink-delay 0
  ;; hscroll only for current line
- auto-hscroll-mode 'current-line)
+ auto-hscroll-mode 'current-line
+ ;; system-time-locale
+ system-time-locale "C") 
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -138,7 +140,7 @@
 
 (setq time-stamp-active t)
 (setq time-stamp-warn-inactive t)
-(setq time-stamp-format "%:u %04y-%02m-%02d %02H:%02M:%02S")
+(setq time-stamp-format "%:u %Y-%m-%d %H:%M:%S")
 (setq time-stamp-end: "\n")
 (add-hook 'write-file-hooks 'time-stamp)
 

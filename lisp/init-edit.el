@@ -35,7 +35,6 @@
 (use-package thing-edit
   :straight (thing-edit :type git :host github :repo "manateelazycat/thing-edit"))
 
-
 ;; (use-package awesome-pair
 ;; :straight (awesome-pair :type git :host github :repo "manateelazycat/awesome-pair")
 ;; :bind (:map awesome-pair-mode-map
@@ -114,8 +113,6 @@ string of results."
        (shell-command-to-string command-string)))))
 ;; Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
 
-
-
 ;; (use-package puni
 ;;    :straight (puni :type git :host github :repo "Amaikinono/puni")
 ;;    :defer t
@@ -124,8 +121,6 @@ string of results."
 ;;            nxml-mode
 ;;            tex-mode
 ;;            eval-expression-minibuffer-setup) . puni-mode))
-
-
 
 (use-package citre
   :straight (citre :type git :host github :repo "universal-ctags/citre")
@@ -137,13 +132,6 @@ string of results."
   ;; (global-set-key (kbd "C-c c j") #'citre-jump)
   ;; (global-set-key (kbd "C-c c J") #'citre-jump-back)
   ;; (global-set-key (kbd "C-c c p") #'citre-ace-peek))
-;;:config
-;;(setq
-;; Set this if readtags is not in your path.
-;; citre-readtags-program "/path/to/readtags"
-;; Set this if you use project management plugin like projectile.  It's
-;; only used to display paths relatively, and doesn't affect actual use.
-;;citre-project-root-function #'project-root))
 
 (defun meow-setup ()
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -363,7 +351,6 @@ string of results."
   :commands vundo)
 
 (use-package autorevert
-  :ensure nil
   :hook (after-init . global-auto-revert-mode))
 
 (provide 'init-edit)

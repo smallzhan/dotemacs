@@ -24,13 +24,11 @@
                 ('dark (load-theme 'doom-one t))))))
 
 (when IS-WINDOWS
-  (use-package circadian)
-  :config
-  (setq circadian-themes '(("8:00" . doom-one-light)
-                           ("19:30" . doom-one)))
-  (circadian-setup))
-
-
+  (use-package circadian
+   :config
+   (setq circadian-themes '(("8:00" . doom-one-light)
+                            ("19:30" . doom-one)))
+   (circadian-setup)))
 
 (defvar default-fonts '("JetBrains Mono" "Fira Code" "SF Mono"))
 ;;font
@@ -97,7 +95,7 @@
           modeline-backup-format nil)
     (awesome-tray-mode -1))
   
-  (add-hook 'emacs-startup-hook #'enable-awesome-tray-mode)
+  ;;(add-hook 'emacs-startup-hook #'enable-awesome-tray-mode)
   (add-hook 'after-load-theme-hook #'enable-awesome-tray-mode)
 
   (defun awesome-tray-module-datetime-info ()
@@ -110,8 +108,6 @@
   (add-to-list 'awesome-tray-module-alist
                '("meow" . (meow-indicator awesome-tray-module-evil-face)))
 
-
-
   (setq awesome-tray-active-modules '("meow"
                                       "git"
                                       "location"
@@ -120,7 +116,31 @@
                                       "buffer-name"
                                       "buffer-read-only"
                                       "datetime")))
-
+;; (use-package mini-modeline
+;;   :init (setq mini-modeline-face-attr `(:background ,(face-attribute 'default :background)))
+;;   :config
+;;   (defun my/enable-mini-modeline ()
+;;     (setq mini-modeline-face-attr `(:background ,(face-attribute 'default :background)))
+;;     (mini-modeline-mode 1))
+;;  
+;;   (setq mini-modeline-truncate-p t
+;;         mini-modeline-r-format '("%e"
+;;                                  mode-line-front-space
+;;                                  mode-line-mule-info
+;;                                  mode-line-client
+;;                                  mode-line-modified
+;;                                  mode-line-remote
+;;                                  mode-line-frame-identification
+;;                                  mode-line-buffer-identification
+;;                                  (vc-mode vc-mode)
+;;                                  " "
+;;                                  mode-line-position
+;;                                  " "
+;;                                  awesome-tray-module-datetime-info
+;;                                  mode-line-misc-info
+;;                                  mode-line-end-spaces))
+;;                                  ;;awesome-tray-module-datetime-info))
+;;   :hook (after-load-theme . my/enable-mini-modeline))
 
 (use-package all-the-icons
   :init (unless (or IS-WINDOWS (font-installed-p "all-the-icons"))
@@ -139,7 +159,6 @@
                       all-the-icons-icon-family))
         (all-the-icons-cache func))
       (message "Reset all-the-icons"))))
-
 
 (with-eval-after-load 'fringe
   (fringe-mode '(4 . 4))

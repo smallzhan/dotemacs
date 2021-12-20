@@ -104,7 +104,9 @@
           ("ACTIVE" ("WAIT") ("CANCEL") ("HOLD"))
           ("DONE" ("WAIT") ("CANCEL") ("HOLD"))))
 
-  (setq org-columns-default-format "%70ITEM(Task) %10Effort(Effort){:} %20CLOCKSUM")
+  (setq org-columns-default-format 
+        "%70ITEM(Task) %10Effort(Effort){:} %20CLOCKSUM")
+  
   (setq org-agenda-log-mode-items '(closed state))
 
   (setq org-tag-alist '((:startgroup)
@@ -128,8 +130,7 @@
                         ("PROJ" . ?j)))
 
   (setq org-emphasis-regexp-components
-        '(
-          "：，。、  \t('\"{"            ;pre
+        '("：，。、  \t('\"{"            ;pre
           "- ：，。、 \t.,:!?;'\")}\\"   ;post
           " \t\r\n,\"'"                  ;border *forbidden*
           "."                            ;body-regexp
@@ -236,8 +237,6 @@
 
   (setq org-publish-project-alist '())
 
-  (setq-default system-time-locale "C")
-
   (pretty-hydra-define
     org-hydra
     (:title "Org Templates"
@@ -275,15 +274,6 @@
              (hot-expand "<s" "perl")) "Perl tangled")
       ("<" self-insert-command "ins"))))
 
-
-  ;;(if (featurep! +jekyll) (load! "+jekyll"))
-  ;;(if (featurep! +latex) (load! "+latex"))
-  ;;(if (featurep! +html) (load! "+html"))
-  ;;(if (featurep! +dragndrop) (load! "~/.emacs.d/modules/lang/org/contrib/dragndrop"))
-  ;;(if (featurep! +jupyter) (load! "~/.emacs.d/modules/lang/org/contrib/jupyter"))
-
-  ;;(load! "+protocol")
-  ;;  (load! "next-spec-day")
   (require 'next-spec-day)
   (require 'init-org+jekyll)
   (require 'init-org+latex)
@@ -550,8 +540,6 @@
   (define-key elfeed-search-mode-map (kbd "p") (elfeed-search-show-entry-pre -1))
   (define-key elfeed-search-mode-map (kbd "M-RET") (elfeed-search-show-entry-pre)))
  
-
- 
 (use-package elfeed-org
   :after elfeed
   :commands elfeed-org
@@ -559,7 +547,6 @@
   (setq rmh-elfeed-org-files (list "elfeed.org"))
   :config
   (elfeed-org))
-
 
 (use-package elfeed-dashboard
   :defer t
@@ -583,7 +570,6 @@
         org-caldav-inbox (concat org-directory "agenda/dingtalk.org"))
   (setq org-caldav-files (list org-caldav-inbox))
   (add-to-list 'org-agenda-files org-caldav-inbox))
-
 
 ;; Set bibliography paths so they are the same.
 (use-package bibtex
@@ -623,7 +609,6 @@
         citar-bibliography my/bibtex-files
         citar-library-paths `(,(concat bibtex-file-path "pdfs/"))
         citar-notes-paths `(,bibtex-notes-path)))
-
 
 (use-package oc
   :straight (oc :type built-in)

@@ -1,13 +1,10 @@
 ;;; -*- lexical-binding: t; -*-
 (use-package rime
-                                        ;:load-path "~/.doom.d/extensions/emacs-rime"
   :init
   (if IS-MAC
       (setq rime-librime-root "~/Projects/librime/dist")
     (setq rime-librime-root "E:/Projects/librime/dist"))
   :config
-  ;;; Code:
-
   (if IS-WINDOWS
       (setq rime-share-data-dir "~/.doom.d/extensions/emacs-rime/data"))
   (setq rime-user-data-dir "~/.emacs.d/rime"
@@ -139,13 +136,6 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
   :commands (pinyinlib-build-regexp-string)
   :init
   (with-no-warnings
-    (defun ivy--regex-pinyin (str)
-      "The regex builder wrapper to support pinyin."
-      (or (pinyin-to-utf8 str)
-          (and (fboundp '+ivy-prescient-non-fuzzy)
-               (+ivy-prescient-non-fuzzy str))
-          (ivy--regex-plus str)))
-
     (defun my-pinyinlib-build-regexp-string (str)
       "Build a pinyin regexp sequence from STR."
       (cond ((equal str ".*") ".*")
@@ -163,11 +153,12 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
             ((equal (substring str 0 1) ";")
              (mapconcat
               #'my-pinyinlib-build-regexp-string
-              (remove nil (mapcar
-                           #'my-pinyin-regexp-helper
-                           (split-string
-                            (replace-regexp-in-string ";" "" str)
-                            "")))
+              (remove nil 
+                      (mapcar
+                       #'my-pinyin-regexp-helper
+                       (split-string
+                        (replace-regexp-in-string ";" "" str)
+                        "")))
               ""))
             (t nil)))
 
@@ -175,20 +166,6 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
       (defun completion--regex-pinyin (str)
         (orderless-regexp (pinyinlib-build-regexp-string str)))
       (add-to-list 'orderless-matching-styles 'completion--regex-pinyin))))
-
-
-    ;; (mapcar
-    ;;  (lambda (item)
-    ;;    (let ((key (car item))
-    ;;          (value (cdr item)))
-    ;;      (when (member value '(+ivy-prescient-non-fuzzy
-    ;;                            ivy--regex-plus))
-    ;;        (setf (alist-get key ivy-re-builders-alist)
-    ;;              #'ivy--regex-pinyin))))
-    ;;  ivy-re-builders-alist)
-
-
-
 
 
 (provide 'init-chinese)
