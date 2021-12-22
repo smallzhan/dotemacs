@@ -26,9 +26,19 @@
 (when IS-WINDOWS
   (use-package circadian
    :config
+   
+   (defun my--encode-time (hour min)
+     "Encode HOUR hours and MIN minutes into a valid format for `run-at-time'."
+     (let ((now (decode-time)))
+       (let ((day (nth 3 now))
+             (month (nth 4 now))
+             (year (nth 5 now)))
+         (encode-time 0 min hour day month year))))
+   (advice-add 'circadian--encode-time :override #'my--encode-time)
+   
    (setq circadian-themes '(("8:00" . doom-one-light)
-                            ("19:30" . doom-one)))
-   (circadian-setup)))
+                            ("19:30" . doom-one))))
+  (circadian-setup))
 
 (defvar default-fonts '("JetBrains Mono" "Fira Code" "SF Mono"))
 ;;font
@@ -95,7 +105,7 @@
           modeline-backup-format nil)
     (awesome-tray-mode -1))
   
-  ;;(add-hook 'emacs-startup-hook #'enable-awesome-tray-mode)
+  (add-hook 'emacs-startup-hook #'enable-awesome-tray-mode)
   (add-hook 'after-load-theme-hook #'enable-awesome-tray-mode)
 
   (defun awesome-tray-module-datetime-info ()
