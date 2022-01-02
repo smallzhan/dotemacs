@@ -170,9 +170,9 @@
         (all-the-icons-cache func))
       (message "Reset all-the-icons"))))
 
-(with-eval-after-load 'fringe
-  (fringe-mode '(4 . 4))
-  (setq-default fringes-outside-margins t))
+;; (with-eval-after-load 'fringe
+;;   (fringe-mode '(4 . 4))
+;;   (setq-default fringes-outside-margins t))
 
 (provide 'init-ui)
 ;;; init-ui.el ends here

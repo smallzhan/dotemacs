@@ -285,6 +285,9 @@
 
   (bh/org-agenda-to-appt)
   (appt-activate t)
+  
+  (with-eval-after-load 'rime
+    (add-to-list 'rime-disable-predicates 'org-in-src-block-p))
 
   :bind (:map org-mode-map
          ("<" . (lambda ()
@@ -543,7 +546,7 @@
 (use-package elfeed-org
   :after elfeed
   :commands elfeed-org
-  :preface
+  :init
   (setq rmh-elfeed-org-files (list "elfeed.org"))
   :config
   (elfeed-org))

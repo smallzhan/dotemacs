@@ -96,29 +96,12 @@ Same as `replace-string C-q C-m RET RET'."
     (warn "Current buffer is not attached to a file!")))
 
 
-;; Mode line
-(defun mode-line-height ()
-  "Get the height of the mode-line."
-  (- (elt (window-pixel-edges) 3)
-     (elt (window-inside-pixel-edges) 3)))
-
 ;; Reload configurations
 (defun reload-init-file ()
   "Reload Emacs configurations."
   (interactive)
   (load user-init-file))
 (global-set-key (kbd "C-c C-l") #'reload-init-file)
-
-;; Open custom file
-(defun open-custom-file()
-  "Open or create `custom-file'."
-  (interactive)
-  (unless (file-exists-p custom-file)
-    (if (file-exists-p centaur-custom-example-file)
-        (copy-file centaur-custom-example-file custom-file)
-      (user-error "The file `%s' doesn't exist" centaur-custom-example-file)))
-  (find-file custom-file)
-  (find-file-other-window centaur-custom-post-file))
 
 ;; Misc
 (defun create-scratch-buffer ()

@@ -78,8 +78,7 @@
  display-line-numbers-width 3
  ;; Don't display comp warnings
  warning-suppress-log-types '((comp))
- ;; Firefox as default browser
- browse-url-browser-function 'browse-url-firefox
+ 
  ;; Custom file path
  ;; custom-file (expand-file-name "custom.el" user-emacs-directory)
  ;; prefer y or n

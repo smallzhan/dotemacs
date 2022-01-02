@@ -28,10 +28,14 @@
     (setq python-shell-interpreter "python3"))
   (define-key python-mode-map (kbd "DEL") nil))
 
-(use-package live-py-mode :defer t)
+;;(use-package live-py-mode :defer t)
 (use-package pyimport :defer t)
 
 (use-package py-isort :defer t)
+
+(use-package python-mls
+  :config
+  (python-mls-setup))
 
 (provide 'init-python)
 ;;; init-python.el ends here
