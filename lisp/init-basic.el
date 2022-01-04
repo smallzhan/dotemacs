@@ -64,7 +64,7 @@
 ;;    :config
 ;;    (exec-path-from-shell-initialize))
 ;;  (use-package cache-path-from-shell
-;;    :straight (cache-path-from-shell :type git :host github :repo "manateelazycat/cache-path-from-shell")))
+;;    :straight (:type git :host github :repo "manateelazycat/cache-path-from-shell")))
 
 
 (use-package isearch-mb

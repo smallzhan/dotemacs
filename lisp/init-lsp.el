@@ -152,7 +152,7 @@
 
 
 (use-package nox
-  :straight (nox :type git :host github :repo "smallzhan/nox")
+  :straight (:type git :host github :repo "smallzhan/nox")
   ;;:load-path "~/.doom.d/extensions/nox"
   :commands (nox nox-ensure)
   :config

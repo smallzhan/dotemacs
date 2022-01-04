@@ -44,6 +44,7 @@
 (require 'init-package)
 (require 'init-basic)
 (require 'init-ui)
+(require 'init-binding) 
 (require 'init-project) 
 
 (require 'init-vertico)
@@ -65,5 +66,5 @@
 (require 'init-window)
 (require 'init-eaf)
 
-(require 'init-binding) 
+
 (require 'init-server)

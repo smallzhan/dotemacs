@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
-(use-package with-editor
-  :defer t)
+;; (use-package with-editor
+;;   :defer t)
 
 (defvar my-prefer-lightweight-magit t)
 
@@ -18,7 +18,7 @@
     (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
     (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
     (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent))
-  (define-key global-map (kbd "C-c e g") #'magit-status))
+  (global-set-key (kbd "C-c e g") #'magit-status))
 
 
 (with-eval-after-load 'ediff
@@ -66,34 +66,69 @@
         git-gutter:update-interval 2
         git-gutter:window-width 2
         git-gutter:ask-p nil)
-  (defhydra hydra-git-gutter (:body-pre (git-gutter-mode 1)
-                              :hint nil)
-   "
- Git gutter:
-   _j_: next hunk        _s_tage hunk     _q_uit
-   _k_: previous hunk    _r_evert hunk    _Q_uit and deactivate git-gutter
-   ^ ^                   _p_opup hunk
-   _h_: first hunk
-   _l_: last hunk        set start _R_evision
- "
-   ("j" git-gutter:next-hunk)
-   ("k" git-gutter:previous-hunk)
-   ("h" (progn (goto-char (point-min))
-               (git-gutter:next-hunk 1)))
-   ("l" (progn (goto-char (point-min))
-               (git-gutter:previous-hunk 1)))
-   ("s" git-gutter:stage-hunk)
-   ("r" git-gutter:revert-hunk)
-   ("p" git-gutter:popup-hunk)
-   ("R" git-gutter:set-start-revision)
-   ("q" nil :color blue)
-   ("Q" (progn (git-gutter-mode -1)
-               ;; git-gutter-fringe doesn't seem to
-               ;; clear the markup right away
-               (sit-for 0.1)
-               (git-gutter:clear))
-        :color blue))
-  (define-key global-map (kbd "C-c e v") #'hydra-git-gutter/body))
+  
+  (defun my-git-gutter-first-hunk ()
+    (interactive)
+    (goto-char (point-min))
+    (git-gutter:next-hunk 1))
+  
+  (defun my-git-gutter-last-hunk ()
+    (interactive)
+    (goto-char (point-max))
+    (git-gutter:previous-hunk 1))
+    
+  (defun my-git-gutter-quit ()
+    (interactive)
+    (git-gutter-mode -1)
+    (sit-for 0.1)
+    (git-gutter:clear))
+ 
+  (transient-define-prefix git-gutter-transient()
+    "Git Gutter Settings"
+    ["Git Gutter Commands"
+     ["Move"
+      ("j" "next hunk" git-gutter:next-hunk)
+      ("k" "previous hunk" git-gutter:previous-hunk)
+      ("h" "first hunk" my-git-gutter-first-hunk)
+      ("l" "last hunk" my-git-gutter-last-hunk)]
+     ["Operation"
+      ("s" "stage hunk" git-gutter:stage-hunk)
+      ("r" "revert hunk" git-gutter:revert-hunk)
+      ("p" "popup hunk" git-gutter:popup-hunk)
+      ("R" "set start revision" git-gutter:set-start-revision)]
+     ["Quit"
+      ("Q" "Quit git-gutter" my-git-gutter-quit)]])
+    
+  (global-set-key (kbd "C-c e v") 'git-gutter-transient))
+     
+ ;;  (defhydra hydra-git-gutter (:body-pre (git-gutter-mode 1)
+ ;;                              :hint nil)
+ ;;   "
+ ;; Git gutter:
+ ;;   _j_: next hunk        _s_tage hunk     _q_uit
+ ;;   _k_: previous hunk    _r_evert hunk    _Q_uit and deactivate git-gutter
+ ;;   ^ ^                   _p_opup hunk
+ ;;   _h_: first hunk
+ ;;   _l_: last hunk        set start _R_evision
+ ;; "
+ ;;   ("j" git-gutter:next-hunk)
+ ;;   ("k" git-gutter:previous-hunk)
+ ;;   ("h" (progn (goto-char (point-min))
+ ;;               (git-gutter:next-hunk 1)))
+ ;;   ("l" (progn (goto-char (point-min))
+ ;;               (git-gutter:previous-hunk 1)))
+ ;;   ("s" git-gutter:stage-hunk)
+ ;;   ("r" git-gutter:revert-hunk)
+ ;;   ("p" git-gutter:popup-hunk)
+ ;;   ("R" git-gutter:set-start-revision)
+ ;;   ("q" nil :color blue)
+ ;;   ("Q" (progn (git-gutter-mode -1)
+ ;;               ;; git-gutter-fringe doesn't seem to
+ ;;               ;; clear the markup right away
+ ;;               (sit-for 0.1)
+ ;;               (git-gutter:clear))
+ ;;        :color blue))
+ ;;  (define-key global-map (kbd "C-c e v") #'hydra-git-gutter/body))
 
 (use-package git-gutter-fringe
   :diminish git-gutter-mode

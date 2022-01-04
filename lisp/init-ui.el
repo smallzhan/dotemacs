@@ -88,7 +88,7 @@
 
 
 (use-package awesome-tray
-  :straight (awesome-tray :type git :host github :repo "manateelazycat/awesome-tray")
+  :straight (:type git :host github :repo "manateelazycat/awesome-tray")
   :config
   (defvar modeline-backup-format nil)
   (defun enable-awesome-tray-mode()

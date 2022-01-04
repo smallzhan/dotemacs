@@ -1,7 +1,13 @@
 ;;; init-edit.el  -*- lexical-binding: t; -*-
 
+(use-package transient
+  :defer t
+  :commands (transient-define-prefix transient-define-suffix)
+  :config
+  (transient-bind-q-to-quit))
+
 (use-package color-rg
-  :straight (color-rg :type git :host github :repo "manateelazycat/color-rg")
+  :straight (:type git :host github :repo "manateelazycat/color-rg")
   :commands (color-rg-search-symbol-in-project
              color-rg-search-input-in-project
              color-rg-search-input-in-current-file
@@ -22,21 +28,82 @@
          (lambda (x) (format rg-glob-fmt x)) color-rg-ignore-dir-list "")))
 
 (use-package auto-save
-  :straight (auto-save :type git :host github :repo "manateelazycat/auto-save")
+  :straight (:type git :host github :repo "manateelazycat/auto-save")
   :init
   (setq auto-save-silent t)
   :config
   (auto-save-enable))
 
 (use-package lazy-search
-  :straight (lazy-search :type git :host github :repo "manateelazycat/lazy-search")
+  :straight (:type git :host github :repo "manateelazycat/lazy-search")
   :commands lazy-search)
 
 (use-package thing-edit
-  :straight (thing-edit :type git :host github :repo "manateelazycat/thing-edit"))
+  :straight (:type git :host github :repo "manateelazycat/thing-edit")
+  :bind ("C-c e e" . thing-edit-transient)
+  :config
+  (transient-define-prefix thing-edit-transient ()
+    "Thing Edit Menu"
+    ["Thing Edit Menu"
+     ["Copy"
+      ("cd" "Thing copy defun" thing-copy-defun)
+      ("cl" "Thing copy line" thing-copy-line)
+      ("ce" "Thing copy sexp" thing-copy-sexp)
+      ("cw" "Thing copy word" thing-copy-word)
+      ("cs" "Thing copy symbol" thing-copy-symbol)
+      ("cf" "Thing copy filename" thing-copy-filename)
+      ("ct" "Thing copy list" thing-copy-list)
+      ("cc" "Thing copy sentence" thing-copy-sentence)
+      ("cp" "Thing copy paragraph" thing-copy-paragraph)
+      ("cg" "Thing copy page" thing-copy-page)
+      ("cu" "Thing copy url" thing-copy-url)
+      ("cm" "Thing copy email" thing-copy-email)
+      ("cb" "Thing copy comment" thing-copy-whole-buffer)
+      ("cn" "Thing copy number" thing-copy-number)
+      ("ca" "Thing copy paren" thing-copy-parentheses)
+      ("cr" "Thing copy region or line" thing-copy-region-or-line)]  
+     ["Cut"
+      ("xd" "Thing cut defun" thing-cut-defun)
+      ("xl" "Thing cut line" thing-cut-line)
+      ("xe" "Thing cut sexp" thing-cut-sexp)
+      ("xw" "Thing cut word" thing-cut-word)
+      ("xs" "Thing cut symbol" thing-cut-symbol)
+      ("xf" "Thing cut filename" thing-cut-filename)
+      ("xt" "Thing cut list" thing-cut-list)
+      ("xc" "Thing cut sentence" thing-cut-sentence)
+      ("xp" "Thing cut paragraph" thing-cut-paragraph)
+      ("xg" "Thing cut page" thing-cut-page)
+      ("xu" "Thing cut url" thing-cut-url)
+      ("xm" "Thing cut email" thing-cut-email)
+      ("xb" "Thing cut comment" thing-cut-whole-buffer)
+      ("xn" "Thing cut number" thing-cut-number)
+      ("xa" "Thing cut paren" thing-cut-parentheses)
+      ("xr" "Thing cut region or line" thing-cut-region-or-line)]
+     ["Replace"
+      ("rd" "Thing replace defun" thing-replace-defun)
+      ("rl" "Thing replace line" thing-replace-line)
+      ("re" "Thing replace sexp" thing-replace-sexp)
+      ("rw" "Thing replace word" thing-replace-word)
+      ("rs" "Thing replace symbol" thing-replace-symbol)
+      ("rf" "Thing replace filename" thing-replace-filename)
+      ("rt" "Thing replace list" thing-replace-list)
+      ("rc" "Thing replace sentence" thing-replace-sentence)
+      ("rp" "Thing replace paragraph" thing-replace-paragraph)
+      ("rg" "Thing replace page" thing-replace-page)
+      ("ru" "Thing replace url" thing-replace-url)
+      ("rm" "Thing replace email" thing-replace-email)
+      ("rb" "Thing replace comment" thing-replace-whole-buffer)
+      ("rn" "Thing replace number" thing-replace-number)
+      ("ra" "Thing replace paren" thing-replace-parentheses)
+      ("rr" "Thing replace region or line" thing-replace-region-or-line)]]))
+ ;; (global-set-key (kbd "C-c e a") #'thing-edit-transient))
+  
+  
+
+
 
 ;; (use-package awesome-pair
-;; :straight (awesome-pair :type git :host github :repo "manateelazycat/awesome-pair")
+;; :straight (:type git :host github :repo "manateelazycat/awesome-pair")
 ;; :bind (:map awesome-pair-mode-map
 ;;        ("(" . awesome-pair-open-round)
 ;;        ("[" . awesome-pair-open-bracket)
@@ -83,7 +150,7 @@
 (use-package posframe :defer t)
 
 (use-package sdcv
-  :straight (sdcv :type git :host github :repo "manateelazycat/sdcv")
+  :straight (:type git :host github :repo "manateelazycat/sdcv")
   :defer t
   :commands (sdcv-search-input sdcv-search-pointer+)
   :config
@@ -114,7 +181,7 @@ string of results."
 ;; Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
 
 ;; (use-package puni
-;;    :straight (puni :type git :host github :repo "Amaikinono/puni")
+;;    :straight (:type git :host github :repo "Amaikinono/puni")
 ;;    :defer t
 ;;    :hook ((prog-mode
 ;;            sgml-mode
@@ -123,7 +190,7 @@ string of results."
 ;;            eval-expression-minibuffer-setup) . puni-mode))
 
 (use-package citre
-  :straight (citre :type git :host github :repo "universal-ctags/citre")
+  :straight (:type git :host github :repo "universal-ctags/citre")
   :defer t
   :init
   ;; This is needed in `:init' block for lazy load to work.
@@ -156,6 +223,8 @@ string of results."
    '("e" . "C-c e")
    '("t" . "C-c t")
    '("s" . "C-c s")
+   '("a" . "C-c e e")
+   '("v" . magit-status)
    
    '("f" . find-file)
    '("i" . imenu)
@@ -313,7 +382,7 @@ string of results."
   
 (use-package grammatical-edit
   ;;:after tree-sitter
-  :straight (grammatical-edit :type git :host github :repo "manateelazycat/grammatical-edit")
+  :straight (:type git :host github :repo "manateelazycat/grammatical-edit")
   :bind (:map grammatical-edit-mode-map
               ("(" . grammatical-edit-open-round)
               ("[" . grammatical-edit-open-bracket)
@@ -347,7 +416,7 @@ string of results."
 (use-package format-all)
 
 (use-package vundo
-  :straight (vundo :type git :host github :repo "casouri/vundo")
+  :straight (:type git :host github :repo "casouri/vundo")
   :commands vundo)
 
 (use-package autorevert

@@ -8,7 +8,7 @@
           (setq org-pomodoro-audio-player "/usr/bin/afplay")))
 
 
-(use-package pretty-hydra)
+;; (use-package pretty-hydra)
 ;; (use-package! notdeft
 ;;   :defer t
 ;;   :commands notdeft
@@ -52,7 +52,7 @@
 ;;     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
 (use-package org
-  :straight (org :type built-in)
+  :straight (:type built-in)
   :commands (org-dynamic-block-define)
   :init
   (setq org-directory +my-org-dir
@@ -104,9 +104,9 @@
           ("ACTIVE" ("WAIT") ("CANCEL") ("HOLD"))
           ("DONE" ("WAIT") ("CANCEL") ("HOLD"))))
 
-  (setq org-columns-default-format 
+  (setq org-columns-default-format
         "%70ITEM(Task) %10Effort(Effort){:} %20CLOCKSUM")
-  
+
   (setq org-agenda-log-mode-items '(closed state))
 
   (setq org-tag-alist '((:startgroup)
@@ -237,42 +237,58 @@
 
   (setq org-publish-project-alist '())
 
-  (pretty-hydra-define
-    org-hydra
-    (:title "Org Templates"
-     :color blue :quit-key "q")
-    ("Basic"
-     (("a" (hot-expand "<a") "ascii")
-      ("c" (hot-expand "<c") "center")
-      ("C" (hot-expand "<C") "comment")
-      ("e" (hot-expand "<e") "example")
-      ("E" (hot-expand "<E") "export")
-      ("h" (hot-expand "<h") "html")
-      ("l" (hot-expand "<l") "latex")
-      ("n" (hot-expand "<n") "note")
-      ("o" (hot-expand "<q") "quote")
-      ("v" (hot-expand "<v") "verse"))
-     "Head"
-     (("i" (hot-expand "<i") "index")
-      ("A" (hot-expand "<A") "ASCII")
-      ("I" (hot-expand "<I") "INCLUDE")
-      ("H" (hot-expand "<H") "HTML")
-      ("L" (hot-expand "<L") "LaTeX"))
-     "Source"
-     (("s" (hot-expand "<s") "src")
-      ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
-      ("y" (hot-expand "<s" "python :results output") "python")
-      ("p" (hot-expand "<s" "perl") "perl")
-      ("r" (hot-expand "<s" "ruby") "ruby")
-      ("S" (hot-expand "<s" "sh") "sh")
-      ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang"))
-     "Misc"
-     (("u" (hot-expand "<s" "plantuml :file CHANGE.png") "plantuml")
-      ("Y" (hot-expand "<s" "jupyter-python :session python :exports both :results raw drawer\n$0") "jupyter")
-      ("P" (progn
-             (insert "#+HEADERS: :results output :exports both :shebang \"#!/usr/bin/env perl\"\n")
-             (hot-expand "<s" "perl")) "Perl tangled")
-      ("<" self-insert-command "ins"))))
+  (defvar org-tempo-special-expand-alist
+    '(("o" . "<q")
+      ("m" . ("<s" "emacs-lisp"))
+      ("p" . ("<s" "python :results output"))
+      ("S" . ("<s" "sh"))
+      ("r" . ("<s" "rust"))
+      ("g" . ("<s" "go :imports '\(\"fmt\"\)"))
+      ("u" . ("<s" "plantuml :file CHANGE.png"))
+      ("y" . ("<s" "jupyter-python :session python :exports both :results raw drawer\n$0"))
+      ("d" . ("<s" "dot :exports both"))))
+      
+  (transient-define-suffix one-key-expand ()
+    :description "ascii"
+    :key "a"
+    (interactive)
+    (if-let ((key (key-description (this-command-keys-vector)))
+             (expand (assoc key org-tempo-special-expand-alist)))
+        (apply 'hot-expand (cdr expand))
+      (hot-expand (concat "<" key))))
+  
+  (transient-define-prefix my/org-tempo-transient ()
+    "Org Templates"
+    ["Org Templates"
+     ["Basic"
+      (one-key-expand :key "a" :description "ascii")
+      (one-key-expand :key "c" :description "center")
+      (one-key-expand :key "C" :description "comment")
+      (one-key-expand :key "e" :description "example")
+      (one-key-expand :key "E" :description "export")
+      (one-key-expand :key "h" :description "html")
+      (one-key-expand :key "l" :description "latex")
+      (one-key-expand :key "n" :description "note")
+      (one-key-expand :key "o" :description "quote")
+      (one-key-expand :key "v" :description "verse")]
+     ["Head"
+      (one-key-expand :key "i" :description "index")
+      (one-key-expand :key "A" :description "ASCII")
+      (one-key-expand :key "I" :description "INCLUDE")
+      (one-key-expand :key "H" :description "HTML")
+      (one-key-expand :key "L" :description "LATEX")]
+     ["Source"
+      (one-key-expand :key "s" :description "src")
+      (one-key-expand :key "m" :description "emacs-lisp")
+      (one-key-expand :key "p" :description "python")
+      (one-key-expand :key "S" :description "sh")
+      (one-key-expand :key "r" :description "rust")
+      (one-key-expand :key "g" :description "golang")]
+     ["Misc"
+      (one-key-expand :key "u" :description "plantuml")
+      (one-key-expand :key "y" :description "jupyter")
+      (one-key-expand :key "d" :description "dot")
+      ("<" "ins" self-insert-command)]])
 
   (require 'next-spec-day)
   (require 'init-org+jekyll)
@@ -285,7 +301,7 @@
 
   (bh/org-agenda-to-appt)
   (appt-activate t)
-  
+
   (with-eval-after-load 'rime
     (add-to-list 'rime-disable-predicates 'org-in-src-block-p))
 
@@ -294,12 +310,11 @@
                   "Insert org template."
                   (interactive)
                   (if (or (region-active-p) (looking-back "^\s*" 1))
-                      (org-hydra/body)
+                      (my/org-tempo-transient)
                     (self-insert-command 1))))))
 
-
 (use-package org-protocol
-  :straight (org-protocol :type built-in)
+  :straight (:type built-in)
   :after org)
 
 (straight-use-package '(org-contrib :includes org-expiry))
@@ -317,10 +332,12 @@
                   (org-expiry-insert-created))))))
 
 (use-package org-clock                 ;built-in
-  :straight (org-clock :type built-in)
+  :straight (:type built-in)
   :commands org-clock-save
   :init
-  (setq org-clock-persist-file (concat user-emacs-directory "org-clock-save.el"))
+  (setq org-clock-persist-file
+        (concat user-emacs-directory "org-clock-save.el")
+        org-clock-clocked-in-display nil)
   ;; (defadvice +org--clock-load-a (&rest _)
   ;;   "Lazy load org-clock until its commands are used."
   ;;   :before '(org-clock-in
@@ -340,7 +357,7 @@
   (add-hook 'kill-emacs-hook #'org-clock-save))
 
 (use-package org-crypt ; built-in
-  :straight (org-crypt :type built-in)
+  :straight (:type built-in)
   :commands org-encrypt-entries org-encrypt-entry org-decrypt-entries org-decrypt-entry
   :hook (org-reveal-start . org-decrypt-entry)
   :preface
@@ -432,54 +449,6 @@
   :hook
   (org-mode . valign-mode))
 
-;; (use-package org-clock-budget
-;;   :commands (org-clock-budget-report)
-;;   :defer t
-;;   :init
-;;   (defun my-buffer-face-mode-org-clock-budget ()
-;;     "Sets a fixed width (monospace) font in current buffer"
-;;     (interactive)
-;;     (setq buffer-face-mode-face '(:family "Iosevka" :height 1.0))
-;;     (buffer-face-mode)
-;;     (setq-local line-spacing nil))
-;;   :config
-;;   (map! :map org-clock-budget-report-mode-map
-;;         :nm "h" #'org-shifttab
-;;         :nm "l" #'org-cycle
-;;         :nm "e" #'org-clock-budget-report
-;;         :nm "s" #'org-clock-budget-report-sort
-;;         :nm "d" #'org-clock-budget-remove-budget
-;;         :nm "q" #'quit-window)
-;;   (add-hook! 'org-clock-budget-report-mode-hook
-;;     (toggle-truncate-lines 1)
-;;     (my-buffer-face-mode-org-clock-budget)))
-
-;; (use-package! gkroam
-;;   :hook (org-load . gkroam-mode)
-;;   :init
-;;   (setq gkroam-root-dir (expand-file-name "roam" +my-org-dir))
-;;   (setq gkroam-prettify-p nil
-;;         gkroam-show-brackets-p t
-;;         gkroam-use-default-filename t
-;;         gkroam-window-margin 4)
-
-;;   :bind
-;;   (:map gkroam-mode-map
-;;    ("C-c k I" . gkroam-index)
-;;    ("C-c k d" . gkroam-daily)
-;;    ("C-c k D" . gkroam-delete)
-;;    ("C-c k f" . gkroam-find)
-;;    ("C-c k i" . gkroam-insert)
-;;    ("C-c k n" . gkroam-dwim)
-;;    ("C-c k c" . gkroam-capture)
-;;    ("C-c k e" . gkroam-link-edit)
-;;    ("C-c k u" . gkroam-show-unlinked)
-;;    ("C-c k p" . gkroam-toggle-prettify)
-;;    ("C-c k t" . gkroam-toggle-brackets)
-;;    ("C-c k R" . gkroam-rebuild-caches)
-;;    ("C-c k g" . gkroam-update)))
-
-
 (use-package org-roam
   ;;:hook (org-load . org-roam-setup)
   :defer t
@@ -508,17 +477,12 @@
                     (window-width . 0.33)
                     (window-height . fit-window-to-buffer))))
 
-
-;; (use-package! org-roam-bibtex
-;;   :after org-roam
-;;   :config
-;;   (require 'org-ref))
 (use-package elfeed
   :defer t
   :config
   (setq elfeed-show-entry-switch #'pop-to-buffer
         elfeed-show-entry-delete #'+rss/delete-pane)
-  
+
   (defun +rss/delete-pane ()
    "Delete the *elfeed-entry* split pane."
    (interactive)
@@ -527,7 +491,7 @@
      (delete-window window)
      (when (buffer-live-p buf)
        (kill-buffer buf))))
-  
+
   (defun elfeed-search-show-entry-pre (&optional lines)
    "Returns a function to scroll forward or back in the Elfeed
   search results, displaying entries without switching to them."
@@ -538,11 +502,11 @@
          (call-interactively #'elfeed-search-show-entry)
          (select-window (previous-window))
          (unless elfeed-search-remain-on-entry (forward-line -1))))
-  
+
   (define-key elfeed-search-mode-map (kbd "n") (elfeed-search-show-entry-pre +1))
   (define-key elfeed-search-mode-map (kbd "p") (elfeed-search-show-entry-pre -1))
   (define-key elfeed-search-mode-map (kbd "M-RET") (elfeed-search-show-entry-pre)))
- 
+
 (use-package elfeed-org
   :after elfeed
   :commands elfeed-org
@@ -570,6 +534,7 @@
         org-caldav-uuid-extension ""
         org-caldav-sync-direction 'twoway
         org-caldav-delete-calendar-entries 'never
+        org-caldav-save-directory (concat org-directory "caldav/")
         org-caldav-inbox (concat org-directory "agenda/dingtalk.org"))
   (setq org-caldav-files (list org-caldav-inbox))
   (add-to-list 'org-agenda-files org-caldav-inbox))
@@ -588,18 +553,6 @@
          bibtex-autokey-name-year-separator "-"
          bibtex-dialect 'biblatex))
 
-;; (use-package! bibtex-completion
-;;   ;;:ensure t
-;;   :defer t
-;;   :config
-;;   (setq bibtex-autokey-year-length 4
-;;         bibtex-completion-additional-search-fields '(keywords)
-;;         bibtex-completion-bibliography my/bibtex-files
-;;         bibtex-completion-library-path (concat bibtex-file-path "pdfs/")
-;;         bibtex-completion-notes-path bibtex-notes-path
-;;         bibtex-completion-pdf-field "file"
-;;         bibtex-completion-pdf-open-function 'org-open-file))
-
 (use-package citar
   :defer t
   :init
@@ -614,26 +567,12 @@
         citar-notes-paths `(,bibtex-notes-path)))
 
 (use-package oc
-  :straight (oc :type built-in)
+  :straight (:type built-in)
   :defer t
   :commands org-cite-insert
   :config
   (setq ;;org-cite-activate-processor nil
         org-cite-global-bibliography my/bibtex-files))
-
-;;(use-package! citeproc
-;;  :defer t)
-
-;; (use-package! oc-bibtex-actions
-;;   ;;:defer t
-;;   :after (oc)
-;;   :config
-;;   (setq org-cite-insert-processor 'oc-bibtex-actions
-;;         org-cite-follow-processor 'oc-bibtex-actions
-;;         org-cite-activate-processor 'oc-bibtex-actions))
-
-;; Use consult-completing-read for enhanced interface.
-;; (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
 (use-package ebib
   :commands ebib
@@ -688,8 +627,6 @@
           (format "curl -s -d '%s' -H 'Content-Type: text/plain' '%s/web' | curl -s -d @- -H 'Content-Type: application/json' '%s/export?format=%s'" url ebib-zotero-translation-server ebib-zotero-translation-server export-format)))
         (ebib-import-entries ebib--cur-db)))))
 
-;; (use-package ebib-biblio
-;;  :commands ebib-biblio-import-doi)
 
 (provide 'init-org)
 ;;; init-org.el ends here
