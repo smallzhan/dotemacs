@@ -265,10 +265,29 @@
   (all-the-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 
+;; Configure Tempel
+(use-package tempel
+  :straight (:type git :host github :repo "minad/tempel")
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
+
+  :init
+
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; The depth is set to -1, such that `tempel-expand' is tried *before* the
+    ;; programming mode Capf. If a template name can be completed it takes
+    ;; precedence over the programming mode completion. `tempel-expand' only
+    ;; triggers on exact matches. Alternatively use `tempel-complete' if you
+    ;; want to see all matches, but then Tempel will probably trigger too
+    ;; often when you don't expect it.
+    (add-hook 'completion-at-point-functions #'tempel-expand -1 'local))
+
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf))
+
 (provide 'init-vertico)
 ;;; init-vertico.el ends here
-
-
-
 
 

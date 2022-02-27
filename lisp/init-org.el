@@ -305,6 +305,8 @@
   (with-eval-after-load 'rime
     (add-to-list 'rime-disable-predicates 'org-in-src-block-p))
 
+  (add-hook 'org-mode-hook 'variable-pitch-mode)
+  
   :bind (:map org-mode-map
          ("<" . (lambda ()
                   "Insert org template."
@@ -312,6 +314,26 @@
                   (if (or (region-active-p) (looking-back "^\s*" 1))
                       (my/org-tempo-transient)
                     (self-insert-command 1))))))
+
+(with-eval-after-load 'org
+  (custom-set-faces
+   '(org-latex-and-related ((t (:inherit 'fixed-pitch-serif))))
+   '(org-tag ((t (:inherit 'fixed-pitch-serif)))) 
+   '(org-checkbox ((t :inherit 'fixed-pitch :box nil)))
+   '(org-table ((t :inherit 'fixed-pitch)))
+   '(org-code ((t :inherit 'fixed-pitch)))
+   '(org-block ((t :inherit 'fixed-pitch)))))
+   
+  
+(with-eval-after-load "ob"
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((dot . t)
+     ;;(restclient . t)
+     (python . t)
+     ;;(clojure . t)
+     ;;(R . t)
+     (shell . t))))
 
 (use-package org-protocol
   :straight (:type built-in)
@@ -441,13 +463,42 @@
                   :order 90))))))))))
 
 
-(use-package org-superstar
-  :hook (org-mode . org-superstar-mode))
+;; (use-package org-superstar
+;;   :hook (org-mode . org-superstar-mode)
+;;   :config
+;;   ;; This is usually the default, but keep in mind it must be nil
+;;  (setq org-hide-leading-stars nil)
+;; ;; This line is necessary.
+;;  (setq org-superstar-leading-bullet ?\s)
+;; ;; If you use Org Indent you also need to add this, otherwise the
+;; ;; above has no effect while Indent is enabled.
+;;  (setq org-indent-mode-turns-on-hiding-stars nil))
 
-
-(use-package valign
-  :hook
-  (org-mode . valign-mode))
+(use-package org-bars
+  :straight (:type git :host github :repo "tonyaldon/org-bars")
+  :hook (org-mode . org-bars-mode)
+  :config
+  (setq org-bars-color-options '(:only-one-color t
+                                 :bar-color "#505050")
+ 
+        org-bars-extra-pixels-height 2))
+  
+  
+;; (straight-use-package '(org-visual-outline 
+;;                         :includes (org-dynamic-bullets org-visual-indent)
+;;                         :type git
+;;                         :host github
+;;                         :repo "legalnonsense/org-visual-outline"))  
+;; (use-package org-dynamic-bullets
+;;   :hook 
+;;   (org-mode . org-dynamic-bullets-mode))
+;; (use-package org-visual-indent
+;;   :hook
+;;   (org-mode . org-visual-indent-mode))
+ 
+;; (use-package valign
+;;   :hook
+;;   (org-mode . valign-mode))
 
 (use-package org-roam
   ;;:hook (org-load . org-roam-setup)

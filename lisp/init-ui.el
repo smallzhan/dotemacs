@@ -2,7 +2,7 @@
 
 ;; theme
 
-(use-package doom-themes)
+;;(use-package doom-themes)
 
 ;; disable line-number
 (setq display-line-numbers-type nil)
@@ -20,8 +20,8 @@
           #'(lambda (appearance)
               (mapc #'disable-theme custom-enabled-themes)
               (pcase appearance
-                ('light (load-theme 'doom-one-light t))
-                ('dark (load-theme 'doom-one t))))))
+                ('light (load-theme 'modus-operandi t))
+                ('dark (load-theme 'modus-vivendi t))))))
 
 (when IS-WINDOWS
   (use-package circadian
@@ -36,38 +36,30 @@
          (encode-time 0 min hour day month year))))
    (advice-add 'circadian--encode-time :override #'my--encode-time)
    
-   (setq circadian-themes '(("8:00" . doom-one-light)
-                            ("19:30" . doom-one))))
+   (setq circadian-themes '(("8:00" . modus-operandi)
+                            ("19:30" . modus-vivendi))))
   (circadian-setup))
 
-(defvar default-fonts '("JetBrains Mono" "Fira Code" "SF Mono"))
-;;font
-(setq default-font (nth (random (length default-fonts)) default-fonts))
-(if IS-WINDOWS
-    (setq default-font "DejaVu Sans Mono"))
 
-(set-face-attribute 'default nil :font (format "%s:pixelsize=%d" default-font (if IS-WINDOWS 14 13)))
-;; if IS-MAC
-;;     (setq font (nth (random (length default-fonts)) default-fonts))
-;;   (setq font "DejaVu Sans Mono"
-;;     (set-face-attribute 'default nil :font (nth (random (length default-fonts)) default-fonts)))
-;;   (set-face-attribute 'default nil :font  "DejaVu Sans Mono"))
-;; (set-face-attribute 'default nil :height (cond (IS-MAC 130)
-;;                                                ;;(IS-WINDOWS 110)
-;;                                                (t 100)))
+;;;======= font config
 
-;;(setq doom-unicode-font (font-spec :family "Sarasa Mono SC" :size 14))
-                                        ;(set-default-font "Sarasa Mono SC 14")
-(set-face-attribute 'fixed-pitch nil
-                    :family "Sarasa Mono SC"
-                    :inherit '(default))
+(defvar my-fonts '((default . ("DejaVu Sans Mono" "JetBrains Mono" "Fira Code" "SF Mono"))
+                   (cjk . ("Sarasa Mono SC" "PingFang SC" "Microsoft YaHei"))
+                   (unicode . ("Apple Color Emoji" "Symbola"))
+                   (fixed . "Sarasa Mono SC")
+                   (fixed-serif . "Latin Modern Mono")
+                   (variable . "Source Serif 4")))
 
-(catch 'loop
-  (dolist (font '("Apple Color Emoji" "Symbola"))
-    (when (member font (font-family-list))
-      (set-fontset-font t 'unicode font nil 'prepend)
-      (throw 'loop t))))
 
+(defvar my-font-size 14)
+;;   
+;; (defvar default-fonts '("JetBrains Mono" "Fira Code" "SF Mono"))
+;; ;;font
+;; (defvar default-font (nth (random (length default-fonts)) default-fonts))
+;; (defvar default-font-size 14)
+;; (if IS-WINDOWS
+;;     (setq default-font "DejaVu Sans Mono"))
+  
 (defun find-fonts (fontlist)
   (let ((font (car fontlist))
         (other (cdr fontlist)))
@@ -77,15 +69,102 @@
           font
         (find-fonts other)))))
 
-(defvar chinese-fonts '("PingFang SC" "Microsoft YaHei" "Sarasa Mono SC"))
+(defun my--get-font-family (key)
+ (let ((my-fonts (alist-get key my-fonts)))
+   (if (listp my-fonts)
+     (find-fonts my-fonts)
+     my-fonts)))
 
+(defun my-load-font ()
+  "Load font configuration."
+  (let ((default-font (format "%s:pixelsize=%s"
+                              (my--get-font-family 'default)
+                              my-font-size))
+        (cjk-font (my--get-font-family 'cjk))
+        (symbol-font (my--get-font-family 'unicode))
+        (variable-font (my--get-font-family 'variable))
+        (fixed-font (my--get-font-family 'fixed))
+        (fixed-serif-font (my--get-font-family 'fixed-serif)))
+    
+    (set-face-attribute 'default nil :font default-font)
+    (dolist (charset '(kana han hangul cjk-misc bopomofo))
+     (set-fontset-font t charset cjk-font))
+    (set-fontset-font t 'unicode symbol-font nil 'prepend)
+      ;; Fonts for faces
+    (set-face-attribute 'variable-pitch nil :family variable-font :height 1.0)
+    (set-face-attribute 'fixed-pitch nil :family fixed-font :height 1.0)
+    (set-face-attribute 'fixed-pitch-serif nil :family fixed-serif-font :height 1.0)))
 
-(run-at-time "2sec" nil
-             (lambda ()
-               (let ((font (find-fonts chinese-fonts)))
-                 (dolist (charset '(kana han cjk-misc bopomofo))
-                   (set-fontset-font t charset font)))))
+(when window-system
+  (my-load-font))
 
+  ;; Run after startup
+(add-hook 'after-init-hook
+          (lambda ()
+            (when window-system
+              (my-load-font))))     
+
+;; (find-fonts (alist-get 'default my-fonts))
+;; 
+;; 
+;; (car (alist-get 'default my-fo))
+;; (my-get-font-family 'default)
+;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" default-font default-font-size))
+;; 
+;; (catch 'loop
+;;   (dolist (font '("Apple Color Emoji" "Symbola"))
+;;     (when (member font (font-family-list))
+;;       (set-fontset-font t 'unicode font nil 'prepend)
+;;       (throw 'loop t))))
+;; 
+;; ("Apple Color Emoji" "Symbola")
+;; 
+;; (defvar chinese-fonts '("Sarasa Mono SC" "PingFang SC" "Microsoft YaHei"))
+;; 
+;; 
+;; ;;(run-at-time "2sec" nil
+;; ;;             (lambda ()
+;; (let ((font (find-fonts chinese-fonts)))
+;;   (dolist (charset '(kana han hangul cjk-misc bopomofo))
+;;     (set-fontset-font t charset font)))
+;; 
+;; 
+;; (set-face-attribute 'fixed-pitch nil
+;;                     :family "Sarasa Mono SC"
+;;                     :inherit '(default))
+;; 
+;; (set-face-attribute 'fixed-pitch-serif nil
+;;                     :family "Latin Modern Mono"
+;;                     :inherit '(default))
+;; 
+;; (set-face-attribute 'variable-pitch nil
+;;                     :family "Source Serif 4")
+;; 
+;; 
+;; 
+;; ;; (defvar meomacs-font-size 14
+;; ;;     "Current font size.")
+;; ;; 
+;; ;; (defvar meomacs-fonts '((default . "SF Mono")
+;; ;;                         (cjk . "PingFang SC")
+;; ;;                         (symbol . "Symbola")
+;; ;;                         (fixed . "Sarasa Mono SC")
+;; ;;                         (fixed-serif . "Latin Modern Mono")
+;; ;;                         (variable . "Source Seruf Pro"))
+;; ;;   "Fonts to use.")
+;; ;; 
+;; ;; (defun meomacs--get-font-family (key)
+;; ;;   (alist-get key meomacs-fonts))
+;; ;; 
+;; ;;   ;; Set default font before frame creation
+;; ;;   ;; to make sure the first frame have the correct size
+;; ;; (add-to-list 'default-frame-alist (cons 'font (format "%s-%s"
+;; ;;                                                       (meomacs--get-font-family 'default)
+;; ;;                                                       meomacs-font-size)))
+;; ;; 
+;; ;; ()
+;; ;; 
+;; ;;  
 
 (use-package awesome-tray
   :straight (:type git :host github :repo "manateelazycat/awesome-tray")

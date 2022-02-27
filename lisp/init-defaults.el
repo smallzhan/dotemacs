@@ -191,7 +191,7 @@
 (setq-default max-mini-window-height 0.1)
 
 (defvar +proxy-host "localhost")
-(defvar +proxy-port 1089)
+(defvar +proxy-port 7890)
 
 (provide 'init-defaults)
 ;;; init-defaults.el ends here

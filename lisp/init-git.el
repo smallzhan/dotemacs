@@ -132,20 +132,20 @@
 
 (use-package git-gutter-fringe
   :diminish git-gutter-mode
-  :after git-gutter
+  :after git-gutter)
   ;:demand fringe-helper
-  :config
-  ;; subtle diff indicators in the fringe
-  ;; places the git gutter outside the margins.
-  (setq-default fringes-outside-margins t)
-  ;; thin fringe bitmaps
-  (define-fringe-bitmap 'git-gutter-fr:added
-   [224] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified
-   [224] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted
-   [128 192 224 240]
-   nil nil 'bottom))
+  ;; :config
+  ;; ;; subtle diff indicators in the fringe
+  ;; ;; places the git gutter outside the margins.
+  ;; (setq-default fringes-outside-margins t)
+  ;; ;; thin fringe bitmaps
+  ;; (define-fringe-bitmap 'git-gutter-fr:added
+  ;;  [224] nil nil '(center repeated))
+  ;; (define-fringe-bitmap 'git-gutter-fr:modified
+  ;;  [224] nil nil '(center repeated))
+  ;; (define-fringe-bitmap 'git-gutter-fr:deleted
+  ;;  [128 192 224 240]
+  ;;  nil nil 'bottom))
 
 (provide 'init-git)
 ;;; init-git.el ends here

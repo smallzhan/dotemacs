@@ -96,5 +96,12 @@
 
   (define-key isearch-mb-minibuffer-map (kbd "C-e") #'move-end-of-line-maybe-ending-isearch))
 
+(use-package elisp-demos
+  :config
+ (advice-add 
+  'describe-function-1 
+  :after 
+  #'elisp-demos-advice-describe-function-1))
+
 (provide 'init-basic)
 ;;; init-basic.el ends here
