@@ -3,6 +3,7 @@
 ;; theme
 
 ;;(use-package doom-themes)
+(use-package modus-themes)
 
 ;; disable line-number
 (setq display-line-numbers-type nil)
@@ -43,7 +44,7 @@
 
 ;;;======= font config
 
-(defvar my-fonts '((default . ("DejaVu Sans Mono" "JetBrains Mono" "Fira Code" "SF Mono"))
+(defvar my-fonts '((default . ("DejaVu Sans Mono"  "JetBrains Mono" "Cascadia Code" "Fira Code" "SF Mono"))
                    (cjk . ("Sarasa Mono SC" "PingFang SC" "Microsoft YaHei"))
                    (unicode . ("Apple Color Emoji" "Symbola"))
                    (fixed . "Sarasa Mono SC")
@@ -51,15 +52,8 @@
                    (variable . "Source Serif 4")))
 
 
-(defvar my-font-size 14)
-;;   
-;; (defvar default-fonts '("JetBrains Mono" "Fira Code" "SF Mono"))
-;; ;;font
-;; (defvar default-font (nth (random (length default-fonts)) default-fonts))
-;; (defvar default-font-size 14)
-;; (if IS-WINDOWS
-;;     (setq default-font "DejaVu Sans Mono"))
-  
+(defvar my-font-size 14)   
+
 (defun find-fonts (fontlist)
   (let ((font (car fontlist))
         (other (cdr fontlist)))

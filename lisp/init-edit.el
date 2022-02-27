@@ -25,7 +25,14 @@
 
   (setq color-rg-search-ignore-rules
         (mapconcat
-         (lambda (x) (format rg-glob-fmt x)) color-rg-ignore-dir-list "")))
+         (lambda (x) (format rg-glob-fmt x)) color-rg-ignore-dir-list ""))
+  
+  (with-eval-after-load 'org
+   (defun color-rg-search-in-org-roam ()
+     "Search in org-roam directory"
+     (interactive)
+     (color-rg-search-input (color-rg-read-input) org-roam-directory))
+   (define-key app-search-keymap (kbd "m") #'color-rg-search-in-org-roam)))
 
 (use-package auto-save
   :straight (:type git :host github :repo "manateelazycat/auto-save")
