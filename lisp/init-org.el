@@ -264,6 +264,9 @@
    '(org-table ((t :inherit 'fixed-pitch)))
    '(org-code ((t :inherit 'fixed-pitch)))
    '(org-block ((t :inherit 'fixed-pitch)))))
+   ;;'(org-special-keyword ((t :inherit 'fixed-pitch)))))
+   ;;'(org-drawer ((t :inherit 'fixed-pitch)))
+   ;;'(org-meta-line ((t :inherit 'fixed-pitch)))))
    
   
 (with-eval-after-load "ob"
@@ -422,7 +425,7 @@
   (setq org-bars-color-options '(:only-one-color t
                                  :bar-color "#505050")
  
-        org-bars-extra-pixels-height 2))
+        org-bars-extra-pixels-height 6))
   
   
 ;; (straight-use-package '(org-visual-outline 

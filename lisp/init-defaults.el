@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t -*-
+;; -*- lexical-binding: t -*-
 
 (setq-default
  ;; no start messages
@@ -175,7 +175,8 @@
       sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*"
       sentence-end-double-space nil
       word-wrap-by-category t
-      initial-major-mode 'fundamental-mode)
+      initial-major-mode 'fundamental-mode
+      tramp-mode nil)
 
 ;; kmacro keys
 (global-set-key (kbd "C-,") 'kmacro-start-macro-or-insert-counter)

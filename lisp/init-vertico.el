@@ -66,7 +66,8 @@
    (setq completion-styles '(flex)
          completion-category-defaults nil
          completion-category-overrides '((file (styles orderless partial-completion)))
-         orderless-style-dispatchers '(+vertico-orderless-dispatch))
+         orderless-style-dispatchers '(+vertico-orderless-dispatch)
+         orderless-component-separator "[ &]")
    
    (defun my/use-orderless-in-minibuffer ()
     (setq-local completion-styles '(substring orderless)))
@@ -289,5 +290,3 @@
 
 (provide 'init-vertico)
 ;;; init-vertico.el ends here
-
-
