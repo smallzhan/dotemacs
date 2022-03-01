@@ -63,7 +63,7 @@
         ;; Options for `modus-themes-hl-line' are either nil (the default),
         ;; or a list of properties that may include any of those symbols:
         ;; `accented', `underline', `intense'
-        modus-themes-hl-line '(underline accented)
+        ;; modus-themes-hl-line '(underline accented)
 
         ;; Options for `modus-themes-paren-match' are either nil (the
         ;; default), or a list of properties that may include any of those
@@ -74,7 +74,7 @@
         ;; or a list of properties that may include any of those symbols:
         ;; `neutral-underline' OR `no-underline', `faint' OR `no-color',
         ;; `bold', `italic', `background'
-        modus-themes-links '(neutral-underline background)
+        ;; modus-themes-links '(neutral-underline background)
 
         ;; Options for `modus-themes-box-buttons' are either nil (the
         ;; default), or a list that can combine any of `flat', `accented',
@@ -129,14 +129,15 @@
           (2 . (rainbow))
           (t . (semibold))))
   (modus-themes-load-themes)
+  (when IS-MAC
+   (add-hook 'ns-system-appearance-change-functions
+               #'(lambda (appearance)
+                   (mapc #'disable-theme custom-enabled-themes)
+                   (pcase appearance
+                     ('light (modus-themes-load-operandi))
+                     ('dark (modus-themes-load-vivendi))))))
   :config
-  (if IS-MAC
-      (add-hook 'ns-system-appearance-change-functions
-                #'(lambda (appearance
-                           (mapc #'disable-theme custom-enabled-themes)
-                           (pcase appearance
-                             ('light (modus-themes-load-operandi))
-                             ('dark (modus-themes-load-vivendi))))))
+  (when IS-WINDOWS
     (modus-themes-load-vivendi)))
 ;;(load-theme 'modus-vivendi t))
 
@@ -164,24 +165,24 @@
                    (unicode . ("Apple Color Emoji" "Segoe UI Emoji" "Symbola"))
                    (fixed . "Sarasa Mono SC")
                    (fixed-serif . ("Latin Modern Mono" "LM Mono 10"))
-                   (variable . "Source Serif 4")))
+                   (variable . ("DejaVu Serif" "Source Serif 4"))))
 
 
 (defvar my-font-size 14)   
 
-(defun find-fonts (fontlist)
+(defun find-fonts (fontlist familylist)
   (let ((font (car fontlist))
         (other (cdr fontlist)))
     (if (null font)
         nil
-      (if (find-font (font-spec :name font))
+      (if (member font familylist)
           font
-        (find-fonts other)))))
+        (find-fonts other familylist)))))
 
 (defun my--get-font-family (key)
   (let ((my-fonts (alist-get key my-fonts)))
     (if (listp my-fonts)
-        (find-fonts my-fonts)
+        (find-fonts my-fonts (font-family-list))
       my-fonts)))
 
 (defun my-load-font ()

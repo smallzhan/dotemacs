@@ -418,16 +418,21 @@
 ;; ;; above has no effect while Indent is enabled.
 ;;  (setq org-indent-mode-turns-on-hiding-stars nil))
 
-(use-package org-bars
-  :straight (:type git :host github :repo "tonyaldon/org-bars")
-  :hook (org-mode . org-bars-mode)
+;; (use-package org-bars
+;;   :straight (:type git :host github :repo "tonyaldon/org-bars")
+;;   :hook (org-mode . org-bars-mode))
+;;   
+;; (with-eval-after-load 'org-bars
+;;     (advice-remove 'org-indent--compute-prefixes 'org-bars-compute-prefixes))
+
+(use-package org-modern
+  :straight (:type git :host github :repo "minad/org-modern")
+  
+  :hook (org-mode . org-modern-mode)
   :config
-  (setq org-bars-color-options '(:only-one-color t
-                                 :bar-color "#505050")
- 
-        org-bars-extra-pixels-height 6))
-  
-  
+  (setq org-modern-table nil
+        org-modern-tag nil))
+
 ;; (straight-use-package '(org-visual-outline 
 ;;                         :includes (org-dynamic-bullets org-visual-indent)
 ;;                         :type git
