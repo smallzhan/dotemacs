@@ -7,7 +7,7 @@
   :hook (tree-sitter-after-on . tree-sitter-hl-mode)
   :config
   (require 'tree-sitter-langs)
-  )
+  
   (defun doom-tree-sitter-fail-gracefully-a (orig-fn &rest args)
     "Don't break with errors when current major mode lacks tree-sitter support."
     :around #'tree-sitter-mode

@@ -161,12 +161,12 @@
 ;;;======= font config
 
 (defvar my-fonts '((default . ("DejaVu Sans Mono"  "JetBrains Mono" "Cascadia Code" "Fira Code" "SF Mono"))
-                   (cjk . ("PingFang SC" "Microsoft YaHei" "Sarasa Mono SC"))
+                   (cjk . ("PingFang SC" "Microsoft YaHei UI" "Sarasa Mono SC"))
                    (unicode . ("Apple Color Emoji" "Segoe UI Emoji" "Symbola"))
                    (fixed . "Sarasa Mono SC")
-                   (fixed-serif . ("Latin Modern Mono" "LM Mono 10"))
-                   (variable . ("DejaVu Serif" "Source Serif 4"))))
-
+                   (fixed-serif . ("Latin Modern Mono" "LM Mono 10" "Courier New"))
+                   (variable . ("Source Serif 4" "Times New Roman"))))
+                   
 
 (defvar my-font-size 14)   
 
