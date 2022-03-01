@@ -431,7 +431,8 @@
   :hook (org-mode . org-modern-mode)
   :config
   (setq org-modern-table nil
-        org-modern-tag nil))
+        org-modern-tag nil
+        org-modern-label-border 0.1))
 
 ;; (straight-use-package '(org-visual-outline 
 ;;                         :includes (org-dynamic-bullets org-visual-indent)
