@@ -432,8 +432,11 @@
   :config
   (setq org-modern-table nil
         org-modern-tag nil
-        org-modern-label-border 0.1
-        org-modern-timestamp nil))
+        org-modern-timestamp nil
+        org-modern-priority '((?A . "Ⓐ")
+                              (?B . "Ⓑ")
+                              (?C . "Ⓒ")))
+  (add-hook 'modus-themes-after-load-theme-hook #'org-modern--update-label-face))
 
 ;; (straight-use-package '(org-visual-outline 
 ;;                         :includes (org-dynamic-bullets org-visual-indent)
