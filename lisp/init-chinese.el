@@ -12,11 +12,11 @@
   (setq rime-posframe-properties
         (list :background-color "#333333"
               :foreground-color "#dcdccc"
-              ;;:font "SF Mono-14"
-              :internal-border-width 10))
+              ;;:font "SF Mono-14" 
+              :internal-border-width 2))
 
   (setq default-input-method "rime"
-        rime-show-preedit 'inline
+        rime-show-preedit t
         rime-preedit-face '(t (:underline t))
         rime-show-candidate 'posframe
         rime-inline-ascii-holder ?a

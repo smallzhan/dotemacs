@@ -247,7 +247,7 @@
 
   (defvar bh/organization-task-id "c77749b4-b094-4c8e-8d22-a52608adc113")
 
-  (bh/org-agenda-to-appt)
+  ;;(bh/org-agenda-to-appt)
   (appt-activate t)
 
   (with-eval-after-load 'rime
