@@ -103,5 +103,22 @@
   :after 
   #'elisp-demos-advice-describe-function-1))
 
+(use-package dirvish
+  :config
+  ;; Override dired with dirvish globally
+  (dirvish-override-dired-mode)
+  ;; Enable file preview when narrowing files in minibuffer.
+  ;; This feature only support `vertico/selectrum' for now.
+  (dirvish-peek-mode)
+  :bind
+  (:map dired-mode-map
+        ("SPC" . dirvish-show-history)
+        ("f"   . dirvish-menu-file-info-cmds)
+        ("r"   . dirvish-roam)
+        ("M-c" . dirvish-ui-config)
+        ("M-m" . dirvish-toggle-fullscreen)
+        ([remap dired-summary] . dirvish-dispatch)
+        ([remap dired-do-copy] . dirvish-yank)
+        ([remap mode-line-other-buffer] . dirvish-other-buffer)))
 (provide 'init-basic)
 ;;; init-basic.el ends here

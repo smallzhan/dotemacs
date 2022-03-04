@@ -222,7 +222,7 @@ string of results."
    '(";" . comment-dwim)
    ;;'("k" . kill-this-buffer)
    '("p" . project-find-file)
-   '("d" . dired)
+   '("d" . dirvish)
    '("b" . consult-buffer)
    '("r" . elfeed-dashboard)
    ;; '("r" . deadgrep)

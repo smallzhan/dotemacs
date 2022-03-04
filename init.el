@@ -62,7 +62,7 @@
 (require 'init-highlight)
 (require 'init-hs)
 
-(require 'init-dired) 
+;;(require 'init-dired) 
 (require 'init-window)
 (require 'init-eaf)
 

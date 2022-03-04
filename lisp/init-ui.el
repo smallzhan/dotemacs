@@ -165,7 +165,7 @@
                    (unicode . ("Apple Color Emoji" "Segoe UI Emoji" "Symbola"))
                    (fixed . "Sarasa Mono SC")
                    (fixed-serif . ("Latin Modern Mono" "LM Mono 10" "Courier New"))
-                   (variable . ("Source Serif 4" "Times New Roman"))))
+                   (variable . ("IBM Plex Serif" "Source Serif 4" "Times New Roman"))))
                    
 
 (defvar my-font-size 14)   
