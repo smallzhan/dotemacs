@@ -15,17 +15,18 @@
 
   ;; Leave automatic reformatting to the :editor format module.
   (setq rustic-babel-format-src-block nil
-        rustic-format-trigger nil)
+        rustic-format-trigger nil
+        rustic-lsp-client 'eglot))
 
   ;; HACK `rustic-flycheck' adds all these hooks in disruptive places. Instead,
   ;;      leave it to our :checkers syntax module to do all the set up properly.
   ;;(remove-hook 'rustic-mode-hook #'flycheck-mode)
         ;;(remove-hook 'rustic-mode-hook #'flymake-mode-off)
-  (defun +rustic-setup-nox()
-   (setq rustic-lsp-client 'nox)
-   (require 'nox)
-   (nox-ensure))
-  (add-hook 'rustic-mode-hook #'+rustic-setup-nox))
+  ;; (defun +rustic-setup-nox()
+  ;;  (setq rustic-lsp-client 'nox)
+  ;;  (require 'nox)
+  ;;  (nox-ensure))
+  ;; (add-hook 'rustic-mode-hook #'+rustic-setup-nox))
 
   ;; (map! :map rustic-mode-map
   ;;       :localleader

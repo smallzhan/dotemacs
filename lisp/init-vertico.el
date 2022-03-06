@@ -63,15 +63,16 @@
       ((string-suffix-p "~" pattern) 
        `(orderless-flex . ,(substring pattern 0 -1)))))
   
-   (setq completion-styles '(flex)
+   (setq completion-styles '(orderless flex)
          completion-category-defaults nil
-         completion-category-overrides '((file (styles orderless partial-completion)))
+         completion-category-overrides '((file (styles orderless partial-completion))
+                                         (eglot (styles orderless flex)))
          orderless-style-dispatchers '(+vertico-orderless-dispatch)
          orderless-component-separator "[ &]")
    
-   (defun my/use-orderless-in-minibuffer ()
-    (setq-local completion-styles '(substring orderless)))
-   (add-hook 'minibuffer-setup-hook #'my/use-orderless-in-minibuffer)
+   ;; (defun my/use-orderless-in-minibuffer ()
+   ;;  (setq-local completion-styles '(substring orderless)))
+   ;; (add-hook 'minibuffer-setup-hook #'my/use-orderless-in-minibuffer)
  
   ;; ...otherwise find-file gets different highlighting than other commands
   (set-face-attribute 'completions-first-difference nil :inherit nil))

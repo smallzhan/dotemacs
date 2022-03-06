@@ -151,56 +151,66 @@
 ;;   (push '(company-capf :with company-tabnine :separate) company-backends))
 
 
-(use-package nox
-  :straight (:type git :host github :repo "smallzhan/nox")
-  ;;:load-path "~/.doom.d/extensions/nox"
-  :commands (nox nox-ensure)
-  :config
-  (setq nox-python-path (executable-find "python3")
-        nox-python-server "pyright"
-        nox-autoshutdown t)
-  (add-to-list 'nox-server-programs '((c++-mode c-mode) "clangd"))
-
- (add-hook 'python-mode-hook #'(lambda () (remove-hook 'completion-at-point-functions 'python-completion-at-point t)))
- :init
- (dolist (hook (list
-                'js-mode-hook
-                'rust-mode-hook
-                'python-mode-hook
-                'ruby-mode-hook
-                'java-mode-hook
-                'sh-mode-hook
-                'php-mode-hook
-                'c-mode-common-hook
-                'c-mode-hook
-                'c++-mode-hook
-                'haskell-mode-hook))
-
-   (add-hook hook #'nox-ensure)))
-
-;; (use-package eglot
-;;   :commands (eglot-ensure eglot)
+;; (use-package nox
+;;   :straight (:type git :host github :repo "smallzhan/nox")
+;;   ;;:load-path "~/.doom.d/extensions/nox"
+;;   :commands (nox nox-ensure)
 ;;   :config
-;;   (setq eglot-python-path (executable-find "python3")
-;;         eglot-autoshutdown t)
-;;   (add-to-list 'eglot-server-programs '((python-mode) "pyright-langserver" "--stdio"))
-;;   ;;(add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
-;;   (add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+;;   (setq nox-python-path (executable-find "python3")
+;;         nox-python-server "pyright"
+;;         nox-autoshutdown t)
+;;   (add-to-list 'nox-server-programs '((c++-mode c-mode) "clangd"))
 ;; 
-;;   (dolist (hook (list
-;;                  'js-mode-hook
-;;                  'rust-mode-hook
-;;                  'python-mode-hook
-;;                  'ruby-mode-hook
-;;                  'java-mode-hook
-;;                  'sh-mode-hook
-;;                  'php-mode-hook
-;;                  'c-mode-common-hook
-;;                  'c-mode-hook
-;;                  'c++-mode-hook
-;;                  'haskell-mode-hook))
-;;     (add-hook hook #'eglot-ensure)))
+;;  (add-hook 'python-mode-hook #'(lambda () (remove-hook 'completion-at-point-functions 'python-completion-at-point t)))
+;;  (define-key app-edit-keymap "i" #'nox-find-implementation)
+;;  (define-key app-edit-keymap "D" #'nox-find-typeDefinition)
+;;  (define-key app-edit-keymap "m" #'nox-show-doc)
+;;  :init
+;;  (dolist (hook (list
+;;                 'js-mode-hook
+;;                 'rust-mode-hook
+;;                 'python-mode-hook
+;;                 'ruby-mode-hook
+;;                 'java-mode-hook
+;;                 'sh-mode-hook
+;;                 'php-mode-hook
+;;                 'c-mode-common-hook
+;;                 'c-mode-hook
+;;                 'c++-mode-hook
+;;                 'haskell-mode-hook))
+;; 
+;;    (add-hook hook #'nox-ensure)))
 
+(use-package eglot
+  :commands (eglot-ensure eglot)
+  :init 
+  (setq eglot-python-path (executable-find "python3")
+        eglot-sync-connect 1
+        eglot-connect-timeout 10
+        eglot-autoshutdown t
+        eglot-auto-display-help-buffer nil)
+        ;;eglot-stay-out-of '(flymake))
+  (dolist (hook (list
+                 'js-mode-hook
+                 'rust-mode-hook
+                 'python-mode-hook
+                 'ruby-mode-hook
+                 'java-mode-hook
+                 'sh-mode-hook
+                 'php-mode-hook
+                 'c-mode-common-hook
+                 'c-mode-hook
+                 'c++-mode-hook
+                 'haskell-mode-hook))
+    (add-hook hook #'eglot-ensure))
+  :config 
+  (define-key app-edit-keymap "i" #'eglot-find-implementation)
+  (define-key app-edit-keymap "D" #'eglot-find-typeDefinition)
+  (define-key app-edit-keymap "m" #'eglot-find-declaration))
+  
+  ;;(add-to-list 'eglot-server-programs '((python-mode) "pyright-langserver" "--stdio"))
+  ;;;;(add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
+  ;;(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
 
 (provide 'init-lsp)
 ;;; init-lsp.el ends here
