@@ -16,7 +16,7 @@
   (setq color-rg-kill-temp-buffer-p nil
         color-rg-mac-load-path-from-shell nil)
   :config
-  (setq color-rg-ignore-dir-list '("node_modules" "dist" "__pycache__"))
+  (setq color-rg-ignore-dir-list '("node_modules" "dist" "__pycache__" "straight"))
 
   (setq rg-glob-fmt
         (if IS-WINDOWS

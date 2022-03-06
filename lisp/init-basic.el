@@ -110,6 +110,13 @@
   ;; Enable file preview when narrowing files in minibuffer.
   ;; This feature only support `vertico/selectrum' for now.
   (dirvish-peek-mode)
+  (defun my--dirvish-preview-args (args)
+    (prin1-to-string args)
+    (let ((file (car args))
+          (tail (cdr args)))
+      (cons (file-name-nondirectory file) tail)))
+    
+  (advice-add 'dirvish--get-image-cache-for-file :filter-args #'my--dirvish-preview-args)
   :bind
   (:map dired-mode-map
         ("SPC" . dirvish-show-history)

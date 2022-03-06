@@ -20,23 +20,7 @@
  split-width-threshold 120
  ;; don't create lockfiles
  create-lockfiles nil
- ;; UTF-8
- ;; buffer-file-coding-system 'utf-8-unix
- ;; default-file-name-coding-system 'utf-8-unix
- ;; default-keyboard-coding-system 'utf-8-unix
- ;; default-process-coding-system '(utf-8-unix . utf-8-unix)
- ;; default-sendmail-coding-system 'utf-8-unix
- ;; default-terminal-coding-system 'utf-8-unix
- ;; add final newline
- require-final-newline t
- ;; backup setups
- backup-directory-alist `((".*" . ,temporary-file-directory))
- auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
- backup-by-copying t
- delete-old-versions t
- kept-new-versions 6
- kept-old-versions 2
- version-control t
+ 
  ;; xref no prompt
  xref-prompt-for-identifier nil
  ;; mouse yank at point instead of click position.

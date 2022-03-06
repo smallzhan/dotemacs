@@ -113,9 +113,12 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
                   +rime-predicate-button-at-point-p
                   rime-predicate-prog-in-code-p
                   rime-predicate-punctuation-line-begin-p
+                  rime-predicate-tex-math-or-command-p
+                  rime-predicate-punctuation-after-space-cc-p
+                  rime-predicate-after-ascii-char-p))
                   ;;rime-predicate-after-alphabet-char-p
                   ;;rime-predicate-auto-english-p
-                  rime-predicate-hydra-p))
+                  
 
   (setq-default rime-inline-predicates
                 '(rime-predicate-space-after-cc-p

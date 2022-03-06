@@ -257,6 +257,7 @@
   (add-hook 'org-mode-hook 'org-num-mode))
   
 (with-eval-after-load 'org
+  (plist-put org-format-latex-options :scale 1.5) 
   (custom-set-faces
    '(org-latex-and-related ((t (:inherit 'fixed-pitch-serif))))
    '(org-tag ((t (:inherit 'fixed-pitch-serif)))) 
@@ -433,6 +434,8 @@
   (setq org-modern-table nil
         org-modern-tag nil
         org-modern-timestamp nil
+        org-modern-progress nil
+        org-modern-statistics nil
         org-modern-priority '((?A . "Ⓐ")
                               (?B . "Ⓑ")
                               (?C . "Ⓒ")))
