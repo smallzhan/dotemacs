@@ -169,23 +169,23 @@
                                         "朗道汉英字典5.0"
                                         "21世纪双语科技词典"
                                         "朗道英汉字典5.0"))
-  (setq sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic"))
+  (setq sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic")))
 
-  (defun sdcv-translate-result (word dictionary-list)
-    "Call sdcv to search word in dictionary list, return filtered
-string of results."
-    (let ((command-string
-           (format "%s -x -n %s %s --data-dir %s"
-                   sdcv-program
-                   (mapconcat (lambda (dict)
-                                (concat "-u \"" dict "\""))
-                              dictionary-list " ")
-                   (format "\"%s\"" word)
-                   sdcv-dictionary-data-dir)))
-      ;; (message command-string)
-      (sdcv-filter
-       (shell-command-to-string command-string)))))
-;; Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
+;;   (defun sdcv-translate-result (word dictionary-list)
+;;     "Call sdcv to search word in dictionary list, return filtered
+;; string of results."
+;;     (let ((command-string
+;;            (format "%s -x -n %s %s --data-dir %s"
+;;                    sdcv-program
+;;                    (mapconcat (lambda (dict)
+;;                                 (concat "-u \"" dict "\""))
+;;                               dictionary-list " ")
+;;                    (format "\"%s\"" word)
+;;                    sdcv-dictionary-data-dir)))
+;;       ;; (message command-string)
+;;       (sdcv-filter
+;;        (shell-command-to-string command-string)))))
+;; ;; Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
 
 ;; (use-package puni
 ;;    :straight (:type git :host github :repo "Amaikinono/puni")
