@@ -214,67 +214,6 @@
             (when window-system
               (my-load-font))))     
 
-;; (find-fonts (alist-get 'default my-fonts))
-;; 
-;; 
-;; (car (alist-get 'default my-fo))
-;; (my-get-font-family 'default)
-;; (set-face-attribute 'default nil :font (format "%s:pixelsize=%d" default-font default-font-size))
-;; 
-;; (catch 'loop
-;;   (dolist (font '("Apple Color Emoji" "Symbola"))
-;;     (when (member font (font-family-list))
-;;       (set-fontset-font t 'unicode font nil 'prepend)
-;;       (throw 'loop t))))
-;; 
-;; ("Apple Color Emoji" "Symbola")
-;; 
-;; (defvar chinese-fonts '("Sarasa Mono SC" "PingFang SC" "Microsoft YaHei"))
-;; 
-;; 
-;; ;;(run-at-time "2sec" nil
-;; ;;             (lambda ()
-;; (let ((font (find-fonts chinese-fonts)))
-;;   (dolist (charset '(kana han hangul cjk-misc bopomofo))
-;;     (set-fontset-font t charset font)))
-;; 
-;; 
-;; (set-face-attribute 'fixed-pitch nil
-;;                     :family "Sarasa Mono SC"
-;;                     :inherit '(default))
-;; 
-;; (set-face-attribute 'fixed-pitch-serif nil
-;;                     :family "Latin Modern Mono"
-;;                     :inherit '(default))
-;; 
-;; (set-face-attribute 'variable-pitch nil
-;;                     :family "Source Serif 4")
-;; 
-;; 
-;; 
-;; ;; (defvar meomacs-font-size 14
-;; ;;     "Current font size.")
-;; ;; 
-;; ;; (defvar meomacs-fonts '((default . "SF Mono")
-;; ;;                         (cjk . "PingFang SC")
-;; ;;                         (symbol . "Symbola")
-;; ;;                         (fixed . "Sarasa Mono SC")
-;; ;;                         (fixed-serif . "Latin Modern Mono")
-;; ;;                         (variable . "Source Seruf Pro"))
-;; ;;   "Fonts to use.")
-;; ;; 
-;; ;; (defun meomacs--get-font-family (key)
-;; ;;   (alist-get key meomacs-fonts))
-;; ;; 
-;; ;;   ;; Set default font before frame creation
-;; ;;   ;; to make sure the first frame have the correct size
-;; ;; (add-to-list 'default-frame-alist (cons 'font (format "%s-%s"
-;; ;;                                                       (meomacs--get-font-family 'default)
-;; ;;                                                       meomacs-font-size)))
-;; ;; 
-;; ;; ()
-;; ;; 
-;; ;;  
 
 (use-package awesome-tray
   :straight (:type git :host github :repo "manateelazycat/awesome-tray")

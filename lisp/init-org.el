@@ -208,7 +208,7 @@
   (setq org-enforce-todo-dependencies t)
 
   ;; Rebuild the reminders everytime the agenda is displayed
-  (add-hook 'org-finalize-agenda-hook 'bh/org-agenda-to-appt 'append)
+  (add-hook 'org-agenda-finalize-hook 'bh/org-agenda-to-appt 'append)
   (add-hook 'org-clock-out-hook 'bh/clock-out-maybe 'append)
 
   ;; If we leave Emacs running overnight - reset the appointments one minute after midnight
