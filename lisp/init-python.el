@@ -29,7 +29,10 @@
   (define-key python-mode-map (kbd "DEL") nil))
 
 ;;(use-package live-py-mode :defer t)
-(use-package pyimport :defer t)
+(use-package pyimport :defer t
+  :bind (:map python-mode-map
+              ("M-RET" . pyimport-insert-missing)
+              ("M-_" . pyimport-remove-unused)))
 
 (use-package py-isort :defer t)
 

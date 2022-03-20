@@ -63,13 +63,13 @@ FACE defaults to inheriting from default and highlight."
   :diminish
   :functions (turn-off-symbol-overlay turn-on-symbol-overlay)
   :custom-face (symbol-overlay-default-face ((t (:inherit (region bold)))))
-  :bind (("M-i" . symbol-overlay-put)
-         ("M-n" . symbol-overlay-jump-next)
-         ("M-p" . symbol-overlay-jump-prev)
-         ("M-N" . symbol-overlay-switch-forward)
-         ("M-P" . symbol-overlay-switch-backward)
-         ("M-C" . symbol-overlay-remove-all)
-         ([M-f3] . symbol-overlay-remove-all))
+  ;; :bind (("M-i" . symbol-overlay-put)
+  ;;        ("M-n" . symbol-overlay-jump-next)
+  ;;        ("M-p" . symbol-overlay-jump-prev)
+  ;;        ("M-N" . symbol-overlay-switch-forward)
+  ;;        ("M-P" . symbol-overlay-switch-backward)
+  ;;        ("M-C" . symbol-overlay-remove-all)
+  ;;        ([M-f3] . symbol-overlay-remove-all))
   :hook (((prog-mode yaml-mode) . symbol-overlay-mode)
          (iedit-mode . turn-off-symbol-overlay)
          (iedit-mode-end . turn-on-symbol-overlay))
@@ -97,7 +97,33 @@ FACE defaults to inheriting from default and highlight."
     (interactive)
     (when (derived-mode-p 'prog-mode 'yaml-mode)
       (symbol-overlay-mode 1)))
-  (advice-add #'deactivate-mark :after #'turn-on-symbol-overlay))
+  (advice-add #'deactivate-mark :after #'turn-on-symbol-overlay)
+  
+  (transient-define-prefix symbol-overlay-transient ()
+    "Symbol Overlay Menu"
+    ["Symbol Overlay"
+     ["Overlays"
+      ("i" "Add/Remove at point" symbol-overlay-put)
+      ("k" "Remove All" symbol-overlay-remove-all)
+      ("b" "Backward" symbol-overlay-switch-backward)
+      ("f" "Forward" symbol-overlay-switch-forward)
+      ("t" "Toggle overlay" symbol-overlay-toggle-in-scope)]
+     ["Move to Symbol"
+      ("n" "Jump Next" symbol-overlay-jump-next)
+      ("p" "Jump Previous" symbol-overlay-jump-prev)
+      ("<" "Jump to First" symbol-overlay-jump-first)
+      (">" "Jump to Last" symbol-overlay-jump-last)
+      ("d" "Jump to Definition" symbol-overlay-jump-to-definition)
+      ("e" "Echo Mark" symbol-overlay-echo-mark)]
+     ["Other"
+      ("m" "Highlight at point" symbol-overlay-mode)
+      ("w" "Save Symbol at point" symbol-overlay-save-symbol)
+      ("h" "Symbol Overlay Help" symbol-overlay-map-help)
+      ("r" "Rename symbol" symbol-overlay-rename)
+      ("u" "Query Replace" symbol-overlay-query-replace)
+      ("s" "Isearch Literally" symbol-overlay-isearch-literally)]])
+  
+  (global-set-key (kbd "s-.") 'symbol-overlay-transient))
 
 ;; Highlight indentions
 ;; (use-package highlight-indent-guides

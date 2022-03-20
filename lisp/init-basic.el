@@ -1,3 +1,4 @@
+
 ;;; init-basic.el  -*- lexical-binding: t; -*-
 
 (require 'init-env)
@@ -117,6 +118,9 @@
       (cons (file-name-nondirectory file) tail)))
     
   (advice-add 'dirvish--get-image-cache-for-file :filter-args #'my--dirvish-preview-args)
+  (setq dirvish-header-style nil)
+  (setq dirvish-mode-line-format nil)
+  (setq dirvish-attributes '(all-the-icons file-size))
   :bind
   (:map dired-mode-map
         ("SPC" . dirvish-show-history)
@@ -127,5 +131,6 @@
         ([remap dired-summary] . dirvish-dispatch)
         ([remap dired-do-copy] . dirvish-yank)
         ([remap mode-line-other-buffer] . dirvish-other-buffer)))
+
 (provide 'init-basic)
 ;;; init-basic.el ends here

@@ -264,10 +264,11 @@
    '(org-checkbox ((t :inherit 'fixed-pitch :box nil)))
    '(org-table ((t :inherit 'fixed-pitch)))
    '(org-code ((t :inherit 'fixed-pitch)))
-   '(org-block ((t :inherit 'fixed-pitch)))))
-   ;;'(org-special-keyword ((t :inherit 'fixed-pitch)))))
-   ;;'(org-drawer ((t :inherit 'fixed-pitch)))
-   ;;'(org-meta-line ((t :inherit 'fixed-pitch)))))
+   '(org-block ((t :inherit 'fixed-pitch)))
+   '(org-special-keyword ((t :inherit 'fixed-pitch)))
+   '(org-drawer ((t :inherit 'fixed-pitch)))
+   '(org-meta-line ((t :inherit 'fixed-pitch)))
+   '(org-property-value ((t :inherit 'fixed-pitch)))))                 
    
   
 (with-eval-after-load "ob"
@@ -433,13 +434,14 @@
   :config
   (setq org-modern-table nil
         org-modern-tag nil
-        org-modern-timestamp nil
+        ;;org-modern-timestamp nil
         org-modern-progress nil
         org-modern-statistics nil
         org-modern-priority '((?A . "Ⓐ")
                               (?B . "Ⓑ")
                               (?C . "Ⓒ")))
-  (add-hook 'modus-themes-after-load-theme-hook #'org-modern--update-label-face))
+  (add-hook 'modus-themes-after-load-theme-hook #'org-modern--update-label-face)
+  (add-hook 'after-load-theme-hook #'org-modern--update-label-face))
 
 ;; (straight-use-package '(org-visual-outline 
 ;;                         :includes (org-dynamic-bullets org-visual-indent)
