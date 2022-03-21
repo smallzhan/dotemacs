@@ -138,21 +138,21 @@
 ;;        ("M-:" . awesome-pair-jump-out-pair-and-newline))
 ;; 
 ;; :hook ((prog-mode ielm-mode minibuffer-inactive-mode sh-mode) . awesome-pair-mode))
-
-;; (use-package! counsel-etags
-;;   ;;:ensure t
-;;   :bind (("M-]" . counsel-etags-find-tag-at-point))
-;;   :init
-;;   (add-hook 'prog-mode-hook
-;;             (lambda ()
-;;               (add-hook 'after-save-hook
-;;                         'counsel-etags-virtual-update-tags 'append 'local)))
-;;   :config
-;;   (setq counsel-etags-update-interval 60)
-;;   (dolist (dir '("build" ".ccls-cache" "Debug" "Release" "rime" ".local"))
-;;     (push dir counsel-etags-ignore-directories))
-;;   (dolist (ext '("*.bin" "*.hex" "*.pdb"))
-;;     (push ext counsel-etags-ignore-filenames)))
+(when IS-WINDOWS
+  (use-package! counsel-etags
+    ;;:ensure t
+    :bind (("M-]" . counsel-etags-find-tag-at-point))
+    :init
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (add-hook 'after-save-hook
+                          'counsel-etags-virtual-update-tags 'append 'local)))
+    :config
+    (setq counsel-etags-update-interval 60)
+    (dolist (dir '("build" ".ccls-cache" "Debug" "Release" "rime" ".local"))
+      (push dir counsel-etags-ignore-directories))
+    (dolist (ext '("*.bin" "*.hex" "*.pdb"))
+      (push ext counsel-etags-ignore-filenames))))
 
 (use-package posframe :defer t)
 
@@ -195,13 +195,13 @@
 ;;            nxml-mode
 ;;            tex-mode
 ;;            eval-expression-minibuffer-setup) . puni-mode))
-
-(use-package citre
-  :straight (:type git :host github :repo "universal-ctags/citre")
-  :defer t
-  :init
-  ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config))
+(unless IS-WINDOWS
+  (use-package citre
+    :straight (:type git :host github :repo "universal-ctags/citre")
+    :defer t
+    :init
+    ;; This is needed in `:init' block for lazy load to work.
+    (require 'citre-config)))
   ;; Bind your frequently used commands.
   ;; (global-set-key (kbd "C-c c j") #'citre-jump)
   ;; (global-set-key (kbd "C-c c J") #'citre-jump-back)

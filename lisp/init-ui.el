@@ -4,13 +4,14 @@
 
 (use-package doom-themes
   :config
-  (when IS-MAC
+  (if IS-MAC
    (add-hook 'ns-system-appearance-change-functions
                #'(lambda (appearance)
                    (mapc #'disable-theme custom-enabled-themes)
                    (pcase appearance
                      ('light (load-theme 'doom-one-light t))
-                     ('dark (load-theme 'doom-one t)))))))
+                     ('dark (load-theme 'doom-one t)))))
+   (load-theme 'doom-one t)))
 
 ;; disable line-number
 (setq display-line-numbers-type nil)
@@ -149,22 +150,22 @@
 ;;     (modus-themes-load-vivendi)))
 ;;(load-theme 'modus-vivendi t))
 
-(when IS-WINDOWS
-  (use-package circadian
-   :config
- 
-   (defun my--encode-time (hour min)
-     "Encode HOUR hours and MIN minutes into a valid format for `run-at-time'."
-     (let ((now (decode-time)))
-       (let ((day (nth 3 now))
-             (month (nth 4 now))
-             (year (nth 5 now)))
-         (encode-time 0 min hour day month year))))
-   (advice-add 'circadian--encode-time :override #'my--encode-time)
- 
-   (setq circadian-themes '(("8:00" . modus-operandi)
-                            ("19:30" . modus-vivendi))))
-  (circadian-setup))
+;; (when IS-WINDOWS
+;;   (use-package circadian
+;;    :config
+;;  
+;;    (defun my--encode-time (hour min)
+;;      "Encode HOUR hours and MIN minutes into a valid format for `run-at-time'."
+;;      (let ((now (decode-time)))
+;;        (let ((day (nth 3 now))
+;;              (month (nth 4 now))
+;;              (year (nth 5 now)))
+;;          (encode-time 0 min hour day month year))))
+;;    (advice-add 'circadian--encode-time :override #'my--encode-time)
+;;  
+;;    (setq circadian-themes '(("8:00" . modus-operandi)
+;;                             ("19:30" . modus-vivendi))))
+;;   (circadian-setup))
 
 
 ;;;======= font config
@@ -174,7 +175,7 @@
                    (unicode . ("Apple Color Emoji" "Segoe UI Emoji" "Symbola"))
                    (fixed . ("LXGW WenKai Mono" "Iosevka Fixed" "Sarasa Mono SC"))
                    (fixed-serif . ("Latin Modern Mono" "LM Mono 10" "Courier New"))
-                   (variable . ("IBM Plex Serif" "Source Serif 4" "Times New Roman"))))
+                   (variable . ("Source Serif 4" "Times New Roman"))))
                    
 
 (defvar my-font-size 14)   
