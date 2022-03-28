@@ -434,7 +434,7 @@
   :config
   (setq org-modern-table nil
         org-modern-tag nil
-        ;;org-modern-timestamp nil
+        org-modern-timestamp nil
         org-modern-progress nil
         org-modern-statistics nil
         org-modern-priority '((?A . "Ⓐ")

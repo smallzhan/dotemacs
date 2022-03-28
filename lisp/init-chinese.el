@@ -13,7 +13,7 @@
         (list :background-color "#333333"
               :foreground-color "#dcdccc"
               ;;:font "SF Mono-14" 
-              :internal-border-width 2))
+              :internal-border-width 10))
 
   (setq default-input-method "rime"
         rime-show-preedit t
@@ -115,7 +115,8 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
                   rime-predicate-punctuation-line-begin-p
                   rime-predicate-tex-math-or-command-p
                   rime-predicate-punctuation-after-space-cc-p
-                  rime-predicate-after-ascii-char-p))
+                  rime-predicate-after-ascii-char-p
+                  minibufferp))
                   ;;rime-predicate-after-alphabet-char-p
                   ;;rime-predicate-auto-english-p
                   

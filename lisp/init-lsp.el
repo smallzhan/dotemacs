@@ -211,6 +211,10 @@
   ;;(add-to-list 'eglot-server-programs '((python-mode) "pyright-langserver" "--stdio"))
   ;;;;(add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
   ;;(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
+(use-package eldoc-box
+  :config
+  (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
+
 
 (provide 'init-lsp)
 ;;; init-lsp.el ends here
