@@ -61,6 +61,7 @@
 (require 'init-git)
 (require 'init-highlight)
 (require 'init-hs)
+(require 'init-flycheck)
 
 ;;(require 'init-dired) 
 (require 'init-window)

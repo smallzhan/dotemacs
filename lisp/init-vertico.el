@@ -248,9 +248,8 @@
 
 (use-package corfu
   :init
-  (setq corfu-auto t
-        corfu-quit-no-match t)
-  (corfu-global-mode)
+  (setq corfu-quit-no-match t)
+  (global-corfu-mode)
   :config
   ;;; all the icons formatter for corfu
   (require 'kind-all-the-icons)
