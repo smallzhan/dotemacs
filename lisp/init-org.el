@@ -268,7 +268,8 @@
    '(org-special-keyword ((t :inherit 'fixed-pitch)))
    '(org-drawer ((t :inherit 'fixed-pitch)))
    '(org-meta-line ((t :inherit 'fixed-pitch)))
-   '(org-property-value ((t :inherit 'fixed-pitch)))))                 
+   '(org-property-value ((t :inherit 'fixed-pitch)))
+   '(org-verbatim ((t :inherit 'fixed-pitch)))))                 
    
   
 (with-eval-after-load "ob"

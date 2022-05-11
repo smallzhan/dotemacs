@@ -53,8 +53,9 @@
   (eaf-bind-key nil "M-q" eaf-browser-keybinding)
 
   (require 'eaf-interleave)
-  (add-to-list 'eaf-interleave-org-notes-dir-list (concat org-directory "research")))
-
+  (add-to-list 'eaf-interleave-org-notes-dir-list (concat org-directory "research"))
+   
+  (require 'eaf-git))
   ;;(require 'eaf-interleave-noter))
   
 

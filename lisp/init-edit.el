@@ -321,6 +321,8 @@
    '("%" . meow-query-replace-regexp)
    '("'" . repeat)
    '("\\" . quoted-insert)
+   '("=" . split-window-vertically)
+   '("/" . split-window-horizontally)  
    '("<escape>" . ignore)))
 
 
