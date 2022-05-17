@@ -31,58 +31,22 @@
   ;;(add-to-list 'eglot-server-programs '((python-mode) "pyright-langserver" "--stdio"))
   ;;;;(add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
   ;;(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
-(use-package eldoc-box
-  :config
-  (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
+;; (use-package eldoc-box
+;;   :config
+;;   (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
+
+(use-package markdown-mode
+  :defer t)
 
 (use-package lsp-bridge
   :straight nil
   :load-path "~/.emacs.d/site-lisp/lsp-bridge"
   :config
-  ;; (setq lsp-bridge-enable-log t)
-  (dolist (hook (list
-                 'emacs-lisp-mode-hook))
-               
-   (add-hook hook (lambda ()
-                    (setq-local corfu-auto t))))
-                   
+  (add-to-list 'lsp-bridge-lang-server-mode-list '(rustic-mode . "rust-analyzer")) 
+  ;;(setq lsp-bridge-enable-log t)
+  (global-lsp-bridge-mode))
 
-  ;; Enable lsp-bridge.
-  (dolist (hook (list
-                 'c-mode-hook
-                 'c++-mode-hook
-                 'java-mode-hook
-                 'python-mode-hook
-                 'ruby-mode-hook
-                 'rust-mode-hook
-                 'elixir-mode-hook
-                 'go-mode-hook
-                 'haskell-mode-hook
-                 'haskell-literate-mode-hook
-                 'dart-mode-hook
-                 'scala-mode-hook
-                 'typescript-mode-hook
-                 'typescript-tsx-mode-hook
-                 'js2-mode-hook
-                 'js-mode-hook
-                 'rjsx-mode-hook
-                 'tuareg-mode-hook
-                 'latex-mode-hook
-                 'Tex-latex-mode-hook
-                 'texmode-hook
-                 'context-mode-hook
-                 'texinfo-mode-hook
-                 'bibtex-mode-hook
-                 'clojure-mode-hook
-                 'clojurec-mode-hook
-                 'clojurescript-mode-hook
-                 'clojurex-mode-hook
-                 'sh-mode-hook
-                 'web-mode-hook))
-               
-    (add-hook hook (lambda ()
-                     (setq-local corfu-auto nil)  ;; let lsp-bridge control when popup completion frame
-                     (lsp-bridge-mode 1)))))
+
                    
 
 (provide 'init-lsp)
