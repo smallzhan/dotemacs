@@ -196,14 +196,6 @@
 ;;            tex-mode
 ;;            eval-expression-minibuffer-setup) . puni-mode))
 ;;(unless IS-WINDOWS
-(use-package citre
-  :straight (:type git :host github :repo "universal-ctags/citre")
-  :defer t
-  :init
-  ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config)
-  (setq citre-enable-capf-integration nil)
-  (setq citre-peek-fill-fringe nil))
 
   ;; Bind your frequently used commands.
   ;; (global-set-key (kbd "C-c c j") #'citre-jump)
