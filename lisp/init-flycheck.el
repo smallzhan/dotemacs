@@ -6,7 +6,8 @@
   :hook (after-init . global-flycheck-mode)
   :init (setq flycheck-global-modes
               '(not text-mode outline-mode fundamental-mode lisp-interaction-mode
-                    org-mode diff-mode shell-mode eshell-mode term-mode vterm-mode)
+                    org-mode diff-mode shell-mode eshell-mode term-mode vterm-mode
+                    emacs-lisp-mode json-mode)
               flycheck-emacs-lisp-load-path 'inherit
               flycheck-indication-mode (if (display-graphic-p)
                                            'right-fringe
@@ -63,9 +64,9 @@
            :poshandler poshandler
            :hidehandler #'flycheck-posframe-hidehandler))))
     (advice-add #'flycheck-posframe-show-posframe :override #'my-flycheck-posframe-show-posframe)))
-
-(use-package flycheck-popup-tip
-  :hook (flycheck-mode . flycheck-popup-tip-mode))
+;; 
+;; (use-package flycheck-popup-tip
+;;   :hook (flycheck-mode . flycheck-popup-tip-mode))
 
 (provide 'init-flycheck)
 

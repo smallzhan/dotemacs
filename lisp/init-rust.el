@@ -1,9 +1,8 @@
 ;;; private/rust/config.el  -*- lexical-binding: t; -*-
 
 (use-package rustic
-  :mode ("\\.rs$" . rustic-mode)
   :init
-  (setq rustic-lsp-setup-p nil)
+  (setq rustic-load-optional-libraries nil)
   (with-eval-after-load 'org-src
     (defalias 'org-babel-execute:rust #'org-babel-execute:rustic)
     (add-to-list 'org-src-lang-modes '("rust" . rustic)))
@@ -16,12 +15,28 @@
   ;; Leave automatic reformatting to the :editor format module.
   (setq rustic-babel-format-src-block nil
         rustic-format-trigger nil
-        rustic-lsp-client 'eglot))
+        rustic-lsp-client nil)
+  (require 'rustic-compile)
+  (require 'rustic-popup)
+  (require 'rustic-cargo)
+  (require 'rustic-doc)
+  (require 'rustic-clippy)
+  (require 'rustic-comint)
+  (with-eval-after-load 'org
+   (require 'rustic-babel))
+  (require 'rustic-racer)
+  (require 'rustic-rustfmt)
+  (require 'rustic-rustfix)
+  ;; (require 'rustic-playpen)
+   ;;(require 'rustic-lsp)
+  (require 'rustic-expand)
+  (with-eval-after-load 'flycheck
+    (require 'rustic-flycheck)))
 
   ;; HACK `rustic-flycheck' adds all these hooks in disruptive places. Instead,
   ;;      leave it to our :checkers syntax module to do all the set up properly.
   ;;(remove-hook 'rustic-mode-hook #'flycheck-mode)
-        ;;(remove-hook 'rustic-mode-hook #'flymake-mode-off)
+      ;;(remove-hook 'rustic-mode-hook #'flymake-mode-off)
   ;; (defun +rustic-setup-nox()
   ;;  (setq rustic-lsp-client 'nox)
   ;;  (require 'nox)
@@ -45,5 +60,16 @@
   ;;       (:prefix ("t" . "cargo test")
   ;;        :desc "all"          "a" #'rustic-cargo-test
   ;;        :desc "current test" "t" #'rustic-cargo-current-test)
+
+;; (use-package rust-mode
+;;   :mode ("\\.rs$" . rust-mode)
+;;   :config
+;;   (add-hook 'rust-mode-hook
+;;           (lambda () (setq indent-tabs-mode nil))))
+;; 
+;; (use-package cargo
+;;  :config
+;;  (add-hook 'rust-mode-hook 'cargo-minor-mode))
+  
 (provide 'init-rust)
 ;;; init-rust.el ends here

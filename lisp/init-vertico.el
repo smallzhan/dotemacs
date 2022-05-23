@@ -246,16 +246,6 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 
-(use-package corfu
-  :init
-  (setq corfu-quit-no-match t)
-  (global-corfu-mode)
-  :config
-  ;;; all the icons formatter for corfu
-  (require 'kind-all-the-icons)
-  (add-to-list 'corfu-margin-formatters 
-               #'kind-all-the-icons-margin-formatter))
-
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
   :bind (("M-/" . dabbrev-completion)

@@ -1,4 +1,3 @@
-
 ;;; init-basic.el  -*- lexical-binding: t; -*-
 
 (require 'init-env)
@@ -68,34 +67,34 @@
 ;;    :straight (:type git :host github :repo "manateelazycat/cache-path-from-shell")))
 
 
-(use-package isearch-mb
-  :init (isearch-mb-mode 1)
-  :config
-  (setq-default
-   ;; Match count next to the minibuffer prompt
-   isearch-lazy-count t
-   ;; Don't be stingy with history; default is to keep just 16 entries
-   search-ring-max 200
-   regexp-search-ring-max 200
-   isearch-regexp-lax-whitespace t
-   search-whitespace-regexp ".*?")
-
-  (add-to-list 'isearch-mb--with-buffer #'consult-isearch)
-  (define-key isearch-mb-minibuffer-map (kbd "M-r") #'consult-isearch)
-  (add-to-list 'isearch-mb--after-exit #'consult-line)
-  (define-key isearch-mb-minibuffer-map (kbd "M-s") #'consult-line)
-
-  (defun move-end-of-line-maybe-ending-isearch (arg)
-    "End search and move to end of line, but only if already at the end of the minibuffer."
-    (interactive "p")
-    (if (eobp)
-        (isearch-mb--after-exit
-         (lambda ()
-           (move-end-of-line arg)
-           (isearch-done)))
-      (move-end-of-line arg)))
-
-  (define-key isearch-mb-minibuffer-map (kbd "C-e") #'move-end-of-line-maybe-ending-isearch))
+;; (use-package isearch-mb
+;;   :init (isearch-mb-mode 1)
+;;   :config
+;;   (setq-default
+;;    ;; Match count next to the minibuffer prompt
+;;    isearch-lazy-count t
+;;    ;; Don't be stingy with history; default is to keep just 16 entries
+;;    search-ring-max 200
+;;    regexp-search-ring-max 200
+;;    isearch-regexp-lax-whitespace t
+;;    search-whitespace-regexp ".*?")
+;; 
+;;   (add-to-list 'isearch-mb--with-buffer #'consult-isearch)
+;;   (define-key isearch-mb-minibuffer-map (kbd "M-r") #'consult-isearch)
+;;   (add-to-list 'isearch-mb--after-exit #'consult-line)
+;;   (define-key isearch-mb-minibuffer-map (kbd "M-s") #'consult-line)
+;; 
+;;   (defun move-end-of-line-maybe-ending-isearch (arg)
+;;     "End search and move to end of line, but only if already at the end of the minibuffer."
+;;     (interactive "p")
+;;     (if (eobp)
+;;         (isearch-mb--after-exit
+;;          (lambda ()
+;;            (move-end-of-line arg)
+;;            (isearch-done)))
+;;       (move-end-of-line arg)))
+;; 
+;;   (define-key isearch-mb-minibuffer-map (kbd "C-e") #'move-end-of-line-maybe-ending-isearch))
 
 (use-package elisp-demos
   :config
