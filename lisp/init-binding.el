@@ -55,17 +55,8 @@
     (define-key keymap (kbd "f") #'format-all-buffer)
     (define-key keymap (kbd "r") #'format-all-region)
     (define-key keymap (kbd "w") #'delete-trailing-whitespace)
-    ;; (define-key keymap (kbd "i") #'nox-find-implementation) 
-    ;; (define-key keymap (kbd "D") #'nox-find-typeDefinition)
-    ;; (define-key keymap (kbd "m") #'nox-show-doc)
-    (define-key keymap (kbd "s") #'ff-find-other-file)
-    (define-key keymap (kbd "j") #'citre-jump)
-    (define-key keymap (kbd "b") #'citre-jump-back)
-    (define-key keymap (kbd "p") #'citre-ace-peek)
     (define-key keymap (kbd "t") #'citar-open-entry)
-
-    ;;(define-key keymap (kbd "c") #'compile)
-    ;;(define-key keymap (kbd "c") #'compile)
+    
     keymap))
 
 (defalias 'app-edit-keymap app-edit-keymap)

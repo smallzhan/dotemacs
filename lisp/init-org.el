@@ -441,7 +441,7 @@
         org-modern-priority '((?A . "Ⓐ")
                               (?B . "Ⓑ")
                               (?C . "Ⓒ")))
-  (add-hook 'modus-themes-after-load-theme-hook #'org-modern--update-label-face)
+  ;; (add-hook 'modus-themes-after-load-theme-hook #'org-modern--update-label-face)
   (add-hook 'after-load-theme-hook #'org-modern--update-label-face))
 
 ;; (straight-use-package '(org-visual-outline 

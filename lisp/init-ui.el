@@ -5,13 +5,13 @@
 (use-package doom-themes
   :config
   (if IS-MAC
-   (add-hook 'ns-system-appearance-change-functions
-               #'(lambda (appearance)
-                   (mapc #'disable-theme custom-enabled-themes)
-                   (pcase appearance
-                     ('light (load-theme 'doom-one-light t))
-                     ('dark (load-theme 'doom-one t)))))
-   (load-theme 'doom-one t)))
+      (add-hook 'ns-system-appearance-change-functions
+                #'(lambda (appearance)
+                    (mapc #'disable-theme custom-enabled-themes)
+                    (pcase appearance
+                      ('light (load-theme 'doom-one-light t))
+                      ('dark (load-theme 'doom-one t)))))
+    (load-theme 'doom-one t)))
 
 ;; disable line-number
 (setq display-line-numbers-type nil)
@@ -175,36 +175,26 @@
                    (unicode . ("Apple Color Emoji" "Segoe UI Emoji" "Symbola"))
                    (fixed . ("Iosevka Fixed" "Sarasa Mono SC"))
                    (fixed-serif . ("Latin Modern Mono" "LM Mono 10" "Courier New"))
-                   (variable . ("Source Serif 4" "Times New Roman"))))
+                   (variable . ("Bookerly" "Source Serif 4" "Times New Roman"))))
                    
 
 (defvar my-font-size 14)   
 
-(defun find-fonts (fontlist familylist)
-  (let ((font (car fontlist))
-        (other (cdr fontlist)))
-    (if (null font)
-        nil
-      (if (member font familylist)
-          font
-        (find-fonts other familylist)))))
-
-(defun my--get-font-family (key)
-  (let ((my-fonts (alist-get key my-fonts)))
-    (if (listp my-fonts)
-        (find-fonts my-fonts (font-family-list))
-      my-fonts)))
+(defun my--get-font-with-code (key)
+  (cl-find-if (lambda (font)
+                (member font (font-family-list)))
+              (alist-get key my-fonts)))
 
 (defun my-load-font ()
   "Load font configuration."
   (let ((default-font (format "%s:pixelsize=%s"
-                              (my--get-font-family 'default)
+                              (my--get-font-with-code 'default)
                               my-font-size))
-        (cjk-font (my--get-font-family 'cjk))
-        (symbol-font (my--get-font-family 'unicode))
-        (variable-font (my--get-font-family 'variable))
-        (fixed-font (my--get-font-family 'fixed))
-        (fixed-serif-font (my--get-font-family 'fixed-serif)))
+        (cjk-font (my--get-font-with-code 'cjk))
+        (symbol-font (my--get-font-with-code 'unicode))
+        (variable-font (my--get-font-with-code 'variable))
+        (fixed-font (my--get-font-with-code 'fixed))
+        (fixed-serif-font (my--get-font-with-code 'fixed-serif)))
     
     (set-face-attribute 'default nil :font default-font)
     (dolist (charset '(kana han hangul cjk-misc bopomofo))
@@ -264,31 +254,6 @@
                                       "buffer-name"
                                       "buffer-read-only"
                                       "datetime")))
-;; (use-package mini-modeline
-;;   :init (setq mini-modeline-face-attr `(:background ,(face-attribute 'default :background)))
-;;   :config
-;;   (defun my/enable-mini-modeline ()
-;;     (setq mini-modeline-face-attr `(:background ,(face-attribute 'default :background)))
-;;     (mini-modeline-mode 1))
-;;  
-;;   (setq mini-modeline-truncate-p t
-;;         mini-modeline-r-format '("%e"
-;;                                  mode-line-front-space
-;;                                  mode-line-mule-info
-;;                                  mode-line-client
-;;                                  mode-line-modified
-;;                                  mode-line-remote
-;;                                  mode-line-frame-identification
-;;                                  mode-line-buffer-identification
-;;                                  (vc-mode vc-mode)
-;;                                  " "
-;;                                  mode-line-position
-;;                                  " "
-;;                                  awesome-tray-module-datetime-info
-;;                                  mode-line-misc-info
-;;                                  mode-line-end-spaces))
-;;                                  ;;awesome-tray-module-datetime-info))
-;;   :hook (after-load-theme . my/enable-mini-modeline))
 
 (use-package all-the-icons
   :init (unless (or IS-WINDOWS (font-installed-p "all-the-icons"))
@@ -307,10 +272,6 @@
                       all-the-icons-icon-family))
         (all-the-icons-cache func))
       (message "Reset all-the-icons"))))
-
-;; (with-eval-after-load 'fringe
-;;   (fringe-mode '(4 . 4))
-;;   (setq-default fringes-outside-margins t))
 
 (provide 'init-ui)
 ;;; init-ui.el ends here

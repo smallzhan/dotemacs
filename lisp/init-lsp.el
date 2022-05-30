@@ -1,6 +1,5 @@
 ;;; private/lsp/config.el -*- lexical-binding: t; -*-
 
-
 ;; (use-package eglot
 ;;   :commands (eglot-ensure eglot)
 ;;   :init 
@@ -29,9 +28,6 @@
 ;;   (define-key app-edit-keymap "D" #'eglot-find-typeDefinition)
 ;;   (define-key app-edit-keymap "m" #'eglot-find-declaration))
    
-  ;;(add-to-list 'eglot-server-programs '((python-mode) "pyright-langserver" "--stdio"))
-  ;;;;(add-to-list 'eglot-server-programs '((python-mode) "jedi-language-server"))
-  ;;(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd")))
 ;; (use-package eldoc-box
 ;;   :config
 ;;   (add-hook 'eglot--managed-mode-hook #'eldoc-box-hover-at-point-mode t))
@@ -45,9 +41,6 @@
   (global-corfu-mode)
   :config
   ;;; all the icons formatter for corfu
-  (require 'corfu-history)
-  (corfu-history-mode t)
-  (require 'corfu-info)
   (require 'kind-all-the-icons)
   (add-to-list 'corfu-margin-formatters 
                #'kind-all-the-icons-margin-formatter))
@@ -56,16 +49,19 @@
   :straight nil
   :load-path "~/.emacs.d/site-lisp/lsp-bridge"
   :config
-  (add-to-list 'lsp-bridge-lang-server-mode-list 
-               '(rustic-mode . "rust-analyzer"))
   (setq lsp-bridge-enable-log nil)
+  (setq lsp-bridge-enable-auto-import t)
   (global-lsp-bridge-mode)
-  (add-hook 'lsp-bridge-mode-hook 
-            (lambda ()
-             (add-hook 'xref-backend-functions 
-                       #'lsp-bridge-xref-backend nil t)))) 
-  
-
+  (bind-keys :map lsp-bridge-mode-map
+             ;; ("M-." . lsp-bridge-find-def)  ;; override Xref bindings
+             ;; ("M-," . lsp-bridge-return-from-def)
+             ("C-c e d" . lsp-bridge-find-def)
+             ("C-c e k" . lsp-bridge-return-from-def)
+             ("C-c e x" . lsp-bridge-find-references)
+             ("C-c e i" . lsp-bridge-find-impl)
+             ("C-c e r" . lsp-bridge-rename)
+             ("C-c e m" . lsp-bridge-lookup-documentation))) 
+         
 ;; 通过Cape融合多个补全后端
 
 (use-package cape
@@ -81,8 +77,15 @@
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
   (setq citre-enable-capf-integration nil)
-  (setq citre-peek-fill-fringe nil))
-
-
+  (setq citre-peek-fill-fringe nil)
+  :config
+  (bind-keys :map app-edit-keymap
+             ("j" . citre-jump)
+             ("b" . citre-jump-back)
+             ("p" . citre-peek)
+             ("P" . citre-ace-peek)
+             ("u" . citre-update-tags-file)
+             ("n" . citre-create-tags-file)))
+    
 (provide 'init-lsp)
 ;;; init-lsp.el ends here
