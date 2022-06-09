@@ -58,8 +58,6 @@
  read-process-output-max (* 1024 1024)
  ;; Don't truncate lines in a window narrower than 65 chars.
  truncate-partial-width-windows 65
- ;; Default line number width.
- display-line-numbers-width 3
  ;; Don't display comp warnings
  warning-suppress-log-types '((comp))
  
@@ -91,8 +89,8 @@
  ;; hscroll only for current line
  auto-hscroll-mode 'current-line
  ;; system-time-locale
- system-time-locale "C") 
-
+ system-time-locale "C")
+ 
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;;(show-paren-mode -1)

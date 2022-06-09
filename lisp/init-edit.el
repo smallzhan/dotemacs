@@ -343,7 +343,8 @@
   ;;         (keypad . "🅚")))
   (add-to-list 'meow-mode-state-list '(color-rg-mode . motion))
   (add-to-list 'meow-mode-state-list '(elfeed-dashboard-mode . motion))
-  (add-to-list 'meow-mode-state-list '(eaf-mode . motion)))
+  (add-to-list 'meow-mode-state-list '(eaf-mode . motion))
+  (add-to-list 'meow-mode-state-list '(snails-mode . insert)))
   
 
 (use-package parinfer-rust-mode
@@ -431,6 +432,19 @@
 
 (use-package autorevert
   :hook (after-init . global-auto-revert-mode))
+
+(use-package snails
+ :straight (:type git :host github :repo "manateelazycat/snails" :build (:not compile))
+ :commands snails
+ :init 
+ (setq snails-use-exec-path-from-shell nil
+       snails-show-with-frame nil)
+ :config 
+ (setq snails-default-backends 
+       '(snails-backend-buffer
+         snails-backend-recentf
+         snails-backend-bookmark
+         snails-backend-directory-files)))
 
 (provide 'init-edit)
 ;;; init-edit.el ends here

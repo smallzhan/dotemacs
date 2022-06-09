@@ -67,19 +67,22 @@
     (define-key keymap (kbd "r") #'color-rg-search-input-in-project)
     (define-key keymap (kbd "s") #'color-rg-search-symbol-in-project)
     (define-key keymap (kbd "f") #'color-rg-search-input-in-current-file)
-    (define-key keymap (kbd "e") #'color-rg-search-symbol-in-current-file)
-    (define-key keymap (kbd "g") #'consult-git-grep)
-    (define-key keymap (kbd "P") #'consult-ripgrep)
+    (define-key keymap (kbd "c") #'color-rg-search-symbol-in-current-file)
+    (define-key keymap (kbd "v") #'consult-git-grep)
+    (define-key keymap (kbd "g") #'consult-ripgrep)
     (define-key keymap (kbd "l") #'consult-line)
+    (define-key keymap (kbd "e") #'my/consult-line-symbol)
     (define-key keymap (kbd "k") #'consult-keep-lines)
     (define-key keymap (kbd "z") #'lazy-search)
     (define-key keymap (kbd "b") #'consult-bookmark)
     (define-key keymap (kbd "i") #'consult-imenu)
     (define-key keymap (kbd "d") #'sdcv-search-input)
     (define-key keymap (kbd "t") #'sdcv-search-pointer+)
-    (define-key keymap (kbd "o") #'consult-org-agenda)
+    (define-key keymap (kbd "a") #'consult-org-agenda)
+    (define-key keymap (kbd "o") #'consult-outline)
     (define-key keymap (kbd "n") #'consult-narrow)
     (define-key keymap (kbd "p") #'consult-find)
+    (define-key keymap (kbd "x") #'snails)
     keymap))
 
 (defalias 'app-search-keymap app-search-keymap)
@@ -101,5 +104,6 @@
 (defalias 'app-toggle-keymap app-toggle-keymap)
 (global-set-key (kbd "C-c t") 'app-toggle-keymap)
 ;;                              ^ note the quote
+
 (provide 'init-binding)
 ;;; init-bingding.el ends here
