@@ -57,6 +57,7 @@
 (require 'init-rust)
 (require 'init-python)
 (require 'init-tex)
+(require 'init-go)
 
 (require 'init-git)
 (require 'init-highlight)

@@ -70,18 +70,15 @@
              ("C-c e m" . lsp-bridge-lookup-documentation)
              :map acm-mode-map
              ("<return>" . acm-complete))
+  
   (defun acm-reset-faces()
+    (when (frame-live-p acm-frame)
+      (delete-frame acm-frame))
     (set-face-attribute 'acm-default-face nil :background 'unspecified)
     (set-face-attribute 'acm-select-face nil :background 'unspecified))
+  
   (add-hook 'after-load-theme-hook #'acm-reset-faces)
   (setq acm-candidate-match-function 'orderless-flex))
-
-  ;;(defun acm-match-orderless-flex (keyword candidate)
-   ;;(string-match-p (orderless-flex (downcase keyword)) (downcase candidate)))
- 
-  ;;(advice-add #'acm-candidate-fuzzy-search :override #'acm-match-orderless-flex))
-  
-  
 
 ;; 通过Cape融合多个补全后端
 
@@ -111,7 +108,7 @@
 ;; (use-package yasnippet
 ;;   :config
 ;;   (yas-global-mode 1))
-;; 
+
 ;; (use-package yasnippet-snippets
 ;;   :config 
 ;;   (add-to-list 'yas/root-directory yasnippet-snippets-dir))
@@ -125,5 +122,3 @@
 
 (provide 'init-lsp)
 ;;; init-lsp.el ends here
-
-

@@ -143,7 +143,8 @@
    consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
    :preview-key (kbd "M-."))
   
-  (defun my/cosult-line-symbol ()
+  (defun my/consult-line-symbol ()
+    (interactive)
     (consult-line (thing-at-point 'symbol))))
 
 
