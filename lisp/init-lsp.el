@@ -78,8 +78,41 @@
     (set-face-attribute 'acm-select-face nil :background 'unspecified))
   
   (add-hook 'after-load-theme-hook #'acm-reset-faces)
-  (setq acm-candidate-match-function 'orderless-flex))
+  (setq acm-candidate-match-function 'orderless-flex)
+  
+  (defun acm-backend-lsp-snippet-expansion-fn ()
+    'tempel-expand-lsp-snippet)
 
+ (defun tempel-expand-lsp-snippet (snippet)
+   (message snippet)
+   (let* ((field-regexp 
+           (rx 
+              (or 
+               (group "${" (one-or-more digit) ":" (group (one-or-more (or word punct digit space))) "}")
+               (group "$" (one-or-more digit)))))
+          (positions (s-matched-positions-all field-regexp snippet))
+          (matches (s-match-strings-all field-regexp snippet))
+          (matched-pos (cl-loop for pos in positions for match in matches collect (cons pos match)))
+          (template '())
+          (last-match 0))
+         (when positions
+           ;;(add-to-list 'template (substring snippet 0 (car (elt positions 0))))
+           (dolist (pos matched-pos)
+             (setq now-match (caar pos))
+             (if (> now-match last-match)
+                 (push (substring snippet last-match now-match) template)) 
+             (setq field-name (cadddr pos))
+             (if field-name 
+                 (push `(p ,field-name) template)
+              (push 'p template))
+             (setq last-match (cdar pos))))
+         (when (< last-match (length snippet))
+          (push  (substring snippet last-match) template)
+         
+          (tempel-insert (reverse template))))))
+
+;;(tempel-expand-lsp-snippet "include <${0:header}>")
+    
 ;; 通过Cape融合多个补全后端
 
 ;; (use-package cape
