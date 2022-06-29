@@ -85,27 +85,27 @@
 
  (defun tempel-expand-lsp-snippet (snippet)
    (message snippet)
-   (let* ((field-regexp 
-           (rx 
-              (or 
-               (group "${" (one-or-more digit) ":" (group (one-or-more (or word punct digit space))) "}")
-               (group "$" (one-or-more digit)))))
-          (positions (s-matched-positions-all field-regexp snippet))
-          (matches (s-match-strings-all field-regexp snippet))
-          (matched-pos (cl-loop for pos in positions for match in matches collect (cons pos match)))
+   (let* ((placeholder-re 
+           "\\${[0-9]+:\\([_a-zA-Z][-_a-zA-Z0-9 *.,]+\\)}\\|\\${?[0-9]+}?")
+           
+          (positions (s-matched-positions-all placeholder-re snippet))
+          (matches (s-match-strings-all placeholder-re snippet))
+          ;;(matched-pos (cl-loop for pos in positions for match in matches collect (cons pos match)))
           (template '())
           (last-match 0))
          (when positions
            ;;(add-to-list 'template (substring snippet 0 (car (elt positions 0))))
-           (dolist (pos matched-pos)
-             (setq now-match (caar pos))
-             (if (> now-match last-match)
-                 (push (substring snippet last-match now-match) template)) 
-             (setq field-name (cadddr pos))
-             (if field-name 
-                 (push `(p ,field-name) template)
-              (push 'p template))
-             (setq last-match (cdar pos))))
+           (dolist (i (number-sequence 0 (- (length positions) 1)))
+             (let ((pos (nth i positions))
+                   (match (nth i matches)))
+              (setq now-match (car pos))
+              (if (> now-match last-match)
+                  (push (substring snippet last-match now-match) template)) 
+              (setq field-name (cadr match))
+              (if field-name 
+                  (push `(p ,field-name) template)
+               (push 'p template))
+              (setq last-match (cdr pos)))))
          (when (< last-match (length snippet))
           (push  (substring snippet last-match) template)
          
