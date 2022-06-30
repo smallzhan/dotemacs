@@ -66,7 +66,11 @@
 ;;  (use-package cache-path-from-shell
 ;;    :straight (:type git :host github :repo "manateelazycat/cache-path-from-shell")))
 
-
+(use-package cc-mode 
+  :straight nil
+  :hook (c-mode-common . (lambda () (c-set-style "stroustrup")))
+  :init (setq-default c-basic-offset 4))
+  
 (use-package isearch-mb
   :init (isearch-mb-mode 1)
   :config
