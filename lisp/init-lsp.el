@@ -53,10 +53,10 @@
   :load-path "~/.emacs.d/site-lisp/lsp-bridge"
   :config
  
-  (setq lsp-bridge-enable-log nil
-        lsp-bridge-enable-auto-import t
+  (setq lsp-bridge-enable-log t
+        lsp-bridge-enable-auto-import t)
         ;;acm-enable-doc nil
-        acm-enable-yas nil)
+        ;;acm-enable-yas nil)
   
   (global-lsp-bridge-mode)
   (bind-keys :map lsp-bridge-mode-map
@@ -68,6 +68,7 @@
              ("C-c e i" . lsp-bridge-find-impl)
              ("C-c e r" . lsp-bridge-rename)
              ("C-c e m" . lsp-bridge-lookup-documentation)
+             ("C-c e R" . lsp-bridge-restart-process)
              :map acm-mode-map
              ("<return>" . acm-complete))
   
@@ -81,35 +82,39 @@
   (setq acm-candidate-match-function 'orderless-flex)
   
   (defun acm-backend-lsp-snippet-expansion-fn ()
-    'tempel-expand-lsp-snippet)
+    'my-expand-lsp-snippet)
+  
+  (defun my-expand-lsp-snippet (snippet)
+    (message (format "snippet: %s" snippet))
+    (yas-expand-snippet snippet))
 
- (defun tempel-expand-lsp-snippet (snippet)
-   (message snippet)
-   (let* ((placeholder-re 
-           "\\${[0-9]+:\\([_a-zA-Z][-_a-zA-Z0-9 *.,]+\\)}\\|\\${?[0-9]+}?")
+  (defun tempel-expand-lsp-snippet (snippet)
+    (message snippet)
+    (let* ((placeholder-re 
+            "\\${[0-9]+:\\([_a-zA-Z][^}]*\\)}\\|\\${?[0-9]+}?")
            
-          (positions (s-matched-positions-all placeholder-re snippet))
-          (matches (s-match-strings-all placeholder-re snippet))
-          ;;(matched-pos (cl-loop for pos in positions for match in matches collect (cons pos match)))
-          (template '())
-          (last-match 0))
-         (when positions
-           ;;(add-to-list 'template (substring snippet 0 (car (elt positions 0))))
-           (dolist (i (number-sequence 0 (- (length positions) 1)))
-             (let ((pos (nth i positions))
-                   (match (nth i matches)))
-              (setq now-match (car pos))
-              (if (> now-match last-match)
-                  (push (substring snippet last-match now-match) template)) 
-              (setq field-name (cadr match))
-              (if field-name 
-                  (push `(p ,field-name) template)
-               (push 'p template))
-              (setq last-match (cdr pos)))))
-         (when (< last-match (length snippet))
-          (push  (substring snippet last-match) template)
+           (positions (s-matched-positions-all placeholder-re snippet))
+           (matches (s-match-strings-all placeholder-re snippet))
+           ;;(matched-pos (cl-loop for pos in positions for match in matches collect (cons pos match)))
+           (template '())
+           (last-match 0))
+          (when positions
+            ;;(add-to-list 'template (substring snippet 0 (car (elt positions 0))))
+            (dolist (i (number-sequence 0 (- (length positions) 1)))
+              (let ((pos (nth i positions))
+                    (match (nth i matches)))
+               (setq now-match (car pos))
+               (if (> now-match last-match)
+                   (push (substring snippet last-match now-match) template)) 
+               (setq field-name (cadr match))
+               (if field-name 
+                   (push `(p ,field-name) template)
+                (push 'p template))
+               (setq last-match (cdr pos)))))
+          (when (< last-match (length snippet))
+           (push  (substring snippet last-match) template)
          
-          (tempel-insert (reverse template))))))
+           (tempel-insert (reverse template))))))
 
 ;;(tempel-expand-lsp-snippet "include <${0:header}>")
     
@@ -138,9 +143,9 @@
              ("u" . citre-update-tags-file)
              ("n" . citre-create-tags-file)))
     
-;; (use-package yasnippet
-;;   :config
-;;   (yas-global-mode 1))
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
 
 ;; (use-package yasnippet-snippets
 ;;   :config 
@@ -154,4 +159,4 @@
              ("TAB" . tempel-next)))
 
 (provide 'init-lsp)
-;;; init-lsp.el ends here
+;;; init-lsp.el ends here  
