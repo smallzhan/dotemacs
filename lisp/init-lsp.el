@@ -49,13 +49,12 @@
 ;;   :defer t)
   
 (use-package lsp-bridge
-  :straight nil
   :load-path "~/.emacs.d/site-lisp/lsp-bridge"
   :config
  
   (setq lsp-bridge-enable-log nil
-        lsp-bridge-enable-auto-import t)
-        ;;acm-enable-doc nil
+        lsp-bridge-enable-auto-import t
+        acm-enable-citre nil)
         ;;acm-enable-yas nil)
   
   (global-lsp-bridge-mode)
@@ -123,7 +122,7 @@
 ;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev))
  
 (use-package citre
-  :straight (:type git :host github :repo "universal-ctags/citre")
+  ;;:straight (:type git :host github :repo "universal-ctags/citre")
   :defer t
   :init
   ;; This is needed in `:init' block for lazy load to work.

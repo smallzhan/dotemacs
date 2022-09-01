@@ -7,7 +7,7 @@
   (transient-bind-q-to-quit))
 
 (use-package color-rg
-  :straight (:type git :host github :repo "manateelazycat/color-rg")
+  :quelpa (color-rg :fetcher github :repo "manateelazycat/color-rg")
   :commands (color-rg-search-symbol-in-project
              color-rg-search-input-in-project
              color-rg-search-input-in-current-file
@@ -35,18 +35,18 @@
    (define-key app-search-keymap (kbd "m") #'color-rg-search-in-org-roam)))
 
 (use-package auto-save
-  :straight (:type git :host github :repo "manateelazycat/auto-save")
+  :quelpa (auto-save :fetcher github :repo "manateelazycat/auto-save")
   :init
   (setq auto-save-silent t)
   :config
   (auto-save-enable))
 
 (use-package lazy-search
-  :straight (:type git :host github :repo "manateelazycat/lazy-search")
+  :quelpa (lazy-search :fetcher github :repo "manateelazycat/lazy-search")
   :commands lazy-search)
 
 (use-package thing-edit
-  :straight (:type git :host github :repo "manateelazycat/thing-edit")
+  :quelpa (thing-edit :fetcher github :repo "manateelazycat/thing-edit")
   :bind ("C-c e e" . thing-edit-transient)
   :config
   (transient-define-prefix thing-edit-transient ()
@@ -157,7 +157,7 @@
 (use-package posframe :defer t)
 
 (use-package sdcv
-  :straight (:type git :host github :repo "manateelazycat/sdcv")
+  :quelpa (sdcv :fetcher github :repo "manateelazycat/sdcv")
   :defer t
   :commands (sdcv-search-input sdcv-search-pointer+)
   :config
@@ -394,7 +394,7 @@
   
 (use-package grammatical-edit
   ;;:after tree-sitter
-  :straight (:type git :host github :repo "manateelazycat/grammatical-edit")
+  :quelpa (grammatical-edit :fetcher github :repo "manateelazycat/grammatical-edit")
   :bind (:map grammatical-edit-mode-map
               ("(" . grammatical-edit-open-round)
               ("[" . grammatical-edit-open-bracket)
@@ -428,24 +428,24 @@
 (use-package format-all)
 
 (use-package vundo
-  :straight (:type git :host github :repo "casouri/vundo")
+  ;;:quelpa (vundo :fetcher github :repo "casouri/vundo")
   :commands vundo)
 
 (use-package autorevert
   :hook (after-init . global-auto-revert-mode))
 
-(use-package snails
- :straight (:type git :host github :repo "manateelazycat/snails" :build (:not compile))
- :commands snails
- :init 
- (setq snails-use-exec-path-from-shell nil
-       snails-show-with-frame nil)
- :config 
- (setq snails-default-backends 
-       '(snails-backend-buffer
-         snails-backend-recentf
-         snails-backend-bookmark
-         snails-backend-directory-files)))
+;; (use-package snails
+;;  :quelpa (:fetcher github :repo "manateelazycat/snails" :build (:not compile))
+;;  :commands snails
+;;  :init 
+;;  (setq snails-use-exec-path-from-shell nil
+;;        snails-show-with-frame nil)
+;;  :config 
+;;  (setq snails-default-backends 
+;;        '(snails-backend-buffer
+;;          snails-backend-recentf
+;;          snails-backend-bookmark
+;;          snails-backend-directory-files)))
 
 ;; (use-package one-key
 ;;   :straight (:type git :host github :repo "manateelazycat/one-key")

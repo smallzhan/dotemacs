@@ -5,7 +5,7 @@
   ;; (when IS-MAC
   ;;   (setq ns-use-native-fullscreen nil
   ;;         ns-use-fullscreen-animation nil))
-  :straight nil
+  ;;:straight nil
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :defer t
   :commands eaf-open

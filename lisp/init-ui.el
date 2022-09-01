@@ -8,7 +8,7 @@
 
 (when IS-MAC
   (use-package auto-dark
-    :straight (:type git :host github :repo "emacsmirror/auto-dark")
+    ;;:straight (:type git :host github :repo "emacsmirror/auto-dark")
     :config
     (setq auto-dark--dark-theme 'doom-one
           auto-dark--light-theme 'doom-one-light)))
@@ -224,7 +224,7 @@
 
 
 (use-package awesome-tray
-  :straight (:type git :host github :repo "manateelazycat/awesome-tray")
+  :quelpa (awesome-tray :fetcher github :repo "manateelazycat/awesome-tray")
   :config
   (defvar modeline-backup-format nil)
   (defun enable-awesome-tray-mode()

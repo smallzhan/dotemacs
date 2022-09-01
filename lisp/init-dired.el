@@ -1,7 +1,7 @@
 ;;;init-dired.el  -*- lexical-binding: t; -*- 
 
 (use-package dired
-  :straight (:type built-in)
+  ;;:straight (:type built-in)
   :defer t
   :commands dired-jump
   :bind (:map dired-mode-map
@@ -84,7 +84,7 @@
   ;; Extra Dired functionality
    
 (use-package dired-aux :defer t
-  :straight (:type built-in)
+  ;;:straight (:type built-in)
   :config
    (setq dired-create-destination-dirs 'ask
          dired-vc-rename-file t))
@@ -94,7 +94,7 @@
 ;;   (use-package fd-dired))
 
 (use-package dired-x
-  :straight (:type built-in)
+  ;;:straight (:type built-in)
   :hook (dired-mode . dired-omit-mode)
   :config
   (setq dired-omit-verbose nil

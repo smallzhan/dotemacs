@@ -1,8 +1,9 @@
 ;;;init-tex.el  -*- lexical-binding: t; -*-
 
-(straight-use-package '(auctex :includes (latex tex reftex preview)))
-
+;;(straight-use-package '(auctex :includes (latex tex reftex preview)))
+;;(use-package auctex)
 (use-package reftex
+  :ensure auctex
   :commands turn-on-reftex
   :config
   (setq reftex-plug-into-AUCTeX t)
@@ -13,6 +14,7 @@
   (add-hook 'TeX-mode-hook (lambda () (reftex-isearch-minor-mode))))
 
 (use-package preview
+  :ensure auctex
   :hook (LateX-mode . LateX-preview-setup)
   :config
   (setq-default preview-scale 1.4
@@ -25,6 +27,7 @@
 
 
 (use-package latex
+  :ensure auctex
   :mode
   ("\\.tex" . latex-mode)
   :bind

@@ -1,6 +1,6 @@
 ;;; init-server.el  -*- lexical-binding: t; -*- 
 (use-package server
-  :straight nil
+  :ensure nil
   :hook (after-init . server-mode))
 
 (provide 'init-server)

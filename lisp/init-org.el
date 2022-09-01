@@ -52,7 +52,8 @@
 ;;     (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
 
 (use-package org
-  :straight (:type built-in)
+  ;;:straight (:type built-in)
+  :ensure nil
   :commands (org-dynamic-block-define)
   :init
   (setq org-directory +my-org-dir
@@ -283,11 +284,13 @@
      (shell . t))))
 
 (use-package org-protocol
-  :straight (:type built-in)
+  ;;:straight (:type built-in)
+  :ensure nil
   :after org)
 
-(straight-use-package '(org-contrib :includes org-expiry))
+;;(straight-use-package '(org-contrib :includes org-expiry))
 (use-package org-expiry
+  :ensure org-contrib
   :after org
   :config
   (setq org-expiry-created-property-name "CREATED"
@@ -301,7 +304,8 @@
                   (org-expiry-insert-created))))))
 
 (use-package org-clock                 ;built-in
-  :straight (:type built-in)
+  ;;:straight (:type built-in)
+  :ensure nil
   :commands org-clock-save
   :init
   (setq org-clock-persist-file
@@ -326,7 +330,8 @@
   (add-hook 'kill-emacs-hook #'org-clock-save))
 
 (use-package org-crypt ; built-in
-  :straight (:type built-in)
+  ;;:straight (:type built-in)
+  :ensure nil
   :commands org-encrypt-entries org-encrypt-entry org-decrypt-entries org-decrypt-entry
   :hook (org-reveal-start . org-decrypt-entry)
   :preface
@@ -429,8 +434,6 @@
 ;;     (advice-remove 'org-indent--compute-prefixes 'org-bars-compute-prefixes))
 
 (use-package org-modern
-  :straight (:type git :host github :repo "minad/org-modern")
-  
   :hook (org-mode . org-modern-mode)
   :config
   (setq org-modern-table nil
@@ -578,7 +581,7 @@
         citar-notes-paths `(,bibtex-notes-path)))
 
 (use-package oc
-  :straight (:type built-in)
+  :ensure nil
   :defer t
   :commands org-cite-insert
   :config

@@ -2,7 +2,7 @@
 ;; Enable vertico
 
 (use-package vertico
-  :straight (:files ("*.el" "extensions/*.el"))
+  ;;:straight (:files ("*.el" "extensions/*.el"))
   :init
   (vertico-mode)
   :config

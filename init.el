@@ -41,7 +41,7 @@
 
 
 (require 'init-defaults)
-(require 'init-package)
+(require 'init-package-quelpa)
 (require 'init-basic)
 (require 'init-ui)
 (require 'init-binding) 
