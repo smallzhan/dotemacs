@@ -2,7 +2,16 @@
 
 ;; theme
 
-(use-package doom-themes)
+(use-package doom-themes 
+  :config 
+  (when IS-WINDOWS (load-theme 'doom-one t)))
+
+(when IS-MAC
+  (use-package auto-dark
+    :straight (:type git :host github :repo "emacsmirror/auto-dark")
+    :config
+    (setq auto-dark--dark-theme 'doom-one
+          auto-dark--light-theme 'doom-one-light)))
   ;; :config
   ;; (if IS-MAC
   ;;     (add-hook 'ns-system-appearance-change-functions
@@ -150,21 +159,21 @@
 ;;     (modus-themes-load-vivendi)))
 ;;(load-theme 'modus-vivendi t))
                        ;
-(use-package circadian
-  :config
-  (when IS-WINDOWS
-    (defun my--encode-time (hour min)
-      "Encode HOUR hours and MIN minutes into a valid format for `run-at-time'."
-      (let ((now (decode-time)))
-        (let ((day (nth 3 now))
-              (month (nth 4 now))
-              (year (nth 5 now)))
-          (encode-time 0 min hour day month year))))
-    (advice-add 'circadian--encode-time :override #'my--encode-time))
-    
-  (setq circadian-themes '(("8:00" . doom-one-light)
-                           ("19:30" . doom-one)))
-  (circadian-setup))
+;; (use-package circadian
+;;   :config
+;;   (when IS-WINDOWS
+;;     (defun my--encode-time (hour min)
+;;       "Encode HOUR hours and MIN minutes into a valid format for `run-at-time'."
+;;       (let ((now (decode-time)))
+;;         (let ((day (nth 3 now))
+;;               (month (nth 4 now))
+;;               (year (nth 5 now)))
+;;           (encode-time 0 min hour day month year))))
+;;     (advice-add 'circadian--encode-time :override #'my--encode-time))
+;;     
+;;   (setq circadian-themes '(("8:00" . doom-one-light)
+;;                            ("19:30" . doom-one)))
+;;   (circadian-setup))
 
 
 ;;;======= font config
