@@ -22,7 +22,7 @@
          ;;:html-postamble: '(("en" "<hr />[<p class=\"author\">Author: %a (%e)</p> | <p class=\"date\">Last Update: %T</p> | <p class=\"creator\">%c</p> | <p class=\"xhtml-validation\">%v</p>]"))
          :auto-index t))
 (add-to-list 'org-publish-project-alist
-        '("homepage"
+        `("homepage"
           :base-directory , (expand-file-name (concat org-directory "../homepage"))
           :base-extension "org"
           :publishing-directory , (expand-file-name (concat org-directory "../public_html"))

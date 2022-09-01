@@ -23,7 +23,7 @@
 ;;                  'haskell-mode-hook))
 ;;     (add-hook hook #'eglot-ensure))
 ;;   :config 
-;;   (setq corfu-auto t)
+;;   ;; (setq corfu-auto t)
 ;;   (define-key app-edit-keymap "i" #'eglot-find-implementation)
 ;;   (define-key app-edit-keymap "D" #'eglot-find-typeDefinition)
 ;;   (define-key app-edit-keymap "m" #'eglot-find-declaration))
@@ -53,7 +53,7 @@
   :load-path "~/.emacs.d/site-lisp/lsp-bridge"
   :config
  
-  (setq lsp-bridge-enable-log t
+  (setq lsp-bridge-enable-log nil
         lsp-bridge-enable-auto-import t)
         ;;acm-enable-doc nil
         ;;acm-enable-yas nil)
@@ -81,12 +81,8 @@
   (add-hook 'after-load-theme-hook #'acm-reset-faces)
   (setq acm-candidate-match-function 'orderless-flex)
   
-  (defun acm-backend-lsp-snippet-expansion-fn ()
-    'my-expand-lsp-snippet)
-  
-  (defun my-expand-lsp-snippet (snippet)
-    (message (format "snippet: %s" snippet))
-    (yas-expand-snippet snippet))
+  ;; (defun acm-backend-lsp-snippet-expansion-fn ()
+  ;;   'tempel-expand-lsp-snippet)
 
   (defun tempel-expand-lsp-snippet (snippet)
     (message snippet)
@@ -116,7 +112,7 @@
          
            (tempel-insert (reverse template))))))
 
-;;(tempel-expand-lsp-snippet "include <${0:header}>")
+;; (tempel-expand-lsp-snippet "queue_get_elem(${1:q}, ${2:i})")
     
 ;; 通过Cape融合多个补全后端
 

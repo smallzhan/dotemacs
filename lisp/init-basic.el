@@ -9,7 +9,7 @@
         w32-apps-modifier 'hyper)
   (w32-register-hot-key [s-t]))
  (IS-MAC
-  (setq max-option-modifier 'meta
+  (setq mac-option-modifier 'meta
         mac-command-modifier 'super)
   (bind-keys ([(super a)] . mark-whole-buffer)
              ([(super c)] . kill-ring-save)

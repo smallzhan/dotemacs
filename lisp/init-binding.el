@@ -105,5 +105,8 @@
 (global-set-key (kbd "C-c t") 'app-toggle-keymap)
 ;;                              ^ note the quote
 
+(global-set-key (kbd "C-0") 'scroll-other-window)  ;; 向下翻
+(global-set-key (kbd "C-9") 'scroll-other-window-down) ;; 向上翻
+
 (provide 'init-binding)
 ;;; init-bingding.el ends here

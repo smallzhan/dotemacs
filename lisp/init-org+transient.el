@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 (require 'transient)
 (defvar org-tempo-special-expand-alist
-    '(("o" . "<q")
+    '(("o" . ("<q"))
       ("m" . ("<s" "emacs-lisp"))
       ("p" . ("<s" "python :results output"))
       ("S" . ("<s" "sh"))
