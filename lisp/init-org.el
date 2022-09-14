@@ -229,6 +229,7 @@
     (myorg-update-parent-cookie))
 
   (setq org-agenda-text-search-extra-files '(agenda-archives))
+  (plist-put org-format-latex-options :scale 1.5)
 
   ;;(set-face-attribute 'org-table nil :family "Sarasa Mono SC")
 
@@ -257,38 +258,6 @@
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (add-hook 'org-mode-hook 'org-num-mode))
   
-(with-eval-after-load 'org
-  (plist-put org-format-latex-options :scale 1.5) 
-  (custom-set-faces
-   '(org-latex-and-related ((t (:inherit 'fixed-pitch-serif))))
-   '(org-tag ((t (:inherit 'fixed-pitch-serif)))) 
-   '(org-checkbox ((t :inherit 'fixed-pitch :box nil)))
-   '(org-table ((t :inherit 'fixed-pitch)))
-   '(org-code ((t :inherit 'fixed-pitch)))
-   '(org-block ((t :inherit 'fixed-pitch)))
-   '(org-special-keyword ((t :inherit 'fixed-pitch)))
-   '(org-drawer ((t :inherit 'fixed-pitch)))
-   '(org-meta-line ((t :inherit 'fixed-pitch)))
-   '(org-property-value ((t :inherit 'fixed-pitch)))
-   '(org-verbatim ((t :inherit 'fixed-pitch)))))                 
-   
-  
-(with-eval-after-load "ob"
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((dot . t)
-     ;;(restclient . t)
-     (python . t)
-     ;;(clojure . t)
-     ;;(R . t)
-     (shell . t))))
-
-(use-package org-protocol
-  ;;:straight (:type built-in)
-  :ensure nil
-  :after org)
-
-;;(straight-use-package '(org-contrib :includes org-expiry))
 (use-package org-expiry
   :ensure org-contrib
   :after org

@@ -221,7 +221,27 @@
           (lambda ()
             (when window-system
               (my-load-font))))     
-
+ 
+(custom-theme-set-faces
+  'user
+  ;;'(fixed-pitch ((t (:family "SF Mono" :height 1.0))))
+  ;;'(variable-pitch ((t (:family "Bookerly" :height 1.0))))
+  ;;'(mode-line ((t (:inherit variable-pitch :height 1.0))))
+  ;;'(mode-line-inactive ((t (:inherit variable-pitch :height 1.0))))
+  '(Info-quoted ((t (:inherit fixed-pitch))))
+  '(org-block ((t (:inherit fixed-pitch))))
+  '(org-code ((t (:inherit (shadow fixed-pitch)))))
+  '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))
+  '(org-indent ((t (:inherit (org-hide fixed-pitch)))))
+  '(org-meta-line ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+  '(org-property-value ((t (:inherit fixed-pitch))) t)
+  '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+  '(org-table ((t (:inherit fixed-pitch))))
+  '(org-tag ((t (:inherit (shadow fixed-pitch-serif) :weight bold :height 1.0))))
+  '(org-latex-and-related ((t (:inherit 'fixed-pitch-serif))))
+  '(org-checkbox ((t :inherit 'fixed-pitch :box nil)))
+  '(org-drawer ((t :inherit 'fixed-pitch)))
+  '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
 (use-package awesome-tray
   :quelpa (awesome-tray :fetcher github :repo "manateelazycat/awesome-tray")

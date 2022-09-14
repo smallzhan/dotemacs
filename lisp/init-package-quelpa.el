@@ -1,5 +1,8 @@
 (require 'init-funcs)
 
+(setq package-user-dir
+      (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version)
+                        user-emacs-directory))
 (setq package-archives
       '(("gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
         ("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
@@ -8,8 +11,9 @@
 ; Initialize the emacs packaging system
 ;;
 (when IS-WINDOWS (setq package-gnupghome-dir "elpa/gnupg"))
-(setq package-enable-at-startup nil)
-(package-initialize)
+(unless (bound-and-true-p package--initialized)
+  (setq package-enable-at-startup nil)
+  (package-initialize))
 
 ;; Setup `use-package'
 (unless (package-installed-p 'use-package)
@@ -26,7 +30,8 @@
 
 (use-package gnu-elpa-keyring-update)
 (use-package quelpa
-  :init (setq quelpa-update-melpa-p nil))
+  :init (setq quelpa-update-melpa-p nil
+              quelpa-checkout-melpa-p nil))
 (use-package quelpa-use-package)
 ;; Install or upgrade quelpa
 ;;
