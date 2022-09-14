@@ -10,7 +10,11 @@
   (use-package auto-dark
     ;;:straight (:type git :host github :repo "emacsmirror/auto-dark")
     :config
-    (setq auto-dark--dark-theme 'doom-one
+    ;; (when (and (fboundp 'mac-osa-script) (not (fboundp 'ns-do-applescript)))
+    ;;       (defalias 'ns-do-applescript 'mac-osa-script)) 
+    (setq auto-dark--allow-osascript t
+          auto-dark--polling-interval-seconds 10
+          auto-dark--dark-theme 'doom-one
           auto-dark--light-theme 'doom-one-light)))
   ;; :config
   ;; (if IS-MAC
