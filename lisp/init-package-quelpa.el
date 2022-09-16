@@ -12,8 +12,13 @@
 (setq package-archives
       '(("gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
         ("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-        ("melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
-
+        ("melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ("m-stable"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")))
+(setq package-archive-priorities
+      '(("nognu" . 10)
+        ("gnu"     . 10)
+        ("m-stable"     . 10)
+        ("melpa"        . 0)))
 ; Initialize the emacs packaging system
 ;;
 (when IS-WINDOWS (setq package-gnupghome-dir "elpa/gnupg"))
