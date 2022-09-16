@@ -15,9 +15,9 @@
         ("melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
         ("m-stable"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")))
 (setq package-archive-priorities
-      '(("nognu" . 10)
+      '(("nongnu" . 10)
         ("gnu"     . 10)
-        ("m-stable"     . 10)
+        ("m-stable"     . 5)
         ("melpa"        . 0)))
 ; Initialize the emacs packaging system
 ;;
