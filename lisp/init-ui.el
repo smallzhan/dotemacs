@@ -8,7 +8,8 @@
 
 (when IS-MAC
   (use-package auto-dark
-    ;;:straight (:type git :host github :repo "emacsmirror/auto-dark")
+    :ensure nil
+    :quelpa (auto-dark :fetcher github :repo "smallzhan/auto-dark-emacs")
     :config
     ;; (when (and (fboundp 'mac-osa-script) (not (fboundp 'ns-do-applescript)))
     ;;       (defalias 'ns-do-applescript 'mac-osa-script)) 
@@ -305,5 +306,6 @@
         (all-the-icons-cache func))
       (message "Reset all-the-icons"))))
 
+(defalias 'global-linum-mode 'global-display-line-numbers-mode)
 (provide 'init-ui)
 ;;; init-ui.el ends here

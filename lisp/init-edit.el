@@ -158,10 +158,11 @@
 
 (use-package sdcv
   :quelpa (sdcv :fetcher github :repo "manateelazycat/sdcv")
+  :ensure nil
   :defer t
   :commands (sdcv-search-input sdcv-search-pointer+)
   :config
-  (set-face-foreground 'sdcv-tooltip-face "#51afef")
+  ;;(set-face-foreground 'sdcv-tooltip-face "#51afef")
   (setq sdcv-program (executable-find "sdcv"))
   (setq sdcv-dictionary-simple-list '("牛津现代英汉双解词典"))
   (setq sdcv-dictionary-complete-list '("牛津现代英汉双解词典"
@@ -396,7 +397,7 @@
   ;;:after tree-sitter
   :quelpa (grammatical-edit :fetcher github :repo "manateelazycat/grammatical-edit")
   :bind (:map grammatical-edit-mode-map
-              ("(" . grammatical-edit-open-round)
+              ("(" . grammatical-edit-open-round) 
               ("[" . grammatical-edit-open-bracket)
               ("{" . grammatical-edit-open-curly)
               (")" . grammatical-edit-close-round)
@@ -407,8 +408,8 @@
               ("%" . grammatical-edit-match-paren)
               ("\"" . grammatical-edit-double-quote)
 
-              ("SPC" . grammatical-edit-space)
-              ("RET" . grammatical-edit-newline)
+              ;;("SPC" . grammatical-edit-space)
+              ;;("RET" . grammatical-edit-newline)
 
               ("M-o" . grammatical-edit-backward-delete)
               ("C-d" . grammatical-edit-forward-delete)

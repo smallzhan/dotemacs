@@ -434,6 +434,7 @@
 
 (use-package org-roam
   ;;:hook (org-load . org-roam-setup)
+  ;;:load-path "~/.emacs.d/straight/build-28.2/org-roam"
   :defer t
   :commands (org-roam-capture org-roam-node-find)
   ;;:after org
@@ -442,6 +443,7 @@
   ;;(setq org-roam-directory (file-truename (concat org-directory "roam")))
 
   :config
+  (setq org-roam-file-exclude-regexp nil)
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol)

@@ -67,19 +67,11 @@
              ("C-c e i" . lsp-bridge-find-impl)
              ("C-c e r" . lsp-bridge-rename)
              ("C-c e m" . lsp-bridge-lookup-documentation)
-             ("C-c e R" . lsp-bridge-restart-process)
-             :map acm-mode-map
-             ("<return>" . acm-complete))
-  
-  (defun acm-reset-faces()
-    (when (frame-live-p acm-frame)
-      (delete-frame acm-frame))
-    (set-face-attribute 'acm-default-face nil :background 'unspecified)
-    (set-face-attribute 'acm-select-face nil :background 'unspecified))
-  
-  (add-hook 'after-load-theme-hook #'acm-reset-faces)
+             ("C-c e R" . lsp-bridge-restart-process))
+  ;; 
+  ;(add-hook 'after-load-theme-hook #'acm-delete-frames)
   (setq acm-candidate-match-function 'orderless-flex)
-  
+
   ;; (defun acm-backend-lsp-snippet-expansion-fn ()
   ;;   'tempel-expand-lsp-snippet)
 
