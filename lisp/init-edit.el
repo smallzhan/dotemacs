@@ -104,11 +104,7 @@
       ("ra" "Thing replace paren" thing-replace-parentheses)
       ("rr" "Thing replace region or line" thing-replace-region-or-line)]]))
  ;; (global-set-key (kbd "C-c e a") #'thing-edit-transient))
-  
-  
-
-
-
+ 
 ;; (use-package awesome-pair
 ;; :straight (:type git :host github :repo "manateelazycat/awesome-pair")
 ;; :bind (:map awesome-pair-mode-map
@@ -188,14 +184,13 @@
 ;;        (shell-command-to-string command-string)))))
 ;; ;; Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
 
-;; (use-package puni
-;;    :straight (:type git :host github :repo "Amaikinono/puni")
-;;    :defer t
-;;    :hook ((prog-mode
-;;            sgml-mode
-;;            nxml-mode
-;;            tex-mode
-;;            eval-expression-minibuffer-setup) . puni-mode))
+(use-package puni
+   :defer t
+   :hook ((prog-mode
+           sgml-mode
+           nxml-mode
+           tex-mode
+           eval-expression-minibuffer-setup) . puni-mode))
 ;;(unless IS-WINDOWS
 
   ;; Bind your frequently used commands.
@@ -351,19 +346,35 @@
 
 (use-package parinfer-rust-mode
   :when (bound-and-true-p module-file-suffix)
-  :hook ((emacs-lisp-mode
-          clojure-mode
-          scheme-mode
-          lisp-mode
-          racket-mode
-          hy-mode) . parinfer-rust-mode)
+  ;; :hook ((emacs-lisp-mode
+  ;;         clojure-mode
+  ;;         scheme-mode
+  ;;         lisp-mode
+  ;;         racket-mode
+  ;;         hy-mode) . parinfer-rust-mode)
   :init
   (setq parinfer-rust-library
         (concat user-emacs-directory "parinfer-rust/"
                 (cond (IS-MAC "parinfer-rust-darwin.so")
                       (IS-LINUX "parinfer-rust-linux.so")
                       (IS-WINDOWS "parinfer-rust-windows.dll")))
-        parinfer-rust-auto-download t))
+        parinfer-rust-auto-download t)
+  :config
+  (defun disable-other-paren-mode()
+    (when (and (fboundp 'puni-mode)
+               puni-mode)
+        (puni-mode -1))
+    (when electric-pair-mode
+        (electric-pair-local-mode -1))
+    (parinfer-rust-mode 1))
+
+  (dolist (hook '(emacs-lisp-mode-hook
+                  clojore-mode-hook
+                  scheme-mode-hook
+                  lisp-mode-hook
+                  racket-mode-hook
+                  hy-mode-hook))
+    (add-hook hook #'disable-other-paren-mode)))
 
 (use-package tree-sitter-langs :defer t)
 
@@ -393,38 +404,38 @@
    (add-to-list 'tree-sitter-major-mode-language-alist `(,mode . elisp))))
   
   
-(use-package grammatical-edit
-  ;;:after tree-sitter
-  :quelpa (grammatical-edit :fetcher github :repo "manateelazycat/grammatical-edit")
-  :bind (:map grammatical-edit-mode-map
-              ("(" . grammatical-edit-open-round) 
-              ("[" . grammatical-edit-open-bracket)
-              ("{" . grammatical-edit-open-curly)
-              (")" . grammatical-edit-close-round)
-              ("]" . grammatical-edit-close-bracket)
-              ("}" . grammatical-edit-close-curly)
-              ("=" . grammatical-edit-equal)
-
-              ("%" . grammatical-edit-match-paren)
-              ("\"" . grammatical-edit-double-quote)
-
-              ;;("SPC" . grammatical-edit-space)
-              ;;("RET" . grammatical-edit-newline)
-
-              ("M-o" . grammatical-edit-backward-delete)
-              ("C-d" . grammatical-edit-forward-delete)
-              ("C-k" . grammatical-edit-kill)
-
-              ("M-\"" . grammatical-edit-wrap-double-quote)
-              ("M-[" . grammatical-edit-wrap-bracket)
-              ("M-{" . grammatical-edit-wrap-curly)
-              ("M-(" . grammatical-edit-wrap-round)
-              ("M-)" . grammatical-edit-unwrap)
-
-              ("M-p" . grammatical-edit-jump-right)
-              ("M-n" . grammatical-edit-jump-left)
-              ("M-:" . grammatical-edit-jump-out-pair-and-newline))
-  :hook ((prog-mode inferior-emacs-lisp-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
+;; (use-package grammatical-edit
+;;   ;;:after tree-sitter
+;;   :quelpa (grammatical-edit :fetcher github :repo "manateelazycat/grammatical-edit")
+;;   :bind (:map grammatical-edit-mode-map
+;;               ("(" . grammatical-edit-open-round) 
+;;               ("[" . grammatical-edit-open-bracket)
+;;               ;;("{" . grammatical-edit-open-curly)
+;;               (")" . grammatical-edit-close-round)
+;;               ("]" . grammatical-edit-close-bracket)
+;;               ("}" . grammatical-edit-close-curly)
+;;               ("=" . grammatical-edit-equal)
+;; 
+;;               ("%" . grammatical-edit-match-paren)
+;;               ("\"" . grammatical-edit-double-quote)
+;; 
+;;               ;;("SPC" . grammatical-edit-space)
+;;               ;;("RET" . grammatical-edit-newline)
+;; 
+;;               ("M-o" . grammatical-edit-backward-delete)
+;;               ("C-d" . grammatical-edit-forward-delete)
+;;               ("C-k" . grammatical-edit-kill)
+;; 
+;;               ("M-\"" . grammatical-edit-wrap-double-quote)
+;;               ("M-[" . grammatical-edit-wrap-bracket)
+;;               ("M-{" . grammatical-edit-wrap-curly)
+;;               ("M-(" . grammatical-edit-wrap-round)
+;;               ("M-)" . grammatical-edit-unwrap)
+;; 
+;;               ("M-p" . grammatical-edit-jump-right)
+;;               ("M-n" . grammatical-edit-jump-left)
+;;               ("M-:" . grammatical-edit-jump-out-pair-and-newline))
+;;   :hook ((prog-mode inferior-emacs-lisp-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
 
 (use-package format-all)
 
@@ -435,6 +446,11 @@
 (use-package autorevert
   :hook (after-init . global-auto-revert-mode))
 
+(use-package elec-pair
+  :ensure nil
+  :hook (after-init . electric-pair-mode) 
+  :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
+ 
 ;; (use-package snails
 ;;  :quelpa (:fetcher github :repo "manateelazycat/snails" :build (:not compile))
 ;;  :commands snails

@@ -69,9 +69,8 @@
              ("C-c e m" . lsp-bridge-lookup-documentation)
              ("C-c e R" . lsp-bridge-restart-process))
   ;; 
-  ;(add-hook 'after-load-theme-hook #'acm-delete-frames)
+  (add-hook 'after-load-theme-hook #'acm-delete-frames)
   (setq acm-candidate-match-function 'orderless-flex)
-
   ;; (defun acm-backend-lsp-snippet-expansion-fn ()
   ;;   'tempel-expand-lsp-snippet)
 
