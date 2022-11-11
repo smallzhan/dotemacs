@@ -17,8 +17,8 @@
     (define-key keymap (kbd "g") #'org-tags-view)
     (define-key keymap (kbd "i") #'org-clock-in)
     (define-key keymap (kbd "I") #'my/org-clock-in)
-    (define-key keymap (kbd "l") #'org-store-link)
-    (define-key keymap (kbd "s") #'org-caldav-sync)
+    (define-key keymap (kbd "L") #'org-store-link)
+    (define-key keymap (kbd "d") #'org-caldav-sync)
     (define-key keymap (kbd "o") #'org-clock-out)
     (define-key keymap (kbd "T") #'org-clock-mark-default-task)
     (define-key keymap (kbd "m") #'org-pomodoro)
@@ -73,8 +73,8 @@
     (define-key keymap (kbd "l") #'consult-line)
     (define-key keymap (kbd "e") #'my/consult-line-symbol)
     (define-key keymap (kbd "k") #'consult-keep-lines)
-    (define-key keymap (kbd "z") #'lazy-search)
-    (define-key keymap (kbd "b") #'consult-bookmark)
+    (define-key keymap (kbd "z") #'symbol-overlay-transient)
+    (define-key keymap (kbd "j") #'consult-bookmark)
     (define-key keymap (kbd "i") #'consult-imenu)
     (define-key keymap (kbd "d") #'sdcv-search-input)
     (define-key keymap (kbd "t") #'sdcv-search-pointer+)
@@ -82,7 +82,8 @@
     (define-key keymap (kbd "o") #'consult-outline)
     (define-key keymap (kbd "n") #'consult-narrow)
     (define-key keymap (kbd "p") #'consult-find)
-    (define-key keymap (kbd "x") #'snails)
+    (define-key keymap (kbd "x") #'blink-search)
+    (define-key keymap (kbd "b") #'blink-search)
     keymap))
 
 (defalias 'app-search-keymap app-search-keymap)
@@ -107,6 +108,11 @@
 
 (global-set-key (kbd "C-0") 'scroll-other-window)  ;; 向下翻
 (global-set-key (kbd "C-9") 'scroll-other-window-down) ;; 向上翻
+
+(global-set-key (kbd "C->") 'remember-init)
+(global-set-key (kbd "C-<") 'remrmber-jump)
+(global-set-key (kbd "M-N") 'delete-block-backward)
+(global-set-key (kbd "M-M") 'delete-block-forward)
 
 (provide 'init-binding)
 ;;; init-bingding.el ends here

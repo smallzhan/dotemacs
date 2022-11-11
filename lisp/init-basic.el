@@ -118,8 +118,11 @@
     
   (advice-add 'dirvish--get-image-cache-for-file :filter-args #'my--dirvish-preview-args)
   (setq dirvish-header-style nil)
+  (setq dirvish-mode-line-height 1) 
   (setq dirvish-mode-line-format nil)
   (setq dirvish-attributes '(all-the-icons file-size))
+  (when IS-MAC
+    (setq dired-use-ls-dired nil))
   :bind
   (:map dired-mode-map
         ("SPC" . dirvish-show-history)

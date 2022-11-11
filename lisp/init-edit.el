@@ -1,4 +1,4 @@
-;;; init-edit.el  -*- lexical-binding: t; -*-
+
 
 (use-package transient
   :defer t
@@ -16,7 +16,7 @@
   (setq color-rg-kill-temp-buffer-p nil
         color-rg-mac-load-path-from-shell nil)
   :config
-  (setq color-rg-ignore-dir-list '("node_modules" "dist" "__pycache__" "straight"))
+  (setq color-rg-ignore-dir-list '("node_modules" "dist" "__pycache__" "straight" "elpa*" "history"))
 
   (setq rg-glob-fmt
         (if IS-WINDOWS
@@ -41,9 +41,13 @@
   :config
   (auto-save-enable))
 
-(use-package lazy-search
-  :quelpa (lazy-search :fetcher github :repo "manateelazycat/lazy-search")
-  :commands lazy-search)
+;; (use-package lazy-search
+;;   :quelpa (lazy-search :fetcher github :repo "manateelazycat/lazy-search")
+;;   :commands lazy-search)
+
+(use-package delete-block
+  :quelpa (delete-block :fetcher github :repo "manateelazycat/delete-block")
+  :commands (delete-block-forward delete-block-backward))
 
 (use-package thing-edit
   :quelpa (thing-edit :fetcher github :repo "manateelazycat/thing-edit")
@@ -184,13 +188,13 @@
 ;;        (shell-command-to-string command-string)))))
 ;; ;; Set LANG environment variable, make sure `shell-command-to-string' can handle CJK character correctly.
 
-(use-package puni
-   :defer t
-   :hook ((prog-mode
-           sgml-mode
-           nxml-mode
-           tex-mode
-           eval-expression-minibuffer-setup) . puni-mode))
+;; (use-package puni
+;;    :defer t
+;;    :hook ((prog-mode
+;;            sgml-mode
+;;            nxml-mode
+;;            tex-mode
+;;            eval-expression-minibuffer-setup) . puni-mode))
 ;;(unless IS-WINDOWS
 
   ;; Bind your frequently used commands.
@@ -341,40 +345,42 @@
   (add-to-list 'meow-mode-state-list '(lsp-bridge-ref-mode . motion))
   (add-to-list 'meow-mode-state-list '(elfeed-dashboard-mode . motion))
   (add-to-list 'meow-mode-state-list '(eaf-mode . motion))
-  (add-to-list 'meow-mode-state-list '(snails-mode . insert)))
+  (add-to-list 'meow-mode-state-list '(snails-mode . motion))
+  (add-to-list 'meow-mode-state-list '(blink-search-mode . motion)))
+               
   
 
 (use-package parinfer-rust-mode
   :when (bound-and-true-p module-file-suffix)
-  ;; :hook ((emacs-lisp-mode
-  ;;         clojure-mode
-  ;;         scheme-mode
-  ;;         lisp-mode
-  ;;         racket-mode
-  ;;         hy-mode) . parinfer-rust-mode)
+  :hook ((emacs-lisp-mode
+          clojure-mode
+          scheme-mode
+          lisp-mode
+          racket-mode
+          hy-mode) . parinfer-rust-mode)
   :init
   (setq parinfer-rust-library
         (concat user-emacs-directory "parinfer-rust/"
                 (cond (IS-MAC "parinfer-rust-darwin.so")
                       (IS-LINUX "parinfer-rust-linux.so")
                       (IS-WINDOWS "parinfer-rust-windows.dll")))
-        parinfer-rust-auto-download t)
-  :config
-  (defun disable-other-paren-mode()
-    (when (and (fboundp 'puni-mode)
-               puni-mode)
-        (puni-mode -1))
-    (when electric-pair-mode
-        (electric-pair-local-mode -1))
-    (parinfer-rust-mode 1))
-
-  (dolist (hook '(emacs-lisp-mode-hook
-                  clojore-mode-hook
-                  scheme-mode-hook
-                  lisp-mode-hook
-                  racket-mode-hook
-                  hy-mode-hook))
-    (add-hook hook #'disable-other-paren-mode)))
+        parinfer-rust-auto-download t))
+  ;; :config
+  ;; (defun disable-elec-pair-mode()
+  ;;   ;; (when (and (fboundp 'puni-mode)
+  ;;   ;;            puni-mode)
+  ;;   ;;     (puni-mode -1))
+  ;;   (when electric-pair-mode
+  ;;       (electric-pair-local-mode -1))
+  ;;   (parinfer-rust-mode 1))
+  ;; 
+  ;; (dolist (hook '(emacs-lisp-mode-hook
+  ;;                 clojore-mode-hook
+  ;;                 scheme-mode-hook
+  ;;                 lisp-mode-hook
+  ;;                 racket-mode-hook
+  ;;                 hy-mode-hook))
+  ;;   (add-hook hook #'disable-elec-pair-mode)))
 
 (use-package tree-sitter-langs :defer t)
 
@@ -404,38 +410,49 @@
    (add-to-list 'tree-sitter-major-mode-language-alist `(,mode . elisp))))
   
   
-;; (use-package grammatical-edit
-;;   ;;:after tree-sitter
-;;   :quelpa (grammatical-edit :fetcher github :repo "manateelazycat/grammatical-edit")
-;;   :bind (:map grammatical-edit-mode-map
-;;               ("(" . grammatical-edit-open-round) 
-;;               ("[" . grammatical-edit-open-bracket)
-;;               ;;("{" . grammatical-edit-open-curly)
-;;               (")" . grammatical-edit-close-round)
-;;               ("]" . grammatical-edit-close-bracket)
-;;               ("}" . grammatical-edit-close-curly)
-;;               ("=" . grammatical-edit-equal)
-;; 
-;;               ("%" . grammatical-edit-match-paren)
-;;               ("\"" . grammatical-edit-double-quote)
-;; 
-;;               ;;("SPC" . grammatical-edit-space)
-;;               ;;("RET" . grammatical-edit-newline)
-;; 
-;;               ("M-o" . grammatical-edit-backward-delete)
-;;               ("C-d" . grammatical-edit-forward-delete)
-;;               ("C-k" . grammatical-edit-kill)
-;; 
-;;               ("M-\"" . grammatical-edit-wrap-double-quote)
-;;               ("M-[" . grammatical-edit-wrap-bracket)
-;;               ("M-{" . grammatical-edit-wrap-curly)
-;;               ("M-(" . grammatical-edit-wrap-round)
-;;               ("M-)" . grammatical-edit-unwrap)
-;; 
-;;               ("M-p" . grammatical-edit-jump-right)
-;;               ("M-n" . grammatical-edit-jump-left)
-;;               ("M-:" . grammatical-edit-jump-out-pair-and-newline))
-;;   :hook ((prog-mode inferior-emacs-lisp-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode))
+(use-package grammatical-edit
+  ;;:after tree-sitter
+  :quelpa (grammatical-edit :fetcher github :repo "manateelazycat/grammatical-edit")
+  :bind (:map grammatical-edit-mode-map
+              ;; 移动
+              ("M-n" . grammatical-edit-jump-left)
+              ("M-p" . grammatical-edit-jump-right)
+              ;; 符号插入
+              ("%" . grammatical-edit-match-paren)       ;括号跳转
+              ("(" . grammatical-edit-open-round)        ;智能 (
+              ("[" . grammatical-edit-open-bracket)      ;智能 [
+              ("{" . grammatical-edit-open-curly)        ;智能 {
+              (")" . grammatical-edit-close-round)       ;智能 )
+              ("]" . grammatical-edit-close-bracket)     ;智能 ]
+              ("}" . grammatical-edit-close-curly)       ;智能 }
+              ("\"" . grammatical-edit-double-quote)     ;智能 \"
+              ("'" . grammatical-edit-single-quote)      ;智能 '
+              ("=" . grammatical-edit-equal)             ;智能 =
+              ;;("SPC" . grammatical-edit-space)           ;智能 space
+              ;;("RET" . grammatical-edit-newline)         ;智能 newline
+              ;; 删除
+              ("M-o" . grammatical-edit-backward-delete) ;向后删除
+              ("C-d" . grammatical-edit-forward-delete)  ;向前删除
+              ("C-k" . grammatical-edit-kill)            ;向前kill
+              ;; 包围
+              ("M-\"" . grammatical-edit-wrap-double-quote) ;用 " " 包围对象, 或跳出字符串
+              ("M-'" . grammatical-edit-wrap-single-quote) ;用 ' ' 包围对象, 或跳出字符串
+              ("M-[" . grammatical-edit-wrap-bracket)      ;用 [ ] 包围对象
+              ("M-{" . grammatical-edit-wrap-curly)        ;用 { } 包围对象
+              ("M-(" . grammatical-edit-wrap-round)        ;用 ( ) 包围对象
+              ("M-)" . grammatical-edit-unwrap)            ;去掉包围对象
+        ;; 跳出并换行缩进
+              ("M-:" . grammatical-edit-jump-out-pair-and-newline) ;跳出括号并换行
+        ;; 向父节点跳动
+              ("C-j" . grammatical-edit-jump-up))
+  :hook ((prog-mode inferior-emacs-lisp-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode)
+  :config
+  (defun my-indent-current ()
+    (indent-for-tab-command))
+  (advice-add #'grammatical-edit-open-curly :after #'my-indent-current))
+  
+     
+  
 
 (use-package format-all)
 
@@ -446,10 +463,10 @@
 (use-package autorevert
   :hook (after-init . global-auto-revert-mode))
 
-(use-package elec-pair
-  :ensure nil
-  :hook (after-init . electric-pair-mode) 
-  :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
+;;(use-package elec-pair
+  ;; :ensure nil
+  ;; :hook (after-init . electric-pair-mode) 
+  ;; :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
  
 ;; (use-package snails
 ;;  :quelpa (:fetcher github :repo "manateelazycat/snails" :build (:not compile))
@@ -487,5 +504,36 @@
 ;;      (("." . "Magit add remote") . magit-remote-add))
 ;;    
 ;;    t))
+(use-package blink-search
+  :load-path "~/.emacs.d/site-lisp/blink-search"
+  :config
+  (global-set-key (kbd "C-c l") 'blink-search)
+  ;;(add-hook 'blink-search-mode-hook 'meow-insert-mode)
+  (setq blink-search-search-backends '("Buffer List"
+                                       "Common Directory"
+                                       "Find File"
+                                       "Recent File"
+                                       "IMenu"
+                                       "Elisp Symbol"))
+  (setq blink-search-grep-file-ignore-dirs '("node_modules"
+                                             "dist"
+                                             "__pycache__"
+                                             "straight"
+                                             "history"))
+  (setq blink-search-common-directory '(("HOME" "~/")
+                                        ("PROJECTS" "~/Projects/")
+                                        ("EMACS" "~/.emacs.d/lisp/")
+                                        ("REPO" "~/.emacs.d/site-lisp/")
+                                        ("ORG" "~/Notes/org")))
+        
+  (defun blink-search-open-file-dirvish (dir)
+    (if (file-directory-p dir)
+        (dirvish-dwim dir)
+      (find-file dir)))
+
+  (advice-add #'blink-search-open-file :override #'blink-search-open-file-dirvish))
+  
+
+
 (provide 'init-edit)
 ;;; init-edit.el ends here

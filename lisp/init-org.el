@@ -431,6 +431,12 @@
 ;; (use-package valign
 ;;   :hook
 ;;   (org-mode . valign-mode))
+(use-package org-super-links
+  :quelpa (org-super-links :repo "toshism/org-super-links" :fetcher github :branch "develop")
+  :after org
+  :bind (("C-c o s" . sl-link)
+         ("C-c o l" . sl-store-link)
+         ("C-c o C-l" . sl-insert-link)))
 
 (use-package org-roam
   ;;:hook (org-load . org-roam-setup)

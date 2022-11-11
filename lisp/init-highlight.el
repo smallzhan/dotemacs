@@ -60,6 +60,8 @@ FACE defaults to inheriting from default and highlight."
 
 ;; Highlight symbols
 (use-package symbol-overlay
+  :ensure nil
+  :quelpa (symbol-overlay :fetcher github :repo "wolray/symbol-overlay")
   :diminish
   :functions (turn-off-symbol-overlay turn-on-symbol-overlay)
   :custom-face (symbol-overlay-default-face ((t (:inherit (region bold)))))

@@ -69,8 +69,10 @@
              ("C-c e m" . lsp-bridge-lookup-documentation)
              ("C-c e R" . lsp-bridge-restart-process))
   ;; 
-  (add-hook 'after-load-theme-hook #'acm-delete-frames)
+  ;;(add-hook 'after-load-theme-hook #'acm-delete-frames)
   (setq acm-candidate-match-function 'orderless-flex)
+  ;;(add-to-list 'acm-continue-commands 'puni-backward-delete-char)
+
   ;; (defun acm-backend-lsp-snippet-expansion-fn ()
   ;;   'tempel-expand-lsp-snippet)
 
@@ -119,6 +121,7 @@
   ;; This is needed in `:init' block for lazy load to work.
   (require 'citre-config)
   (setq citre-enable-capf-integration nil)
+  (setq citre-enable-imenu-integration nil)
   (setq citre-peek-fill-fringe nil)
   :config
   (bind-keys :map app-edit-keymap

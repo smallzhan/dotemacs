@@ -52,6 +52,7 @@
 (require 'init-chinese)
 ;;(require 'init-company)
 (require 'init-org)
+(require 'init-denote)
 
 (require 'init-lsp)
 (require 'init-cc)
