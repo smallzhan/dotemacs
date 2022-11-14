@@ -77,10 +77,10 @@
   ;; ...otherwise find-file gets different highlighting than other commands
   (set-face-attribute 'completions-first-difference nil :inherit nil))
   
-;; Persist history over Emacs restarts. Vertico sorts by history position.
-(use-package savehist
-  :init
-  (savehist-mode))
+;; ;; Persist history over Emacs restarts. Vertico sorts by history position.
+;; (use-package savehist
+;;   :init
+;;   (savehist-mode))
 
 ;; A few more useful configurations...
 (use-package emacs

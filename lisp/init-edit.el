@@ -524,7 +524,8 @@
                                         ("PROJECTS" "~/Projects/")
                                         ("EMACS" "~/.emacs.d/lisp/")
                                         ("REPO" "~/.emacs.d/site-lisp/")
-                                        ("ORG" "~/Notes/org")))
+                                        ("ORG" "~/Notes/org")
+                                        ("Notes" "~/Notes/org/notes")))
         
   (defun blink-search-open-file-dirvish (dir)
     (if (file-directory-p dir)

@@ -106,6 +106,28 @@
 (global-set-key (kbd "C-c t") 'app-toggle-keymap)
 ;;                              ^ note the quote
 
+(defvar app-notes-keymap
+  (let ((keymap (make-sparse-keymap)))
+    (define-key keymap (kbd "n") #'denote)
+    (define-key keymap (kbd "j") #'my-denote-journal)
+    (define-key keymap (kbd "b") #'my-denote-blog)
+    (define-key keymap (kbd "d") #'denote-date)
+    (define-key keymap (kbd "c") #'denote-subdirectory)
+    (define-key keymap (kbd "s") #'consult-notes)
+    (define-key keymap (kbd "S") #'consult-notes-search-in-all-notes)
+    (define-key keymap (kbd "t") #'denote-template)
+    (define-key keymap (kbd "i") #'denote-link)
+    (define-key keymap (kbd "I") #'denote-link-add-links)
+    (define-key keymap (kbd "f") #'denote-link-find-file)
+    (define-key keymap (kbd "l") #'denote-link-find-backlink)
+    (define-key keymap (kbd "r") #'denote-rename-file)
+    (define-key keymap (kbd "R") #'denote-rename-file-using-front-matter)
+    keymap))
+
+(defalias 'app-notes-keymap app-notes-keymap)
+(global-set-key (kbd "C-c n") 'app-notes-keymap)
+
+
 (global-set-key (kbd "C-0") 'scroll-other-window)  ;; 向下翻
 (global-set-key (kbd "C-9") 'scroll-other-window-down) ;; 向上翻
 

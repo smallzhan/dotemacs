@@ -165,10 +165,10 @@
            (file  "agenda/notes.org")
            "* TODO Respond to %:from on %:subject\n:PROPERTIES:\n:CATEGORY: task\n:END:\n%a\n"
            :clock-in t :clock-resume t :immediate-finish t)
-          ("n" "note" entry
-           (file+headline  "agenda/notes.org" "Notes")
-           "* %? :NOTE:\n%a\n"
-           :clock-in t :clock-resume t)
+          ;; ("n" "note" entry
+          ;;  (file+headline  "agenda/notes.org" "Notes")
+          ;;  "* %? :NOTE:\n%a\n"
+          ;;  :clock-in t :clock-resume t)
           ("j" "Journal" entry
            (file+olp+datetree  "diary.org")
            "* %?\n%U\n"
@@ -240,7 +240,7 @@
   (setq org-publish-project-alist '())
 
   (require 'next-spec-day)
-  (require 'init-org+jekyll)
+  ;;(require 'init-org+jekyll)
   (require 'init-org+latex)
   (require 'init-org+html)
   (require 'init-org+transient)
@@ -313,7 +313,7 @@
     ;;  (add-hook 'before-save-hook 'org-encrypt-entries nil t))))
 
 (use-package org-super-agenda
-  :after org
+  :after org-agenda
   :config
   (org-super-agenda-mode 1)
   (setq org-agenda-custom-commands
@@ -438,35 +438,35 @@
          ("C-c o l" . sl-store-link)
          ("C-c o C-l" . sl-insert-link)))
 
-(use-package org-roam
-  ;;:hook (org-load . org-roam-setup)
-  ;;:load-path "~/.emacs.d/straight/build-28.2/org-roam"
-  :defer t
-  :commands (org-roam-capture org-roam-node-find)
-  ;;:after org
-  :init
-  (setq org-roam-v2-ack t)
-  ;;(setq org-roam-directory (file-truename (concat org-directory "roam")))
-
-  :config
-  (setq org-roam-file-exclude-regexp nil)
-  (org-roam-db-autosync-mode)
-  ;; If using org-roam-protocol
-  (require 'org-roam-protocol)
-  (add-to-list 'org-roam-capture-ref-templates
-              '("a" "Annotation" plain ;;(function org-roam-capture--get-point)
-                "%U ${body}\n"
-                :target (file+head "${slug}.org" "#+title: ${title}\n")
-                ;;:file-name "${slug}"
-                ;;:head "#+title: ${title}\n#+roam_ref: ${ref}\n#+roam_aliases:\n"
-                :immediate-finish t
-                :unnarrowed t))
-  (add-to-list 'display-buffer-alist
-                 '("\\*org-roam\\*"
-                    (display-buffer-in-direction)
-                    (direction . right)
-                    (window-width . 0.33)
-                    (window-height . fit-window-to-buffer))))
+;; (use-package org-roam
+;;   ;;:hook (org-load . org-roam-setup)
+;;   ;;:load-path "~/.emacs.d/straight/build-28.2/org-roam"
+;;   :defer t
+;;   :commands (org-roam-capture org-roam-node-find)
+;;   ;;:after org
+;;   :init
+;;   (setq org-roam-v2-ack t)
+;;   ;;(setq org-roam-directory (file-truename (concat org-directory "roam")))
+;; 
+;;   :config
+;;   (setq org-roam-file-exclude-regexp nil)
+;;   (org-roam-db-autosync-mode)
+;;   ;; If using org-roam-protocol
+;;   (require 'org-roam-protocol)
+;;   (add-to-list 'org-roam-capture-ref-templates
+;;               '("a" "Annotation" plain ;;(function org-roam-capture--get-point)
+;;                 "%U ${body}\n"
+;;                 :target (file+head "${slug}.org" "#+title: ${title}\n")
+;;                 ;;:file-name "${slug}"
+;;                 ;;:head "#+title: ${title}\n#+roam_ref: ${ref}\n#+roam_aliases:\n"
+;;                 :immediate-finish t
+;;                 :unnarrowed t))
+;;   (add-to-list 'display-buffer-alist
+;;                  '("\\*org-roam\\*"
+;;                     (display-buffer-in-direction)
+;;                     (direction . right)
+;;                     (window-width . 0.33)
+;;                     (window-height . fit-window-to-buffer))))
 
 (use-package elfeed
   :defer t

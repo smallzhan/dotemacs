@@ -3,7 +3,7 @@
 (use-package denote
   :init
   (setq denote-directory (expand-file-name "notes" +my-org-dir))
-  (setq denote-known-keywords '("emacs" "programming" "reading" "learning"))
+  (setq denote-known-keywords '("emacs" "programming" "reading" "learning" "misc" "work"))
   (setq denote-infer-keywords t)
   (setq denote-sort-keywords t)
   (setq denote-file-type nil) ; Org is the default, set others here
@@ -61,30 +61,73 @@
      (denote--title-prompt)
      '("journal")))
   
+  (defun my-denote-blog ()
+    "Create an entry in sub directory 'blog', while prompting for a title and keywords."
+    (interactive)
+    (let ((denote-date-format "%Y-%m-%d")
+          (denote-id-format "%Y-%m-%d-T%H%M%S"))
+     (denote
+      (denote--title-prompt)
+      (denote-keywords-prompt)
+      'blog
+      (expand-file-name "blog" denote-directory))))
+     
+
+  (setq denote-blog-front-matter
+        (concat "#+title:      %1$s"
+                "\n#+date:       %2$s"
+                "\n#+filetags:   %3$s"
+                "\n#+identifier: %4$s"
+                "\n#+BEGIN_EXPORT html"
+                "\n---"
+                "\nlayout: post"
+                "\ntitle: %1$s"
+                "\ncomments: t"
+                "\ndate: %2$s"
+                "\nexcerpt:"
+                "\ncategories:"
+                "\n  - %3$s"
+                "\ntags:"
+                "\n  - %3$s"
+                "\n---"
+                "\n#+END_EXPORT"
+                "\n"))
+ 
+ ;; (defvar denote-file-type-blog (plist-put (alist-get 'org denote-file-types) :front-matter 'denote-blog-front-matter))
+  (add-to-list 'denote-file-types '(blog
+                                    :extension ".org"
+                                    :front-matter denote-blog-front-matter
+                                    :title-key-regexp "^#\\+title\\s-*:"
+                                    :title-value-function identity
+                                    :title-value-reverse-function denote-trim-whitespace
+                                    :keywords-key-regexp "^#\\+filetags\\s-*:"
+                                    :keywords-value-function denote-format-keywords-for-text-front-matter
+                                    :keywords-value-reverse-function denote-extract-keywords-from-front-matter) t) 
    ;; Denote DOES NOT define any key bindings.  This is for the user to
    ;; decide.  For example:
-  (let ((map global-map))
-    (define-key map (kbd "C-c n j") #'my-denote-journal) ; our custom command
-    (define-key map (kbd "C-c n n") #'denote)
-    (define-key map (kbd "C-c n N") #'denote-type)
-    (define-key map (kbd "C-c n d") #'denote-date)
-    (define-key map (kbd "C-c n s") #'denote-subdirectory)
-    (define-key map (kbd "C-c n t") #'denote-template)
-    ;; If you intend to use Denote with a variety of file types, it is
-    ;; easier to bind the link-related commands to the `global-map', as
-    ;; shown here.  Otherwise follow the same pattern for `org-mode-map',
-    ;; `markdown-mode-map', and/or `text-mode-map'.
-    (define-key map (kbd "C-c n i") #'denote-link) ; "insert" mnemonic
-    (define-key map (kbd "C-c n I") #'denote-link-add-links)
-    (define-key map (kbd "C-c n b") #'denote-link-backlinks)
-    (define-key map (kbd "C-c n f f") #'denote-link-find-file)
-    (define-key map (kbd "C-c n f b") #'denote-link-find-backlink)
-    ;; Note that `denote-rename-file' can work from any context, not just
-    ;; Dired bufffers.  That is why we bind it here to the `global-map'.
-    (define-key map (kbd "C-c n r") #'denote-rename-file)
-    (define-key map (kbd "C-c n R") #'denote-rename-file-using-front-matter))
   
-   ;; Key bindings specifically for Dired.
+  (defvar my-denote-blog-dir (expand-file-name "blog/" denote-directory))
+  (defvar my-denote-blog-publish-dir (expand-file-name "~/Projects/smallzhan.github.io/_posts/"))
+  (with-eval-after-load 'org
+   (add-to-list 'org-publish-project-alist
+                `("smallzhan-github-io" ;; settings for cute-jumper.github.io
+                  :base-directory , my-denote-blog-dir
+                  :base-extension "org"
+                  :publishing-directory , my-denote-blog-publish-dir
+                  :recursive t
+                  ;;         :publishing-function org-html-publish-to-html
+                  :publishing-function org-gfm-publish-to-gfm
+                  :with-toc nil
+                  :headline-levels 4
+                  :auto-preamble nil
+                  :auto-sitemap nil
+                  :html-extension "html"
+                  :body-only t))
+
+   (add-to-list 'org-publish-project-alist
+                '("blog" :components ("smallzhan-github-io"))))
+
+     ;; Key bindings specifically for Dired.
   (let ((map dired-mode-map))
     (define-key map (kbd "C-c C-d C-i") #'denote-link-dired-marked-notes)
     (define-key map (kbd "C-c C-d C-r") #'denote-dired-rename-marked-files)
@@ -109,8 +152,10 @@
              consult-notes-search-in-all-notes
              consult-notes-org-roam-find-node
              consult-notes-org-roam-find-node-relation)
-  :config
-  (setq consult-notes-sources `(("denote"  ?d  ,denote-directory)))) ;; Set notes dir(s), see below
+ :config
+ (with-eval-after-load 'denote
+  (consult-notes-denote-mode)))
+ ;;(setq consult-notes-sources `(("roam"  ?r  "~/Notes/org/roam")))) ;; Set notes dir(s), see below
   ;;(consult-notes-org-roam-mode)) ;; Set org-roam integration)
 (provide 'init-denote)
 ;;; init-denote.el ends here

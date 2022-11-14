@@ -79,13 +79,13 @@
             (format-time-string "%Y-%m-%d") (jekyll-make-slug title))
    (expand-file-name jekyll-posts-dir jekyll-base-directory)))
 
-
-(add-to-list 'org-capture-templates
-             '("b" "start blog post" plain
-               (file my-jekyll-blog-post-name)
-               "%(let ((jtitle (jekyll-yaml-escape my-jekyll-blog-post--title)))
+(with-eval-after-load 'org-capture
+ (add-to-list 'org-capture-templates
+              '("b" "start blog post" plain
+                (file my-jekyll-blog-post-name)
+                "%(let ((jtitle (jekyll-yaml-escape my-jekyll-blog-post--title)))
                    (format jekyll-post-template jtitle jtitle))"
-               :clock-in t :clock-resume t))
+                :clock-in t :clock-resume t)))
 
 (with-eval-after-load 'org-roam-capture
   (add-to-list 'org-roam-capture-templates
@@ -95,23 +95,24 @@
                                      (format jekyll-post-roam-template jtitle jtitle))")
                  :clock-in t :clock-resume t :immediate-finish t :unnarrowed t)))
 
-(add-to-list 'org-publish-project-alist
-             `("smallzhan-github-io" ;; settings for cute-jumper.github.io
-               :base-directory , jekyll-base-directory
-               :base-extension "org"
-               :publishing-directory , jekyll-publish-directory
-               :recursive t
-               ;;         :publishing-function org-html-publish-to-html
-               :publishing-function org-gfm-publish-to-gfm
-               :with-toc nil
-               :headline-levels 4
-               :auto-preamble nil
-               :auto-sitemap nil
-               :html-extension "html"
-               :body-only t))
+(with-eval-after-load 'org
+ (add-to-list 'org-publish-project-alist
+              `("smallzhan-github-io" ;; settings for cute-jumper.github.io
+                :base-directory , jekyll-base-directory
+                :base-extension "org"
+                :publishing-directory , jekyll-publish-directory
+                :recursive t
+                ;;         :publishing-function org-html-publish-to-html
+                :publishing-function org-gfm-publish-to-gfm
+                :with-toc nil
+                :headline-levels 4
+                :auto-preamble nil
+                :auto-sitemap nil
+                :html-extension "html"
+                :body-only t))
 
-(add-to-list 'org-publish-project-alist
-             '("blog" :components ("smallzhan-github-io")))
+ (add-to-list 'org-publish-project-alist
+              '("blog" :components ("smallzhan-github-io"))))
 
 
 (provide 'init-org+jekyll)
