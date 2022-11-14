@@ -154,8 +154,8 @@
              consult-notes-org-roam-find-node-relation)
  :config
  (with-eval-after-load 'denote
-  (consult-notes-denote-mode)))
- ;;(setq consult-notes-sources `(("roam"  ?r  "~/Notes/org/roam")))) ;; Set notes dir(s), see below
+  (consult-notes-denote-mode))
+ (setq consult-notes-sources nil)) ;; Set notes dir(s), see below
   ;;(consult-notes-org-roam-mode)) ;; Set org-roam integration)
 (provide 'init-denote)
 ;;; init-denote.el ends here

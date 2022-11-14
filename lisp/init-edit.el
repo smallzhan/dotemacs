@@ -520,12 +520,12 @@
                                              "__pycache__"
                                              "straight"
                                              "history"))
-  (setq blink-search-common-directory '(("HOME" "~/")
-                                        ("PROJECTS" "~/Projects/")
-                                        ("EMACS" "~/.emacs.d/lisp/")
-                                        ("REPO" "~/.emacs.d/site-lisp/")
-                                        ("ORG" "~/Notes/org")
-                                        ("Notes" "~/Notes/org/notes")))
+  (setq blink-search-common-directory `(("HOME" ,(expand-file-name "~/"))
+                                        ("PROJECTS" ,(expand-file-name "~/Projects/"))
+                                        ("EMACS" ,(expand-file-name "~/.emacs.d/lisp/"))
+                                        ("REPO" ,(expand-file-name "~/.emacs.d/site-lisp/"))
+                                        ("ORG" ,+my-org-dir)
+                                        ("Notes" ,(expand-file-name "notes" +my-org-dir))))
         
   (defun blink-search-open-file-dirvish (dir)
     (if (file-directory-p dir)
