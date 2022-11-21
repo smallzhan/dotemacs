@@ -134,5 +134,7 @@
         ([remap dired-do-copy] . dirvish-yank)
         ([remap mode-line-other-buffer] . dirvish-other-buffer)))
 
+(use-package posframe :defer t)
+
 (provide 'init-basic)
 ;;; init-basic.el ends here

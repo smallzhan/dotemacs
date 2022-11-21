@@ -69,6 +69,7 @@
 ;;(require 'init-dired) 
 (require 'init-window)
 (require 'init-eaf)
+(require 'init-dict)
 
 
 (require 'init-server)

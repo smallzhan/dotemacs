@@ -1,4 +1,4 @@
-;;; private/lsp/config.el -*- lexical-binding: t; -*-
+;;; lisp/init-lsp.el -*- lexical-binding: t; -*-
 
 ;; (use-package eglot
 ;;   :commands (eglot-ensure eglot)
@@ -104,7 +104,7 @@
          
            (tempel-insert (reverse template))))))
 
-;; (tempel-expand-lsp-snippet "queue_get_elem(${1:q}, ${2:i})")
+ ;;(tempel-expand-lsp-snippet "queue_get_elem(${1:q}, ${2:i})"))
     
 ;; 通过Cape融合多个补全后端
 
@@ -136,16 +136,16 @@
   :config
   (yas-global-mode 1))
 
-;; (use-package yasnippet-snippets
-;;   :config 
-;;   (add-to-list 'yas/root-directory yasnippet-snippets-dir))
+(use-package yasnippet-snippets
+  :config 
+  (add-to-list 'yas/root-directory yasnippet-snippets-dir))
 
-(use-package tempel
-  :config
-  (bind-keys ("M-+" . tempel-complete)
-             ("M-*" . tempel-insert)
-             :map tempel-map
-             ("TAB" . tempel-next)))
+;; (use-package tempel
+;;   :config
+;;   (bind-keys ("M-+" . tempel-complete)
+;;              ("M-*" . tempel-insert)
+;;              :map tempel-map
+;;              ("TAB" . tempel-next)))
 
 (provide 'init-lsp)
 ;;; init-lsp.el ends here  

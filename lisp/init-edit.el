@@ -154,23 +154,9 @@
 ;;     (dolist (ext '("*.bin" "*.hex" "*.pdb"))
 ;;       (push ext counsel-etags-ignore-filenames))))
 
-(use-package posframe :defer t)
 
-(use-package sdcv
-  :quelpa (sdcv :fetcher github :repo "manateelazycat/sdcv")
-  :ensure nil
-  :defer t
-  :commands (sdcv-search-input sdcv-search-pointer+)
-  :config
-  ;;(set-face-foreground 'sdcv-tooltip-face "#51afef")
-  (setq sdcv-program (executable-find "sdcv"))
-  (setq sdcv-dictionary-simple-list '("牛津现代英汉双解词典"))
-  (setq sdcv-dictionary-complete-list '("牛津现代英汉双解词典"
-                                        "CEDICT汉英辞典"
-                                        "朗道汉英字典5.0"
-                                        "21世纪双语科技词典"
-                                        "朗道英汉字典5.0"))
-  (setq sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic")))
+
+
 
 ;;   (defun sdcv-translate-result (word dictionary-list)
 ;;     "Call sdcv to search word in dictionary list, return filtered
