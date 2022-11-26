@@ -1,10 +1,10 @@
 ;;; init-bindings.el  -*- lexical-binding: t; -*-
 
-(use-package which-key
-  :hook (after-init . which-key-mode)
-  :init (setq which-key-max-description-length 30
-              which-key-show-remaining-keys t))
-;;              which-key-popup-type 'frame))
+;; (use-package which-key
+;;   :hook (after-init . which-key-mode)
+;;   :init (setq which-key-max-description-length 30
+;;               which-key-show-remaining-keys t))
+;; ;;              which-key-popup-type 'frame))
 
 
 (defvar app-org-keymap
@@ -50,12 +50,26 @@
   (let ((keymap (make-keymap)))
     (define-key keymap (kbd "c") #'compile)
     (define-key keymap (kbd "C") #'recompile)
-    (define-key keymap (kbd "d") #'xref-find-definitions)
-    (define-key keymap (kbd "x") #'xref-find-references)
+    ;;(define-key keymap (kbd "d") #'xref-find-definitions)
+    ;;(define-key keymap (kbd "x") #'xref-find-references)
     (define-key keymap (kbd "f") #'format-all-buffer)
-    (define-key keymap (kbd "r") #'format-all-region)
-    (define-key keymap (kbd "w") #'delete-trailing-whitespace)
+    (define-key keymap (kbd "F") #'format-all-region)
+    (define-key keymap (kbd "D") #'delete-trailing-whitespace)
     (define-key keymap (kbd "t") #'citar-open-entry)
+    
+    (define-key keymap (kbd "w") #'markmacro-mark-words)
+    (define-key keymap (kbd "l") #'markmacro-mark-lines)
+    (define-key keymap (kbd "A") #'markmacro-apply-all-except-first)
+    (define-key keymap (kbd "a") #'markmacro-apply-all)
+    (define-key keymap (kbd "s") #'markmacro-rect-set)
+    (define-key keymap (kbd "d") #'markmacro-rect-delete)
+    (define-key keymap (kbd "r") #'markmacro-rect-replace)
+    (define-key keymap (kbd "i") #'markmacro-rect-insert)
+    (define-key keymap (kbd "ms") #'markmacro-rect-mark-symbols)
+    (define-key keymap (kbd "mc") #'markmacro-rect-mark-columns)
+    (define-key keymap (kbd "mi") #'markmacro-mark-imenus)
+    (define-key keymap (kbd "mr") #'markmacro-secondary-region-set)
+    (define-key keymap (kbd "mm") #'markmacro-secondary-region-mark-cursors)
     
     keymap))
 

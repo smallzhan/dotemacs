@@ -36,6 +36,7 @@
   ;;(setq use-package-always-defer t)
   (setq use-package-expand-minimally t)
   (setq use-package-enable-imenu-support t))
+
 (eval-when-compile
   (require 'use-package))
 
@@ -43,6 +44,7 @@
 (use-package quelpa
   :init (setq quelpa-update-melpa-p nil
               quelpa-checkout-melpa-p nil))
+
 (use-package quelpa-use-package)
 
 

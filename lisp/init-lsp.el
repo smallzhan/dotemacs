@@ -61,13 +61,15 @@
   (bind-keys :map lsp-bridge-mode-map
              ;; ("M-." . lsp-bridge-find-def)  ;; override Xref bindings
              ;; ("M-," . lsp-bridge-return-from-def)
-             ("C-c e d" . lsp-bridge-find-def)
-             ("C-c e k" . lsp-bridge-return-from-def)
-             ("C-c e x" . lsp-bridge-find-references)
-             ("C-c e i" . lsp-bridge-find-impl)
-             ("C-c e r" . lsp-bridge-rename)
-             ("C-c e m" . lsp-bridge-lookup-documentation)
-             ("C-c e R" . lsp-bridge-restart-process))
+             ("C-c c d" . lsp-bridge-find-def)
+             ("C-c c k" . lsp-bridge-return-from-def)
+             ("C-c c x" . lsp-bridge-find-references)
+             ("C-c c i" . lsp-bridge-find-impl)
+             ("C-c c r" . lsp-bridge-rename)
+             ("C-c c m" . lsp-bridge-lookup-documentation)
+             ("C-c c R" . lsp-bridge-restart-process)
+             ("C-c c o" . lsp-bridge-outgoing-call-hierarchy)
+             ("C-c c h" . lsp-bridge-incoming-call-hierarchy))
   ;; 
   ;;(add-hook 'after-load-theme-hook #'acm-delete-frames)
   (setq acm-candidate-match-function 'orderless-flex)
@@ -119,10 +121,14 @@
   :defer t
   :init
   ;; This is needed in `:init' block for lazy load to work.
-  (require 'citre-config)
+  ;;(require 'citre-config)
   (setq citre-enable-capf-integration nil)
   (setq citre-enable-imenu-integration nil)
   (setq citre-peek-fill-fringe nil)
+  :commands (citre-jump
+             citre-peek
+             citre-create-tags-file
+             citre-update-tags-file)
   :config
   (bind-keys :map app-edit-keymap
              ("j" . citre-jump)

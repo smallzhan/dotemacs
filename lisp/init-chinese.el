@@ -107,9 +107,9 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
       (rime--redisplay)))
 
   (setq-default rime-disable-predicates
-                '(meow-normal-mode-p
-                  meow-motion-mode-p
-                  meow-keypad-mode-p
+                '(;;meow-normal-mode-p
+                  ;;meow-motion-mode-p
+                  ;;meow-keypad-mode-p
                   +rime-predicate-button-at-point-p
                   rime-predicate-prog-in-code-p
                   rime-predicate-punctuation-line-begin-p
