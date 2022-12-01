@@ -3,29 +3,15 @@
 ;; theme
 
 (use-package doom-themes 
-  :config 
-  (when IS-WINDOWS (load-theme 'doom-one t)))
-
-(when IS-MAC
-  (use-package auto-dark
-    :ensure nil
-    :quelpa (auto-dark :fetcher github :repo "smallzhan/auto-dark-emacs")
-    :config
-    ;; (when (and (fboundp 'mac-osa-script) (not (fboundp 'ns-do-applescript)))
-    ;;       (defalias 'ns-do-applescript 'mac-osa-script)) 
-    (setq auto-dark--allow-osascript t
-          auto-dark--polling-interval-seconds 10
-          auto-dark--dark-theme 'doom-one
-          auto-dark--light-theme 'doom-one-light)))
-  ;; :config
-  ;; (if IS-MAC
-  ;;     (add-hook 'ns-system-appearance-change-functions
-  ;;               #'(lambda (appearance)
-  ;;                   (mapc #'disable-theme custom-enabled-themes)
-  ;;                   (pcase appearance
-  ;;                     ('light (load-theme 'doom-one-light t))
-  ;;                     ('dark (load-theme 'doom-one t)))))
-  ;;   (load-theme 'doom-one t)))
+  :config
+  (if IS-MAC
+      (add-hook 'ns-system-appearance-change-functions
+                #'(lambda (appearance)
+                    (mapc #'disable-theme custom-enabled-themes)
+                    (pcase appearance
+                      ('light (load-theme 'doom-one-light t))
+                      ('dark (load-theme 'doom-one t)))))
+    (load-theme 'doom-one t)))
 
 ;; disable line-number
 (setq display-line-numbers-type nil)

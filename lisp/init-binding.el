@@ -56,7 +56,9 @@
     (define-key keymap (kbd "F") #'format-all-region)
     (define-key keymap (kbd "D") #'delete-trailing-whitespace)
     (define-key keymap (kbd "t") #'citar-open-entry)
-    
+
+    (define-key keymap (kbd "L") #'my-mark-line)
+    (define-key keymap (kbd "K") #'my-kill)
     (define-key keymap (kbd "w") #'markmacro-mark-words)
     (define-key keymap (kbd "l") #'markmacro-mark-lines)
     (define-key keymap (kbd "A") #'markmacro-apply-all-except-first)
@@ -142,13 +144,14 @@
 (global-set-key (kbd "C-c n") 'app-notes-keymap)
 
 
-(global-set-key (kbd "C-0") 'scroll-other-window)  ;; 向下翻
-(global-set-key (kbd "C-9") 'scroll-other-window-down) ;; 向上翻
+(global-set-key (kbd "C-0") #'scroll-other-window)  ;; 向下翻
+(global-set-key (kbd "C-9") #'scroll-other-window-down) ;; 向上翻
 
-(global-set-key (kbd "C->") 'remember-init)
-(global-set-key (kbd "C-<") 'remrmber-jump)
-(global-set-key (kbd "M-N") 'delete-block-backward)
-(global-set-key (kbd "M-M") 'delete-block-forward)
+(global-set-key (kbd "C->") #'remember-init)
+(global-set-key (kbd "C-<") #'remember-jump)
+(global-set-key (kbd "M-N") #'delete-block-backward)
+(global-set-key (kbd "M-M") #'delete-block-forward)
+(global-set-key (kbd "M-w") #'my-copy)
 
 (provide 'init-binding)
 ;;; init-bingding.el ends here

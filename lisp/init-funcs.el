@@ -49,7 +49,7 @@ Same as `replace-string C-q C-m RET RET'."
   (unless (minibuffer-window-active-p (selected-window))
     (revert-buffer t t)
     (message "Reverted this buffer")))
-(global-set-key (kbd "s-r") #'revert-this-buffer)
+;;(global-set-key (kbd "s-r") #'revert-this-buffer)
 
 (defun delete-this-file ()
   "Delete the current file, and kill the buffer."
@@ -60,7 +60,7 @@ Same as `replace-string C-q C-m RET RET'."
                              (file-name-nondirectory buffer-file-name)))
     (delete-file (buffer-file-name))
     (kill-this-buffer)))
-(global-set-key (kbd "C-x K") #'delete-this-file)
+;;(global-set-key (kbd "C-x K") #'delete-this-file)
 
 (defun rename-this-file (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
@@ -101,7 +101,6 @@ Same as `replace-string C-q C-m RET RET'."
   "Reload Emacs configurations."
   (interactive)
   (load user-init-file))
-(global-set-key (kbd "C-c C-l") #'reload-init-file)
 
 ;; Misc
 (defun create-scratch-buffer ()
@@ -131,20 +130,6 @@ Same as `replace-string C-q C-m RET RET'."
         (async-byte-recompile-directory temp-dir)
       (byte-recompile-directory temp-dir 0 t))))
 
-(define-minor-mode centaur-read-mode
-  "Minor Mode for better reading experience."
-  :init-value nil
-  :group centaur
-  (if centaur-read-mode
-      (progn
-        (and (fboundp 'olivetti-mode) (olivetti-mode 1))
-        (and (fboundp 'mixed-pitch-mode) (mixed-pitch-mode 1))
-        (text-scale-set +2))
-    (progn
-      (and (fboundp 'olivetti-mode) (olivetti-mode -1))
-      (and (fboundp 'mixed-pitch-mode) (mixed-pitch-mode -1))
-      (text-scale-set 0))))
-(global-set-key (kbd "M-<f7>") #'centaur-read-mode)
 
 ;; UI
 (defvar after-load-theme-hook nil
@@ -299,7 +284,38 @@ Version 2022-06-29 00.01.07 +8000"
       (message "Stack is empty.")
     (switch-to-buffer (caar point-stack))
     (goto-char (cadar point-stack))
-    (setq point-stack (cdr point-stack))))
+    (setq point-stack (cdr point-stack)))) 
+
+(defun my-copy (&optional arg)
+  "if mark-active, copy the region, else mark current line"
+  (interactive "P")
+  (if mark-active
+      (kill-ring-save (region-beginning) (region-end))
+    (let ((beg (progn (back-to-indentation) (point)))
+          (end (line-end-position arg)))
+      (copy-region-as-kill beg end))))
+
+(defun my-kill (&optional arg region)
+  "`kill-region' if the region is active, otherwise `backward-kill-word'"
+  (interactive
+   (list (prefix-numeric-value current-prefix-arg) (use-region-p)))
+  (if region (kill-region (region-beginning) (region-end))
+	(backward-kill-word arg)))
+
+(defun my-mark-line (&optional arg)
+  "mark line, mark current line when first call, then mark to next line each call"
+  (interactive "P")
+  (if (region-active-p)
+        (goto-char (line-end-position 2))
+    (progn
+      (back-to-indentation)
+      (set-mark (point))
+      (goto-char (line-end-position))))
+  (setq arg (if arg (prefix-numeric-value arg)
+              (if (< (mark) (point)) -1 1)))
+  (if (and arg (> arg 1))
+      (goto-char (line-end-position arg))))
+
 
 (provide 'init-funcs)
 

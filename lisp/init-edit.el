@@ -380,6 +380,21 @@
   ;;                 hy-mode-hook))
   ;;   (add-hook hook #'disable-elec-pair-mode)))
 
+;; (use-package lispy
+;;    :hook ((lisp-mode . lispy-mode)
+;;           (emacs-lisp-mode . lispy-mode)
+;;           (ielm-mode . lispy-mode)
+;;           (scheme-mode . lispy-mode)
+;;           (racket-mode . lispy-mode)
+;;           (hy-mode . lispy-mode)
+;;           (lfe-mode . lispy-mode)
+;;           (dune-mode . lispy-mode)
+;;           (clojure-mode . lispy-mode)
+;;           (fennel-mode . lispy-mode)))
+;; 
+;; (use-package lpy
+;;   :hook (python-mode . lpy-mode))
+
 (use-package tree-sitter-langs :defer t)
 
 (use-package tree-sitter
@@ -440,9 +455,9 @@
               ("M-(" . grammatical-edit-wrap-round)        ;用 ( ) 包围对象
               ("M-)" . grammatical-edit-unwrap)            ;去掉包围对象
         ;; 跳出并换行缩进
-              ("M-:" . grammatical-edit-jump-out-pair-and-newline) ;跳出括号并换行
+              ("C-j" . grammatical-edit-jump-out-pair-and-newline) ;跳出括号并换行
         ;; 向父节点跳动
-              ("C-j" . grammatical-edit-jump-up))
+              ("M-:" . grammatical-edit-jump-up))
   :hook ((prog-mode inferior-emacs-lisp-mode minibuffer-inactive-mode sh-mode) . grammatical-edit-mode)
   :config
   (defun my-indent-current ()
@@ -461,6 +476,9 @@
 (use-package autorevert
   :hook (after-init . global-auto-revert-mode))
 
+(use-package expand-region
+  :defer t
+  :bind (("C-=" . #'er/expand-region)))
 ;;(use-package elec-pair
   ;; :ensure nil
   ;; :hook (after-init . electric-pair-mode) 

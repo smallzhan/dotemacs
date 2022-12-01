@@ -72,9 +72,14 @@
              ("C-c c h" . lsp-bridge-incoming-call-hierarchy))
   ;; 
   ;;(add-hook 'after-load-theme-hook #'acm-delete-frames)
-  (setq acm-candidate-match-function 'orderless-flex)
+  (setq acm-candidate-match-function 'regexp-quote)
   ;;(add-to-list 'acm-continue-commands 'puni-backward-delete-char)
 
+  (defun my-lsp-bridge--turn-off (filepath)
+    (lsp-bridge--with-file-buffer filepath
+      (lsp-bridge-mode -1)))
+
+  (advice-add #'lsp-bridge--turn-off :override #'my-lsp-bridge--turn-off)
   ;; (defun acm-backend-lsp-snippet-expansion-fn ()
   ;;   'tempel-expand-lsp-snippet)
 

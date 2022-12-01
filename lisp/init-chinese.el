@@ -127,13 +127,13 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
   (require 'im-cursor-chg)
   (cursor-chg-mode 1)
   :bind
-  ("M-l" . #'+rime-convert-string-at-point)
+  ("M-L" . #'+rime-convert-string-at-point)
   (:map rime-active-mode-map
    ("<tab>" . #'+rime-inline-ascii)
-   ("M-l" . #'+rime-convert-string-at-point))
+   ("M-L" . #'+rime-convert-string-at-point))
   (:map rime-mode-map
-   ("M-l" . #'+rime-convert-string-at-point)
-   ("M-j" . #'rime-force-enable)))
+   ("M-L" . #'+rime-convert-string-at-point)
+   ("M-J" . #'rime-force-enable)))
 
 
 (use-package pinyinlib
