@@ -47,7 +47,7 @@
 ;; 
 ;; (use-package corfu-doc
 ;;   :defer t)
-  
+
 (use-package lsp-bridge
   :load-path "~/.emacs.d/site-lisp/lsp-bridge"
   :config
@@ -62,7 +62,7 @@
              ;; ("M-." . lsp-bridge-find-def)  ;; override Xref bindings
              ;; ("M-," . lsp-bridge-return-from-def)
              ("C-c c d" . lsp-bridge-find-def)
-             ("C-c c k" . lsp-bridge-return-from-def)
+             ("C-c c k" . lsp-bridge-find-def-return)
              ("C-c c x" . lsp-bridge-find-references)
              ("C-c c i" . lsp-bridge-find-impl)
              ("C-c c r" . lsp-bridge-rename)
@@ -72,9 +72,14 @@
              ("C-c c h" . lsp-bridge-incoming-call-hierarchy))
   ;; 
   ;;(add-hook 'after-load-theme-hook #'acm-delete-frames)
-  (setq acm-candidate-match-function 'regexp-quote)
+  ;;(setq acm-candidate-match-function 'regexp-quote)
   ;;(add-to-list 'acm-continue-commands 'puni-backward-delete-char)
-
+  (setq lsp-bridge-python-command
+        (if (executable-find "asdf")
+            (string-trim (shell-command-to-string "asdf which python3"))
+          "python3"))
+  
+  ;;(setq lsp-bridge-python-lsp-server "pylsp")
   (defun my-lsp-bridge--turn-off (filepath)
     (lsp-bridge--with-file-buffer filepath
       (lsp-bridge-mode -1)))

@@ -61,6 +61,7 @@
     (define-key keymap (kbd "K") #'my-kill)
     (define-key keymap (kbd "w") #'markmacro-mark-words)
     (define-key keymap (kbd "l") #'markmacro-mark-lines)
+    (define-key keymap (kbd "h") #'markmacro-mark-chars)
     (define-key keymap (kbd "A") #'markmacro-apply-all-except-first)
     (define-key keymap (kbd "a") #'markmacro-apply-all)
     (define-key keymap (kbd "s") #'markmacro-rect-set)

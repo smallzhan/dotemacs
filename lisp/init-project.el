@@ -15,7 +15,7 @@
             (when-let ((root (locate-dominating-file dir f)))
               (throw 'ret (cons 'local root))))))))
 
-  (add-to-list 'project-find-functions #'my/project-try-local)
+  (add-to-list 'project-find-functions #'my/project-try-local 'append)
   ;;(setq project-find-functions '(my/project-try-local project-try-vc))
 
   ;;(setq project-find-functions '(project-try-vc))
@@ -55,8 +55,8 @@
             (when (file-directory-p full-name)
               (when-let ((pr (project-current nil full-name)))
                 (project-remember-project pr)
-                (message "add project %s..." pr))))))))
-  )
+                (message "add project %s..." pr)))))))))
+  
 
 (provide 'init-project)
 ;;; init-project.el ends here
