@@ -52,7 +52,9 @@
         ("epub" (apply fn file nil))
         (_      (apply orig-fn file args)))))
   
-  (advice-add #'find-file :around #'adviser-find-file))
+  (advice-add #'find-file :around #'adviser-find-file)
+
+  (require 'eaf-markmap))
   
    ;;(require 'eaf-interleave-noter))
   

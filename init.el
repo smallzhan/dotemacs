@@ -49,6 +49,9 @@
 
 (require 'init-vertico)
 (require 'init-edit)
+(if EMACS28+
+    (require 'init-treesit)
+  (require 'init-tree-sitter))
 (require 'init-chinese)
 ;;(require 'init-company)
 (require 'init-org)
