@@ -115,7 +115,7 @@
       ("rp" "Thing replace paren" thing-replace-parentheses)
       ("rr" "Thing replace region or line" thing-replace-region-or-line)
       ("ra" "Thing replace to line begin" thing-replace-to-line-beginning)
-      ("re" "Thing replace to line end" thing-replace-to-line-end)]]))
+      ("re" "Thing replace to line end" thing-replace-to-line-end)]]
      
  ;; (global-set-key (kbd "C-c e a") #'thing-edit-transient))
  
@@ -290,61 +290,61 @@
 ;;    '("Q" . meow-goto-line)
 ;;    '("r" . meow-replace)
 ;;    '("R" . meow-swap-grab)
-;;    '("s" . meow-kill)
-;;    '("t" . meow-till)
-;;    '("T" . meow-till-expand)
-;;    '("u" . meow-undo)
-;;    '("U" . meow-undo-in-selection)
-;;    '("v" . meow-visit)
-;;    '("V" . meow-kmacro-matches)
-;;    '("w" . meow-mark-word)
-;;    '("W" . meow-mark-symbol)
-;;    '("x" . meow-line)
-;;    '("X" . meow-kmacro-lines)
-;;    '("y" . meow-save)
-;;    '("Y" . meow-sync-grab)
-;;    '("z" . meow-pop-selection)
-;;    '("Z" . meow-pop-all-selection)
-;;    '("&" . meow-query-replace)
-;;    '("%" . meow-query-replace-regexp)
-;;    '("'" . repeat)
-;;    '("\\" . quoted-insert)
-;;    '("=" . split-window-vertically)
-;;    '("/" . split-window-horizontally)  
-;;    '("<escape>" . ignore)))
+   '("s" . meow-kill)
+   '("t" . meow-till)
+   '("T" . meow-till-expand)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-visit)
+   '("V" . meow-kmacro-matches)
+   '("w" . meow-mark-word)
+   '("W" . meow-mark-symbol)
+   '("x" . meow-line)
+   '("X" . meow-kmacro-lines)
+   '("y" . meow-save)
+   '("Y" . meow-sync-grab)
+   '("z" . meow-pop-selection)
+   '("Z" . meow-pop-all-selection)
+   '("&" . meow-query-replace)
+   '("%" . meow-query-replace-regexp)
+   '("'" . repeat)
+   '("\\" . quoted-insert)
+   '("=" . split-window-vertically)
+   '("/" . split-window-horizontally)  
+   '("<escape>" . ignore)))
 
 
 
-;; (use-package meow
-;;   ;;:demand t
-;;   :init
-;;   (meow-global-mode 1)
-;;   :config
-;;   ;; meow-setup 用于自定义按键绑定，可以直接使用下文中的示例
-;;   (meow-setup)
-;;   ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
-;;   ;;(meow-setup-line-number)
-;;   ;; 如果你需要自动的 mode-line 设置（如果需要自定义见下文对 `meow-indicator' 说明）
-;;   ;;(meow-setup-indicator))
-;;   (setq meow-replace-state-name-list '((normal . "[N]")
-;;                                        (motion . "[M]")
-;;                                        (keypad . "[K]")
-;;                                        (insert . "[I]")
-;;                                        (beacon . "[B]")))
-;;   ;; (setq meow-replace-state-name-list
-;;   ;;       '((normal . "🅝")
-;;   ;;         (beacon . "🅑")
-;;   ;;         (insert . "🅘")
-;;   ;;         (motion . "🅜")
-;;   ;;         (keypad . "🅚")))
-;;   (setq meow-expand-hint-remove-delay 5)
-;;   
-;;   (add-to-list 'meow-mode-state-list '(color-rg-mode . motion))
-;;   (add-to-list 'meow-mode-state-list '(lsp-bridge-ref-mode . motion))
-;;   (add-to-list 'meow-mode-state-list '(elfeed-dashboard-mode . motion))
-;;   (add-to-list 'meow-mode-state-list '(eaf-mode . motion))
-;;   (add-to-list 'meow-mode-state-list '(snails-mode . motion))
-;;   (add-to-list 'meow-mode-state-list '(blink-search-mode . motion)))
+(use-package meow
+  ;;:demand t
+  :init
+  (meow-global-mode 1)
+  :config
+  ;; meow-setup 用于自定义按键绑定，可以直接使用下文中的示例
+  (meow-setup)
+  ;; 如果你需要在 NORMAL 下使用相对行号（基于 display-line-numbers-mode）
+  ;;(meow-setup-line-number)
+  ;; 如果你需要自动的 mode-line 设置（如果需要自定义见下文对 `meow-indicator' 说明）
+  ;;(meow-setup-indicator))
+  (setq meow-replace-state-name-list '((normal . "[N]")
+                                       (motion . "[M]")
+                                       (keypad . "[K]")
+                                       (insert . "[I]")
+                                       (beacon . "[B]")))
+  ;; (setq meow-replace-state-name-list
+  ;;       '((normal . "🅝")
+  ;;         (beacon . "🅑")
+  ;;         (insert . "🅘")
+  ;;         (motion . "🅜")
+  ;;         (keypad . "🅚")))
+  (setq meow-expand-hint-remove-delay 5)
+  
+  (add-to-list 'meow-mode-state-list '(color-rg-mode . motion))
+  (add-to-list 'meow-mode-state-list '(lsp-bridge-ref-mode . motion))
+  (add-to-list 'meow-mode-state-list '(elfeed-dashboard-mode . motion))
+  (add-to-list 'meow-mode-state-list '(eaf-mode . motion))
+  (add-to-list 'meow-mode-state-list '(snails-mode . motion))
+  (add-to-list 'meow-mode-state-list '(blink-search-mode . motion)))
                
   
 

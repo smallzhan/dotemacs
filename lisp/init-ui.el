@@ -265,7 +265,7 @@
   ;; (add-to-list 'awesome-tray-module-alist
   ;;              '("meow" . (meow-indicator awesome-tray-module-evil-face)))
 
-  (setq awesome-tray-active-modules '(;;"meow"
+  (setq awesome-tray-active-modules '("meow"
                                       "git"
                                       "location"
                                       "mode-name"
