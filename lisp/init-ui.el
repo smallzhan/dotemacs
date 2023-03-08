@@ -292,6 +292,5 @@
         (all-the-icons-cache func))
       (message "Reset all-the-icons"))))
 
-(defalias 'global-linum-mode 'global-display-line-numbers-mode)
 (provide 'init-ui)
 ;;; init-ui.el ends here

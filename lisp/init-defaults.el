@@ -175,9 +175,9 @@
 
 (defvar +proxy-host "localhost")
 (defvar +proxy-port 7890)
-(unless (fboundp 'global-linum-mode)
-  (defalias 'global-linum-mode #'global-display-line-numbers-mode)
-  (defvaralias 'global-linum-mode 'global-display-line-numbers-mode))
+;;(unless (fboundp 'global-linum-mode)
+;;  (defalias 'global-linum-mode #'global-display-line-numbers-mode)
+;;  (defvaralias 'global-linum-mode 'global-display-line-numbers-mode))
 
 (provide 'init-defaults)
 ;;; init-defaults.el ends here

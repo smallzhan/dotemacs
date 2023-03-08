@@ -253,7 +253,7 @@
   (appt-activate t)
 
   (with-eval-after-load 'rime
-    (add-to-list 'rime-disable-predicates 'org-in-src-block-p))
+    (add-to-list 'rime-disable-predicates 'rime-predicate-org-in-src-block-p))
 
   (add-hook 'org-mode-hook 'variable-pitch-mode)
   (add-hook 'org-mode-hook 'org-num-mode))

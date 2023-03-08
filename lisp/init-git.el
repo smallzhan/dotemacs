@@ -52,58 +52,58 @@
 ;;     (git-timemachine--start #'my-git-timemachine-show-selected-revision)))
 ;; ;; }})
 
-;;; Git Gutter
-;;Git gutter is great for giving visual feedback on changes, but it doesn't play well
-;;with org-mode using org-indent. So I don't use it globally.
-(use-package git-gutter
-  :defer t
-  :hook ((markdown-mode . git-gutter-mode)
-         (prog-mode . git-gutter-mode)
-         (conf-mode . git-gutter-mode))
-  :init
-  :config
-  (setq git-gutter:disabled-modes '(org-mode asm-mode image-mode)
-        git-gutter:update-interval 2
-        git-gutter:window-width 2
-        git-gutter:ask-p nil)
-  
-  (defun my-git-gutter-first-hunk ()
-    (interactive)
-    (goto-char (point-min))
-    (git-gutter:next-hunk 1))
-  
-  (defun my-git-gutter-last-hunk ()
-    (interactive)
-    (goto-char (point-max))
-    (git-gutter:previous-hunk 1))
-    
-  (defun my-git-gutter-quit ()
-    (interactive)
-    (git-gutter-mode -1)
-    (sit-for 0.1)
-    (git-gutter:clear))
- 
-  (transient-define-prefix git-gutter-transient()
-    "Git Gutter Settings"
-    ["Git Gutter Commands"
-     ["Move"
-      ("j" "next hunk" git-gutter:next-hunk)
-      ("k" "previous hunk" git-gutter:previous-hunk)
-      ("h" "first hunk" my-git-gutter-first-hunk)
-      ("l" "last hunk" my-git-gutter-last-hunk)]
-     ["Operation"
-      ("s" "stage hunk" git-gutter:stage-hunk)
-      ("r" "revert hunk" git-gutter:revert-hunk)
-      ("p" "popup hunk" git-gutter:popup-hunk)
-      ("R" "set start revision" git-gutter:set-start-revision)]
-     ["Quit"
-      ("Q" "Quit git-gutter" my-git-gutter-quit)]])
-    
-  (global-set-key (kbd "C-c e v") 'git-gutter-transient))
+;; ;;; Git Gutter
+;; ;;Git gutter is great for giving visual feedback on changes, but it doesn't play well
+;; ;;with org-mode using org-indent. So I don't use it globally.
+;; (use-package git-gutter
+;;   :defer t
+;;   :hook ((markdown-mode . git-gutter-mode)
+;;          (prog-mode . git-gutter-mode)
+;;          (conf-mode . git-gutter-mode))
+;;   :init
+;;   :config
+;;   (setq git-gutter:disabled-modes '(org-mode asm-mode image-mode)
+;;         git-gutter:update-interval 2
+;;         git-gutter:window-width 2
+;;         git-gutter:ask-p nil)
+;;   
+;;   (defun my-git-gutter-first-hunk ()
+;;     (interactive)
+;;     (goto-char (point-min))
+;;     (git-gutter:next-hunk 1))
+;;   
+;;   (defun my-git-gutter-last-hunk ()
+;;     (interactive)
+;;     (goto-char (point-max))
+;;     (git-gutter:previous-hunk 1))
+;;     
+;;   (defun my-git-gutter-quit ()
+;;     (interactive)
+;;     (git-gutter-mode -1)
+;;     (sit-for 0.1)
+;;     (git-gutter:clear))
+;;  
+;;   (transient-define-prefix git-gutter-transient()
+;;     "Git Gutter Settings"
+;;     ["Git Gutter Commands"
+;;      ["Move"
+;;       ("j" "next hunk" git-gutter:next-hunk)
+;;       ("k" "previous hunk" git-gutter:previous-hunk)
+;;       ("h" "first hunk" my-git-gutter-first-hunk)
+;;       ("l" "last hunk" my-git-gutter-last-hunk)]
+;;      ["Operation"
+;;       ("s" "stage hunk" git-gutter:stage-hunk)
+;;       ("r" "revert hunk" git-gutter:revert-hunk)
+;;       ("p" "popup hunk" git-gutter:popup-hunk)
+;;       ("R" "set start revision" git-gutter:set-start-revision)]
+;;      ["Quit"
+;;       ("Q" "Quit git-gutter" my-git-gutter-quit)]])
+;;     
+;;   (global-set-key (kbd "C-c e v") 'git-gutter-transient))
 
-(use-package git-gutter-fringe
-  :diminish git-gutter-mode
-  :after git-gutter)
+;; (use-package git-gutter-fringe
+;;   :diminish git-gutter-mode
+;;   :after git-gutter)
   ;:demand fringe-helper
   ;; :config
   ;; ;; subtle diff indicators in the fringe
@@ -117,6 +117,49 @@
   ;; (define-fringe-bitmap 'git-gutter-fr:deleted
   ;;  [128 192 224 240]
   ;;  nil nil 'bottom))
+
+;; Highlight uncommitted changes using VC
+(use-package diff-hl
+  :custom-face
+  (diff-hl-change ((t (:inherit custom-changed :foreground unspecified :background unspecified))))
+  (diff-hl-insert ((t (:inherit diff-added :background unspecified))))
+  (diff-hl-delete ((t (:inherit diff-removed :background unspecified))))
+  :bind (:map diff-hl-command-map
+         ("SPC" . diff-hl-mark-hunk))
+  :hook ((after-init . global-diff-hl-mode)
+         (after-init . global-diff-hl-show-hunk-mouse-mode)
+         (dired-mode . diff-hl-dired-mode))
+  :init (setq diff-hl-draw-borders nil)
+  :config
+
+  ;; Highlight on-the-fly
+  (setq diff-hl-flydiff-delay 1)
+  (diff-hl-flydiff-mode 1)
+
+  ;; Set fringe style
+  (setq-default fringes-outside-margins t)
+
+  (with-no-warnings
+    (defun my-diff-hl-fringe-bmp-function (_type _pos)
+      "Fringe bitmap function for use as `diff-hl-fringe-bmp-function'."
+      (define-fringe-bitmap 'my-diff-hl-bmp
+        (vector (if IS-LINUX #b11111100 #b11100000))
+        1 8
+        '(center t)))
+    (setq diff-hl-fringe-bmp-function #'my-diff-hl-fringe-bmp-function)
+
+    (unless (display-graphic-p)
+      ;; Fall back to the display margin since the fringe is unavailable in tty
+      (diff-hl-margin-mode 1)
+      ;; Avoid restoring `diff-hl-margin-mode'
+      (with-eval-after-load 'desktop
+        (add-to-list 'desktop-minor-mode-table
+                     '(diff-hl-margin-mode nil))))
+
+    ;; Integration with magit
+    (with-eval-after-load 'magit
+      (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
+      (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh))))
 
 (provide 'init-git)
 ;;; init-git.el ends here
