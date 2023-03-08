@@ -1,4 +1,4 @@
-
+;; -*- lexical-binding: t; init-edit.el -*- 
 
 (use-package transient
   :defer t
@@ -28,11 +28,11 @@
          (lambda (x) (format rg-glob-fmt x)) color-rg-ignore-dir-list ""))
   
   (with-eval-after-load 'org
-   (defun color-rg-search-in-org-roam ()
-     "Search in org-roam directory"
-     (interactive)
-     (color-rg-search-input (color-rg-read-input) org-roam-directory))
-   (define-key app-search-keymap (kbd "m") #'color-rg-search-in-org-roam)))
+    (defun color-rg-search-in-org-roam ()
+      "Search in org-roam directory"
+      (interactive)
+      (color-rg-search-input (color-rg-read-input) org-roam-directory))
+    (define-key app-search-keymap (kbd "m") #'color-rg-search-in-org-roam)))
 
 (use-package auto-save
   :quelpa (auto-save :fetcher github :repo "manateelazycat/auto-save")
@@ -115,10 +115,10 @@
       ("rp" "Thing replace paren" thing-replace-parentheses)
       ("rr" "Thing replace region or line" thing-replace-region-or-line)
       ("ra" "Thing replace to line begin" thing-replace-to-line-beginning)
-      ("re" "Thing replace to line end" thing-replace-to-line-end)]]
-     
- ;; (global-set-key (kbd "C-c e a") #'thing-edit-transient))
- 
+      ("re" "Thing replace to line end" thing-replace-to-line-end)]]))
+
+;;(global-set-key (kbd "C-c e a") #'thing-edit-transient))
+
 ;; (use-package awesome-pair
 ;; :straight (:type git :host github :repo "manateelazycat/awesome-pair")
 ;; :bind (:map awesome-pair-mode-map
@@ -193,103 +193,103 @@
 ;;            eval-expression-minibuffer-setup) . puni-mode))
 ;;(unless IS-WINDOWS
 
-  ;; Bind your frequently used commands.
-  ;; (global-set-key (kbd "C-c c j") #'citre-jump)
-  ;; (global-set-key (kbd "C-c c J") #'citre-jump-back)
-  ;; (global-set-key (kbd "C-c c p") #'citre-ace-peek))
+;; Bind your frequently used commands.
+;; (global-set-key (kbd "C-c c j") #'citre-jump)
+;; (global-set-key (kbd "C-c c J") #'citre-jump-back)
+;; (global-set-key (kbd "C-c c p") #'citre-ace-peek))
 
-;; (defun meow-setup ()
-;;   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-;;   (meow-motion-overwrite-define-key
-;;    '("j" . meow-next)
-;;    '("k" . meow-prev))
-;;   (meow-leader-define-key
-;;    ;; SPC j/k will run the original command in MOTION state.
-;;    '("j" . meow-motion-origin-command)
-;;    '("k" . meow-motion-origin-command)
-;;    ;; Use SPC (0-9) for digit arguments.
-;;    '("." . "M-.")
-;;    '("," . "M-,")
-;;    '(";" . comment-dwim)
-;;    ;;'("k" . kill-this-buffer)
-;;    '("p" . project-find-file)
-;;    '("d" . dirvish)
-;;    '("b" . consult-buffer)
-;;    '("r" . elfeed-dashboard)
-;;    ;; '("r" . deadgrep)
-;;    ;;'("o" . "C-c o")
-;;    ;;'("e" . "C-c e")
-;;    ;;'("t" . "C-c t")
-;;    ;;'("s" . "C-c s")
-;;    '("a" . org-agenda)
-;;    '("v" . magit-status)
-;;    
-;;    '("f" . find-file)
-;;    '("i" . imenu)
-;;    '("1" . meow-digit-argument)
-;;    '("2" . meow-digit-argument)
-;;    '("3" . meow-digit-argument)
-;;    '("4" . meow-digit-argument)
-;;    '("5" . meow-digit-argument)
-;;    '("6" . meow-digit-argument)
-;;    '("7" . meow-digit-argument)
-;;    '("8" . meow-digit-argument)
-;;    '("9" . meow-digit-argument)
-;;    '("0" . meow-digit-argument)
-;;    '("/" . meow-keypad-describe-key)
-;;    '("?" . meow-cheatsheet))
-;;   (meow-normal-define-key
-;;    '("0" . meow-expand-0)
-;;    '("9" . meow-expand-9)
-;;    '("8" . meow-expand-8)
-;;    '("7" . meow-expand-7)
-;;    '("6" . meow-expand-6)
-;;    '("5" . meow-expand-5)
-;;    '("4" . meow-expand-4)
-;;    '("3" . meow-expand-3)
-;;    '("2" . meow-expand-2)
-;;    '("1" . meow-expand-1)
-;;    '("-" . negative-argument)
-;;    '(";" . meow-reverse)
-;;    '("," . meow-inner-of-thing)
-;;    '("." . meow-bounds-of-thing)
-;;    '("[" . meow-beginning-of-thing)
-;;    '("]" . meow-end-of-thing)
-;;    '("a" . meow-append)
-;;    '("A" . meow-open-below)
-;;    '("b" . meow-back-word)
-;;    '("B" . meow-back-symbol)
-;;    '("c" . meow-change)
-;;    '("C" . meow-change-save)
-;;    '("d" . meow-C-d)
-;;    '("D" . meow-backward-delete)
-;;    '("e" . meow-next-word)
-;;    '("E" . meow-next-symbol)
-;;    '("f" . meow-find)
-;;    '("F" . meow-find-expand)
-;;    '("g" . meow-cancel)
-;;    '("G" . meow-grab)
-;;    '("h" . meow-left)
-;;    '("H" . meow-left-expand)
-;;    '("i" . meow-insert)
-;;    '("I" . meow-open-above)
-;;    '("j" . meow-next)
-;;    '("J" . meow-next-expand)
-;;    '("k" . meow-prev)
-;;    '("K" . meow-prev-expand)
-;;    '("l" . meow-right)
-;;    '("L" . meow-right-expand)
-;;    '("m" . meow-join)
-;;    '("n" . meow-search)
-;;    '("N" . meow-pop-search)
-;;    '("o" . meow-block)
-;;    '("O" . meow-block-expand)
-;;    '("p" . meow-yank)
-;;    '("P" . meow-yank-pop)
-;;    '("q" . meow-quit)
-;;    '("Q" . meow-goto-line)
-;;    '("r" . meow-replace)
-;;    '("R" . meow-swap-grab)
+(defun meow-setup ()
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+  (meow-motion-overwrite-define-key
+   '("j" . meow-next)
+   '("k" . meow-prev))
+  (meow-leader-define-key
+   ;; SPC j/k will run the original command in MOTION state.
+   '("j" . meow-motion-origin-command)
+   '("k" . meow-motion-origin-command)
+   ;; Use SPC (0-9) for digit arguments.
+   '("." . "M-.")
+   '("," . "M-,")
+   '(";" . comment-dwim)
+   ;;'("k" . kill-this-buffer)
+   '("p" . project-find-file)
+   '("d" . dirvish)
+   '("b" . consult-buffer)
+   '("r" . elfeed-dashboard)
+   ;; '("r" . deadgrep)
+   ;;'("o" . "C-c o")
+   ;;'("e" . "C-c e")
+   ;;'("t" . "C-c t")
+   ;;'("s" . "C-c s")
+   '("a" . org-agenda)
+   '("v" . magit-status)
+   
+   '("f" . find-file)
+   '("i" . imenu)
+   '("1" . meow-digit-argument)
+   '("2" . meow-digit-argument)
+   '("3" . meow-digit-argument)
+   '("4" . meow-digit-argument)
+   '("5" . meow-digit-argument)
+   '("6" . meow-digit-argument)
+   '("7" . meow-digit-argument)
+   '("8" . meow-digit-argument)
+   '("9" . meow-digit-argument)
+   '("0" . meow-digit-argument)
+   '("/" . meow-keypad-describe-key)
+   '("?" . meow-cheatsheet))
+  (meow-normal-define-key
+   '("0" . meow-expand-0)
+   '("9" . meow-expand-9)
+   '("8" . meow-expand-8)
+   '("7" . meow-expand-7)
+   '("6" . meow-expand-6)
+   '("5" . meow-expand-5)
+   '("4" . meow-expand-4)
+   '("3" . meow-expand-3)
+   '("2" . meow-expand-2)
+   '("1" . meow-expand-1)
+   '("-" . negative-argument)
+   '(";" . meow-reverse)
+   '("," . meow-inner-of-thing)
+   '("." . meow-bounds-of-thing)
+   '("[" . meow-beginning-of-thing)
+   '("]" . meow-end-of-thing)
+   '("a" . meow-append)
+   '("A" . meow-open-below)
+   '("b" . meow-back-word)
+   '("B" . meow-back-symbol)
+   '("c" . meow-change)
+   '("C" . meow-change-save)
+   '("d" . meow-C-d)
+   '("D" . meow-backward-delete)
+   '("e" . meow-next-word)
+   '("E" . meow-next-symbol)
+   '("f" . meow-find)
+   '("F" . meow-find-expand)
+   '("g" . meow-cancel)
+   '("G" . meow-grab)
+   '("h" . meow-left)
+   '("H" . meow-left-expand)
+   '("i" . meow-insert)
+   '("I" . meow-open-above)
+   '("j" . meow-next)
+   '("J" . meow-next-expand)
+   '("k" . meow-prev)
+   '("K" . meow-prev-expand)
+   '("l" . meow-right)
+   '("L" . meow-right-expand)
+   '("m" . meow-join)
+   '("n" . meow-search)
+   '("N" . meow-pop-search)
+   '("o" . meow-block)
+   '("O" . meow-block-expand)
+   '("p" . meow-yank)
+   '("P" . meow-yank-pop)
+   '("q" . meow-quit)
+   '("Q" . meow-goto-line)
+   '("r" . meow-replace)
+   '("R" . meow-swap-grab)
    '("s" . meow-kill)
    '("t" . meow-till)
    '("T" . meow-till-expand)
@@ -345,8 +345,8 @@
   (add-to-list 'meow-mode-state-list '(eaf-mode . motion))
   (add-to-list 'meow-mode-state-list '(snails-mode . motion))
   (add-to-list 'meow-mode-state-list '(blink-search-mode . motion)))
-               
-  
+
+
 
 (use-package parinfer-rust-mode
   :when (bound-and-true-p module-file-suffix)
@@ -363,22 +363,22 @@
                       (IS-LINUX "parinfer-rust-linux.so")
                       (IS-WINDOWS "parinfer-rust-windows.dll")))
         parinfer-rust-auto-download t))
-  ;; :config
-  ;; (defun disable-elec-pair-mode()
-  ;;   ;; (when (and (fboundp 'puni-mode)
-  ;;   ;;            puni-mode)
-  ;;   ;;     (puni-mode -1))
-  ;;   (when electric-pair-mode
-  ;;       (electric-pair-local-mode -1))
-  ;;   (parinfer-rust-mode 1))
-  ;; 
-  ;; (dolist (hook '(emacs-lisp-mode-hook
-  ;;                 clojore-mode-hook
-  ;;                 scheme-mode-hook
-  ;;                 lisp-mode-hook
-  ;;                 racket-mode-hook
-  ;;                 hy-mode-hook))
-  ;;   (add-hook hook #'disable-elec-pair-mode)))
+;; :config
+;; (defun disable-elec-pair-mode()
+;;   ;; (when (and (fboundp 'puni-mode)
+;;   ;;            puni-mode)
+;;   ;;     (puni-mode -1))
+;;   (when electric-pair-mode
+;;       (electric-pair-local-mode -1))
+;;   (parinfer-rust-mode 1))
+;; 
+;; (dolist (hook '(emacs-lisp-mode-hook
+;;                 clojore-mode-hook
+;;                 scheme-mode-hook
+;;                 lisp-mode-hook
+;;                 racket-mode-hook
+;;                 hy-mode-hook))
+;;   (add-hook hook #'disable-elec-pair-mode)))
 
 ;; (use-package lispy
 ;;    :hook ((lisp-mode . lispy-mode)
@@ -394,7 +394,7 @@
 ;; 
 ;; (use-package lpy
 ;;   :hook (python-mode . lpy-mode))
-  
+
 
 (use-package format-all)
 
@@ -409,10 +409,10 @@
   :defer t
   :bind (("C-=" . #'er/expand-region)))
 ;;(use-package elec-pair
-  ;; :ensure nil
-  ;; :hook (after-init . electric-pair-mode) 
-  ;; :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
- 
+;; :ensure nil
+;; :hook (after-init . electric-pair-mode) 
+;; :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
+
 ;; (use-package snails
 ;;  :quelpa (:fetcher github :repo "manateelazycat/snails" :build (:not compile))
 ;;  :commands snails
@@ -474,18 +474,18 @@
   
   (setq blink-search-grep-pdf-search-paths "~/OneDrive/Zotero/Papers/")
   (setq blink-search-grep-pdf-backend 'eaf-pdf-viewer)
-        
+  
   (defun blink-search-open-file-dirvish (dir)
     (if (file-directory-p dir)
         (dirvish-dwim dir)
       (find-file dir)))
   
   (advice-add #'blink-search-open-file :override #'blink-search-open-file-dirvish))
-  
+
 
 (use-package markmacro
   :load-path "~/.emacs.d/site-lisp/markmacro")
-  
+
 
 (provide 'init-edit)
 ;;; init-edit.el ends here

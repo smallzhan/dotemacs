@@ -262,8 +262,8 @@
 
   (add-to-list 'awesome-tray-module-alist
                '("datetime" . (awesome-tray-module-datetime-info awesome-tray-module-date-face)))
-  ;; (add-to-list 'awesome-tray-module-alist
-  ;;              '("meow" . (meow-indicator awesome-tray-module-evil-face)))
+  (add-to-list 'awesome-tray-module-alist
+               '("meow" . (meow-indicator awesome-tray-module-evil-face)))
 
   (setq awesome-tray-active-modules '("meow"
                                       "git"
