@@ -1,14 +1,14 @@
 ;;; -*- lexical-binding: t; -*-
 (use-package rime
   :init
-  (if IS-MAC
-      (setq rime-librime-root "~/Projects/librime/dist")
-    (setq rime-librime-root "E:/Projects/librime/dist"))
+  (when IS-MAC
+      (setq rime-librime-root "~/Projects/librime/dist"))
+    
   :config
-  (if IS-WINDOWS
-      (setq rime-share-data-dir "~/.doom.d/extensions/emacs-rime/data"))
-  (setq rime-user-data-dir "~/.emacs.d/rime"
-        rime--module-path (expand-file-name (concat "lib/librime-emacs" module-file-suffix) rime-user-data-dir))
+  ;; (if IS-WINDOWS ;; windows set msys librime-data                        
+  ;;    (setq rime-share-data-dir "~/.emacs.d/rime/rime-data"))
+  ;;(setq rime-user-data-dir "~/.emacs.d/rime"
+  (setq rime--module-path (expand-file-name (concat "lib/librime-emacs" module-file-suffix) rime-user-data-dir))
   (setq rime-posframe-properties
         (list :background-color "#333333"
               :foreground-color "#dcdccc"

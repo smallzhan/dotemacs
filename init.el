@@ -35,7 +35,8 @@
 
 (defconst IS-LINUX (eq system-type 'gnu/linux))
 
-(defconst EMACS28+ (> emacs-major-version 27))
+(defconst EMACS27+ (> emacs-major-version 27))
+(defconst EMACS28+ (> emacs-major-version 28))
 
 (defconst +my-org-dir (file-truename (expand-file-name "~/Nutstore/Notes/org/")))
 

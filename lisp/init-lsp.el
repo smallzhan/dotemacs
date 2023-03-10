@@ -74,10 +74,9 @@
   ;;(add-hook 'after-load-theme-hook #'acm-delete-frames)
   ;;(setq acm-candidate-match-function 'regexp-quote)
   ;;(add-to-list 'acm-continue-commands 'puni-backward-delete-char)
-  (setq lsp-bridge-python-command
-        (if (executable-find "asdf")
-            (string-trim (shell-command-to-string "asdf which python3"))
-          "python3"))
+  (if (executable-find "asdf")
+      (setq lsp-bridge-python-command
+            (string-trim (shell-command-to-string "asdf which python3"))))
   
   ;;(setq lsp-bridge-python-lsp-server "pylsp")
   (defun my-lsp-bridge--turn-off (filepath)

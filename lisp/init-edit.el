@@ -349,6 +349,8 @@
 
 
 (use-package parinfer-rust-mode
+  :ensure nil
+  :quelpa (parinfer-rust-mode :fetcher github :repo "justinbarclay/parinfer-rust-mode")
   :when (bound-and-true-p module-file-suffix)
   :hook ((emacs-lisp-mode
           clojure-mode
