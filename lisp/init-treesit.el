@@ -58,7 +58,9 @@
 
 (use-package fingertip
   ;;:after tree-sitter
-  :quelpa (fingertip :fetcher github :repo "manateelazycat/fingertip")
+  :load-path "~/.emacs.d/site-lisp/fingertip"
+  ;;:quelpa (fingertip :fetcher github :repo "manateelazycat/fingertip")
+  :commands fingertip-mode
   :bind (:map fingertip-mode-map
               ;; 移动
               ("M-n" . fingertip-jump-left)

@@ -397,6 +397,9 @@
 ;; (use-package lpy
 ;;   :hook (python-mode . lpy-mode))
 
+(use-package language-id
+  :ensure nil
+  :quelpa (language-id :fetcher github :repo "lassik/emacs-language-id"))
 
 (use-package format-all)
 
