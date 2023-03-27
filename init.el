@@ -64,6 +64,7 @@
 (require 'init-python)
 (require 'init-tex)
 (require 'init-go)
+(require 'init-dart)
 
 (require 'init-git)
 (require 'init-highlight)
@@ -73,6 +74,7 @@
 ;;(require 'init-dired) 
 (require 'init-window)
 (require 'init-eaf)
+(require 'init-mind-wave)
 (require 'init-dict)
 
 
