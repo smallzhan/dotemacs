@@ -120,7 +120,11 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
                   ;;rime-predicate-after-alphabet-char-p
                   ;;rime-predicate-auto-english-p
                   
-
+  (with-eval-after-load 'meow
+    (add-to-list 'rime-disable-predicates 'meow-normal-mode-p)
+    (add-to-list 'rime-disable-predicates 'meow-motion-mode-p)
+    (add-to-list 'rime-disable-predicates 'meow-keypad-mode-p))
+  
   (setq-default rime-inline-predicates
                 '(rime-predicate-space-after-cc-p
                   rime-predicate-current-uppercase-letter-p))
@@ -129,7 +133,7 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
   :bind
   ("M-L" . #'+rime-convert-string-at-point)
   (:map rime-active-mode-map
-   ("<tab>" . #'+rime-inline-ascii)
+   ("<tab>" . #'rime-inline-ascii)
    ("M-L" . #'+rime-convert-string-at-point))
   (:map rime-mode-map
    ("M-L" . #'+rime-convert-string-at-point)
