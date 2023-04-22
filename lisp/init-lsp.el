@@ -54,7 +54,10 @@
  
   (setq lsp-bridge-enable-log nil
         lsp-bridge-enable-auto-import t
-        acm-enable-citre nil)
+        acm-enable-citre nil
+        acm-enable-tabnine nil
+        acm-enable-quick-access t
+        acm-enable-codeium t)
         ;;acm-enable-yas nil)
   
   (global-lsp-bridge-mode)
@@ -74,9 +77,17 @@
   ;;(add-hook 'after-load-theme-hook #'acm-delete-frames)
   ;;(setq acm-candidate-match-function 'regexp-quote)
   ;;(add-to-list 'acm-continue-commands 'puni-backward-delete-char)
-  (if (executable-find "asdf")
+
+  (defun my-find-pypy3 ()
+   (let ((wildchar "~/.asdf/installs/python/pypy3*/bin/pypy3"))
+    (file-expand-wildcards wildchar t)))
+
+  (when (executable-find "asdf")
+    (setq pypy3 (my-find-pypy3))
+    (if pypy3
+        (setq lsp-bridge-python-command (car pypy3))
       (setq lsp-bridge-python-command
-            (string-trim (shell-command-to-string "asdf which python3"))))
+            (string-trim (shell-command-to-string "asdf which python3")))))
   
   ;;(setq lsp-bridge-python-lsp-server "pylsp")
   (defun my-lsp-bridge--turn-off (filepath)

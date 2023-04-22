@@ -55,6 +55,8 @@
 ;;         (typescript-mode . typescript-ts-mode)))
 
 (add-hook 'emacs-lisp-mode-hook #'(lambda () (treesit-parser-create 'elisp)))
+(setq c-ts-mode-indent-style 'bsd)
+(setq c-ts-mode-indent-offset 4)
 
 (use-package fingertip
   ;;:after tree-sitter

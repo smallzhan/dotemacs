@@ -169,7 +169,7 @@
 
 ;;;======= font config
 
-(defvar my-fonts '((default . ("DejaVu Sans Mono" "JetBrains Mono" "Cascadia Code" "Fira Code" "SF Mono"))
+(defvar my-fonts '((default . ("IBM Plex Mono" "DejaVu Sans Mono" "JetBrains Mono" "Cascadia Code" "Fira Code" "SF Mono"))
                    (cjk . ("LXGW WenKai" "Source Han Serif SC" "PingFang SC" "Microsoft YaHei UI" "Sarasa Mono SC"))
                    (unicode . ("Apple Color Emoji" "Segoe UI Emoji" "Symbola"))
                    (fixed . ("Iosevka Fixed" "Sarasa Mono SC"))
