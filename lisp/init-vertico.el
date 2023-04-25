@@ -190,10 +190,17 @@
   :bind (("M-/" . dabbrev-completion)
          ("C-M-/" . dabbrev-expand)))
 
-(use-package all-the-icons-completion
+
+(use-package nerd-icons-completion
+  :quelpa (nerd-icons-completion :type git :fetcher github :repo "rainstormstudio/nerd-icons-completion")
   :config
-  (all-the-icons-completion-mode)
-  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+  (nerd-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+;; (use-package all-the-icons-completion
+;;   :config
+;;   (all-the-icons-completion-mode)
+;;   (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 
 ;; Configure Tempel
 ;;(use-package tempel

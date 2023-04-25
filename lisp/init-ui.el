@@ -2,7 +2,8 @@
 
 ;; theme
 
-(use-package doom-themes 
+(use-package doom-themes
+  :pin melpa
   :config
   (if IS-MAC
       (add-hook 'ns-system-appearance-change-functions
@@ -274,23 +275,27 @@
                                       "buffer-read-only"
                                       "datetime")))
 
-(use-package all-the-icons
-  :init (unless (or IS-WINDOWS (font-installed-p "all-the-icons"))
-          (all-the-icons-install-fonts t))
-  :config
-  (with-no-warnings
-    (defun all-the-icons-reset ()
-      "Reset the icons."
-      (interactive)
-      (dolist (func '(all-the-icons-icon-for-dir
-                      all-the-icons-icon-for-file
-                      all-the-icons-icon-for-mode
-                      all-the-icons-icon-for-url
-                      all-the-icons-icon-family-for-file
-                      all-the-icons-icon-family-for-mode
-                      all-the-icons-icon-family))
-        (all-the-icons-cache func))
-      (message "Reset all-the-icons"))))
+(use-package nerd-icons)
+(use-package nerd-icons-ibuffer
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+;; (use-package all-the-icons
+;;   :init (unless (or IS-WINDOWS (font-installed-p "all-the-icons"))
+;;           (all-the-icons-install-fonts t))
+;;   :config
+;;   (with-no-warnings
+;;     (defun all-the-icons-reset ()
+;;       "Reset the icons."
+;;       (interactive)
+;;       (dolist (func '(all-the-icons-icon-for-dir
+;;                       all-the-icons-icon-for-file
+;;                       all-the-icons-icon-for-mode
+;;                       all-the-icons-icon-for-url
+;;                       all-the-icons-icon-family-for-file
+;;                       all-the-icons-icon-family-for-mode
+;;                       all-the-icons-icon-family))
+;;         (all-the-icons-cache func))
+;;       (message "Reset all-the-icons"))))ls
+
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
