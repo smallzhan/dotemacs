@@ -432,7 +432,7 @@
 ;;   :hook
 ;;   (org-mode . valign-mode))
 (use-package org-super-links
-  :quelpa (org-super-links :repo "toshism/org-super-links" :fetcher github :branch "develop")
+  :vc (:fetcher github :repo "toshism/org-super-links")
   :after org
   :bind (("C-c o s" . sl-link)
          ("C-c o l" . sl-store-link)

@@ -236,7 +236,7 @@
   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
 (use-package awesome-tray
-  :quelpa (awesome-tray :fetcher github :repo "manateelazycat/awesome-tray")
+  :vc (:fetcher github :repo "manateelazycat/awesome-tray")
   :config
   (defvar modeline-backup-format nil)
   (defun enable-awesome-tray-mode()

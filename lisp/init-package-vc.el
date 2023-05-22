@@ -41,12 +41,19 @@
   (require 'use-package))
 
 (use-package gnu-elpa-keyring-update)
-(use-package quelpa
-  :init (setq quelpa-update-melpa-p nil
-              quelpa-checkout-melpa-p nil))
 
-(use-package quelpa-use-package)
+(when EMACS30-
+  (unless (package-installed-p 'vc-use-package)
+    (package-vc-install "https://github.com/slotThe/vc-use-package"))
+
+ (require 'vc-use-package))
+
+;; (use-package quelpa
+;;   :init (setq quelpa-update-melpa-p nil
+;;               quelpa-checkout-melpa-p nil))
+;; 
+;; (use-package quelpa-use-package)
 
 
-(provide 'init-package-quelpa)
+(provide 'init-package-vc)
 ;;; 

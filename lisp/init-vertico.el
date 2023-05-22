@@ -192,7 +192,7 @@
 
 
 (use-package nerd-icons-completion
-  :quelpa (nerd-icons-completion :type git :fetcher github :repo "rainstormstudio/nerd-icons-completion")
+  :vc (:fetcher github :repo "rainstormstudio/nerd-icons-completion")
   :config
   (nerd-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))

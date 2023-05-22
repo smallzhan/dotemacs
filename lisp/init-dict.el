@@ -1,7 +1,7 @@
 ;; lisp/init-dict.el -*- lexical-binding: t; -*-
 
 (use-package sdcv
-  :quelpa (sdcv :fetcher github :repo "manateelazycat/sdcv")
+  :vc (:fetcher github :repo "manateelazycat/sdcv")
   :ensure nil
   :defer t
   :commands (sdcv-search-input sdcv-search-pointer+)
@@ -18,12 +18,12 @@
 
 (use-package websocket :defer t)
 (use-package websocket-bridge
-  :quelpa (websocket-bridge :fetcher github :repo "ginqi7/websocket-bridge")
+  :vc (:fetcher github :repo "ginqi7/websocket-bridge")
   :ensure nil
   :defer t)
  
 (use-package dictionary-overlay
-  :load-path "~/.emacs.d/site-lisp/dictionary-overlay"
+  :vc (:fetcher github :repo "ginqi7/dictionary-overlay")
   :commands (dictionary-overlay-toggle
              dictionary-overlay-render-buffer
              dictionary-overlay-start))

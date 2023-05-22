@@ -60,8 +60,8 @@
 
 (use-package fingertip
   ;;:after tree-sitter
-  :load-path "~/.emacs.d/site-lisp/fingertip"
-  ;;:quelpa (fingertip :fetcher github :repo "manateelazycat/fingertip")
+  ;;:load-path "~/.emacs.d/site-lisp/fingertip"
+  :vc (:fetcher github :repo "manateelazycat/fingertip")
   :commands fingertip-mode
   :bind (:map fingertip-mode-map
               ;; 移动

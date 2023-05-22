@@ -32,7 +32,7 @@
   
 (use-package grammatical-edit
   ;;:after tree-sitter
-  :quelpa (grammatical-edit :fetcher github :repo "manateelazycat/grammatical-edit")
+  :vc (:fetcher github :repo "manateelazycat/grammatical-edit")
   :bind (:map grammatical-edit-mode-map
               ;; 移动
               ("M-n" . grammatical-edit-jump-left)

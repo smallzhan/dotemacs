@@ -7,7 +7,7 @@
   (transient-bind-q-to-quit))
 
 (use-package color-rg
-  :quelpa (color-rg :fetcher github :repo "manateelazycat/color-rg")
+  :vc (:fetcher github :repo "manateelazycat/color-rg")
   :commands (color-rg-search-symbol-in-project
              color-rg-search-input-in-project
              color-rg-search-input-in-current-file
@@ -35,7 +35,7 @@
     (define-key app-search-keymap (kbd "m") #'color-rg-search-in-org-roam)))
 
 (use-package auto-save
-  :quelpa (auto-save :fetcher github :repo "manateelazycat/auto-save")
+  :vc (:fetcher github :repo "manateelazycat/auto-save")
   :init
   (setq auto-save-silent t)
   :config
@@ -46,11 +46,11 @@
 ;;   :commands lazy-search)
 
 (use-package delete-block
-  :quelpa (delete-block :fetcher github :repo "manateelazycat/delete-block")
+  :vc (:fetcher github :repo "manateelazycat/delete-block")
   :commands (delete-block-forward delete-block-backward))
 
 (use-package thing-edit
-  :quelpa (thing-edit :fetcher github :repo "manateelazycat/thing-edit")
+  :vc (:fetcher github :repo "manateelazycat/thing-edit")
   :bind ("C-c e e" . thing-edit-transient)
   :config
   (transient-define-prefix thing-edit-transient ()
@@ -350,7 +350,7 @@
 
 (use-package parinfer-rust-mode
   :ensure nil
-  :quelpa (parinfer-rust-mode :fetcher github :repo "justinbarclay/parinfer-rust-mode")
+  :vc (:fetcher github :repo "justinbarclay/parinfer-rust-mode")
   :when (bound-and-true-p module-file-suffix)
   :hook ((emacs-lisp-mode
           clojure-mode
@@ -399,7 +399,7 @@
 
 (use-package language-id
   :ensure nil
-  :quelpa (language-id :fetcher github :repo "lassik/emacs-language-id"))
+  :vc (:fetcher github :repo "lassik/emacs-language-id"))
 
 (use-package format-all)
 
@@ -418,42 +418,7 @@
 ;; :hook (after-init . electric-pair-mode) 
 ;; :init (setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit))
 
-;; (use-package snails
-;;  :quelpa (:fetcher github :repo "manateelazycat/snails" :build (:not compile))
-;;  :commands snails
-;;  :init 
-;;  (setq snails-use-exec-path-from-shell nil
-;;        snails-show-with-frame nil)
-;;  :config 
-;;  (setq snails-default-backends 
-;;        '(snails-backend-buffer
-;;          snails-backend-recentf
-;;          snails-backend-bookmark
-;;          snails-backend-directory-files)))
 
-;; (use-package one-key
-;;   :straight (:type git :host github :repo "manateelazycat/one-key")
-;;   :config
-;;   (one-key-create-menu
-;;    "MAGIT"
-;;    '(
-;;      (("s" . "Magit status") . magit-status+)
-;;      (("c" . "Magit checkout") . magit-checkout)
-;;      (("C" . "Magit commit") . magit-commit)
-;;      (("u" . "Magit push to remote") . magit-push-current-to-pushremote)
-;;      (("p" . "Magit delete remote branch") . magit-delete-remote-branch)
-;;      (("i" . "Magit pull") . magit-pull-from-upstream)
-;;      (("r" . "Magit rebase") . magit-rebase)
-;;      (("e" . "Magit merge") . magit-merge)
-;;      (("l" . "Magit log") . magit-log-all)
-;;      (("L" . "Magit blame") . magit-blame+)
-;;      (("b" . "Magit branch") . magit-branch)
-;;      (("B" . "Magit buffer") . magit-process-buffer)
-;;      (("D" . "Magit discarded") . magit-discard)
-;;      (("," . "Magit init") . magit-init)
-;;      (("." . "Magit add remote") . magit-remote-add))
-;;    
-;;    t))
 (use-package blink-search
   :load-path "~/.emacs.d/site-lisp/blink-search"
   :config
@@ -489,7 +454,8 @@
 
 
 (use-package markmacro
-  :load-path "~/.emacs.d/site-lisp/markmacro")
+  :vc (:fetcher github :repo "manateelazycat/markmacro")
+ )
 
 
 (provide 'init-edit)

@@ -37,8 +37,9 @@
 (use-package py-isort :defer t)
 
 (use-package python-mls
-  :config
-  (python-mls-setup))
+ :hook
+ (inferior-python-mode . python-mls-mode))
+
 
 (provide 'init-python)
 ;;; init-python.el ends here
