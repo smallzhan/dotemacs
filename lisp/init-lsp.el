@@ -88,7 +88,8 @@
         (setq lsp-bridge-python-command (car pypy3))
       (setq lsp-bridge-python-command
             (string-trim (shell-command-to-string "asdf which python3")))))
-  
+
+  (setq lsp-bridge-python-command (executable-find "python"))
   ;;(setq lsp-bridge-python-lsp-server "pylsp")
   (defun my-lsp-bridge--turn-off (filepath)
     (lsp-bridge--with-file-buffer filepath

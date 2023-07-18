@@ -145,6 +145,11 @@
 (set-selection-coding-system 'utf-8)
 (modify-coding-system-alist 'process "*" 'utf-8)
 
+(when IS-WINDOWS ;; special setting for windows clipboard
+  (set-selection-coding-system 'utf-16-le))
+  ;;(set-clipboard-coding-system 'utf-16-le)) 
+
+
 (setq visible-bell t
       inhibit-compacting-font-caches t  ; Don’t compact font caches during GC.
       delete-by-moving-to-trash t       ; Deleting files go to OS's trash folder

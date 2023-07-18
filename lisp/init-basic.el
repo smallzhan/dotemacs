@@ -136,5 +136,8 @@
 
 (use-package posframe :defer t)
 
+(use-package kill-ring-search
+  :bind ("C-c s y" . kill-ring-search))
+
 (provide 'init-basic)
 ;;; init-basic.el ends here
