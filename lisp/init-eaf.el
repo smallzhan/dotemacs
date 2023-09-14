@@ -64,5 +64,37 @@
 ;;(use-package ctable :defer t)
 ;;(use-package deferred :defer t)
 
+
+(use-package holo-layer
+  :load-path "~/.emacs.d/site-lisp/holo-layer"
+  :defer t
+  :config
+  (setq holo-layer-enable-cursor-animation t)
+  (setq holo-layer-hide-mode-line t)
+
+  (defun holo-layer-reset-colors ()
+    (setq holo-layer-active-window-color (face-attribute 'highlight :background))
+    (setq holo-layer-cursor-color (frame-parameter nil 'cursor-color)))
+  (add-hook 'after-load-theme-hook #'holo-layer-reset-colors)
+  ;; (defun holo-layer-mac-get-size-advice (orig-fn &rest args)
+  ;;  ;; (message "<<< %s" args)
+  ;;  (if (memq (frame-parameter (car args) 'fullscreen)
+  ;;            '(fullscreen fullboth maximized))
+  ;;      0
+  ;;    (apply orig-fn args)))
+  ;; 
+  ;; (advice-add 'holo-layer--frame-top :around #'holo-layer-mac-get-size-advice)
+  ;; (advice-add 'holo-layer--frame-left :around #'holo-layer-mac-get-size-advice)
+  ;; (advice-add 'holo-layer--frame-internal-height :around #'holo-layer-mac-get-size-advice)
+  (defun holo-layer-mac-get-window-info (orig-fn &rest args)
+    (if (memq (frame-parameter (car args) 'fullscreen)
+              '(fullscreen fullboth maximized))
+        (list 0 0 (frame-pixel-width) (frame-pixel-height))
+      (apply orig-fn args)))
+  (advice-add 'holo-layer-get-emacs-frame-info :around #'holo-layer-mac-get-window-info)
+  (holo-layer-enable))
+  ;;(setq mode-line-format nil))
+  ;;(holo-layer-enable-cursor-animation))
+
 (provide 'init-eaf)
 ;;; init-eaf.el ends here

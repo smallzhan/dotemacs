@@ -2,17 +2,42 @@
 
 ;; theme
 
+
+      
 (use-package doom-themes
   :pin melpa
   :config
-  (if IS-MAC
-      (add-hook 'ns-system-appearance-change-functions
-                #'(lambda (appearance)
-                    (mapc #'disable-theme custom-enabled-themes)
-                    (pcase appearance
-                      ('light (load-theme 'doom-one-light t))
-                      ('dark (load-theme 'doom-one t)))))
-    (load-theme 'doom-one t)))
+  (cond ((boundp 'ns-system-appearance-change-functions)
+         (defun change-appearance (appearance)
+           (mapc #'disable-theme custom-enabled-themes)
+           (pcase appearance
+             ('light (load-theme 'doom-one-light t))
+             ('dark (load-theme 'doom-one t))))
+         (add-hook 'ns-system-appearance-change-functions #'change-appearance))
+        ((boundp 'mac-effective-appearance-change-hook)
+         (defun change-appearance ()
+            (mapc #'disable-theme custom-enabled-themes)
+            (pcase (plist-get (mac-application-state) :appearance)
+              ("NSAppearanceNameAqua" (load-theme 'doom-one-light t))
+              ("NSAppearanceNameDarkAqua" (load-theme 'doom-one t))))
+         (change-appearance)
+         (add-hook 'mac-effective-appearance-change-hook #'change-appearance))
+        (t (use-package auto-dark
+             :config
+             (setq auto-dark-dark-theme 'doom-one)
+             (setq auto-dark-light-theme 'doom-one-light)
+             (auto-dark-mode t)))))
+  ;; (if IS-MAC
+  ;;     (progn)
+  ;;      
+  ;;   
+  ;;     ;; (add-hook 'mac-effective-appearance-change-hook
+  ;;     ;;           #'(lambda (appearance)
+  ;;     ;;               (mapc #'disable-theme custom-enabled-themes)
+  ;;     ;;               (pcase appearance
+  ;;     ;;                 ('light (load-theme 'doom-one-light t))
+  ;;     ;;                 ('dark (load-theme 'doom-one t)))))
+  ;;   (load-theme 'doom-one t)))
 
 ;; disable line-number
 (setq display-line-numbers-type nil)
@@ -266,6 +291,9 @@
   (add-to-list 'awesome-tray-module-alist
                '("meow" . (meow-indicator awesome-tray-module-evil-face)))
 
+  (setq awesome-tray-location-info-top " <T>")
+  (setq awesome-tray-location-info-bottom " <B>")
+  
   (setq awesome-tray-active-modules '("meow"
                                       "git"
                                       "location"

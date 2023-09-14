@@ -78,10 +78,11 @@
   ;;(setq acm-candidate-match-function 'regexp-quote)
   ;;(add-to-list 'acm-continue-commands 'puni-backward-delete-char)
 
+  ;(defun my-find-pypy3 ()
+  ; (let ((wildchar "~/.asdf/installs/python/pypy3*/bin/pypy3"))
+  ;  (file-expand-wildcards wildchar t))
   (defun my-find-pypy3 ()
-   (let ((wildchar "~/.asdf/installs/python/pypy3*/bin/pypy3"))
-    (file-expand-wildcards wildchar t)))
-
+    nil)
   (when (executable-find "asdf")
     (setq pypy3 (my-find-pypy3))
     (if pypy3
