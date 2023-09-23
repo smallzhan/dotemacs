@@ -138,10 +138,10 @@ Meant to be used as `hs-set-up-overlay'."
        (_ (hs-hide-all))))
  
  :bind (:map hs-minor-mode-map
-             ("C-c /" . hs-hide-all)
-             ("C-c \\" . hs-show-all)
-             ("C-<tab>" . hs-toggle-hiding)
-             ("C-c -" . (lambda() (interactive) (hs-cycle 1)))
+             ;; ("C-c /" . hs-hide-all)
+             ;; ("C-c \\" . hs-show-all)
+             ;; ("C-<tab>" . hs-toggle-hiding)
+             ;; ("C-c -" . (lambda() (interactive) (hs-cycle 1)))
               
               
              ("<mouse-1>" . elpy-folding--click-text))

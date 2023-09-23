@@ -145,6 +145,23 @@
 (global-set-key (kbd "C-c n") 'app-notes-keymap)
 
 
+(defvar app-hs-keymap
+  (let ((keymap (make-sparse-keymap)))
+    (define-key keymap (kbd "h") #'hs-hide-all)
+    (define-key keymap (kbd "s") #'hs-show-all)
+    (define-key keymap (kbd "c") #'hs-cycle)
+    (define-key keymap (kbd "l") #'hs-hide-level)
+    (define-key keymap (kbd "b") #'hs-hide-block)
+    (define-key keymap (kbd "B") #'hs-show-block)
+    (define-key keymap (kbd "p") #'hs-hide-block-at-point)
+    (define-key keymap (kbd "r") #'hs-hide-comment-region)
+    (define-key keymap (kbd "L") #'hs-hide-level-recursive)
+    (define-key keymap (kbd "t") #'hs-toggle-hiding)
+    keymap))
+
+(defalias 'app-hs-keymap app-hs-keymap)
+(global-set-key (kbd "C-c /") 'app-hs-keymap)
+
 (global-set-key (kbd "C-0") #'scroll-other-window)  ;; 向下翻
 (global-set-key (kbd "C-9") #'scroll-other-window-down) ;; 向上翻
 

@@ -68,6 +68,7 @@
 (require 'init-tex)
 (require 'init-go)
 (require 'init-dart)
+(require 'init-php)
 
 (require 'init-git)
 (require 'init-highlight)
