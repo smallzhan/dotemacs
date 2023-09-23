@@ -316,6 +316,21 @@ Version 2022-06-29 00.01.07 +8000"
   (if (and arg (> arg 1))
       (goto-char (line-end-position arg))))
 
+(defun swap (LIST el1 el2)
+  "in LIST swap indices EL1 and EL2 in place"
+  (let ((tmp (elt LIST el1)))
+    (setf (elt LIST el1) (elt LIST el2))
+    (setf (elt LIST el2) tmp)))
+
+
+(defun shuffle (LIST)
+  "Shuffle the elements in LIST.
+shuffling is done in place."
+  (cl-loop for i in (reverse (number-sequence 1 (1- (length LIST))))
+        do (let ((j (random (+ i 1))))
+             (swap LIST i j)))
+  LIST)
+
 
 (provide 'init-funcs)
 
