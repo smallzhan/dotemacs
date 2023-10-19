@@ -22,11 +22,12 @@
               ("NSAppearanceNameDarkAqua" (load-theme 'doom-one t))))
          (change-appearance)
          (add-hook 'mac-effective-appearance-change-hook #'change-appearance))
-        (t (use-package auto-dark
-             :config
-             (setq auto-dark-dark-theme 'doom-one)
-             (setq auto-dark-light-theme 'doom-one-light)
-             (auto-dark-mode t)))))
+        (IS-MAC (use-package auto-dark
+                  :config
+                  (setq auto-dark-dark-theme 'doom-one)
+                  (setq auto-dark-light-theme 'doom-one-light)
+                  (auto-dark-mode t)))
+        (t (load-theme 'doom-one t))))
   ;; (if IS-MAC
   ;;     (progn)
   ;;      
@@ -42,15 +43,15 @@
 ;; disable line-number
 (setq display-line-numbers-type nil)
 (when IS-MAC
-  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  ;;   ;;(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(undecorated . t))
-  (add-to-list 'default-frame-alist '(ns-appearance . dark))
-  (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-  (add-hook 'after-load-theme-hook
-            (lambda ()
-              (let ((bg (frame-parameter nil 'background-mode)))
-                (set-frame-parameter nil 'ns-appearance bg)
-                (setcdr (assq 'ns-appearance default-frame-alist) bg)))))
+;;   ;;(add-to-list 'default-frame-alist '(ns-appearance . dark))
+  (add-to-list 'initial-frame-alist '(fullscreen . maximized)))
+;;   (add-hook 'after-load-theme-hook
+;;             (lambda ()
+;;               (let ((bg (frame-parameter nil 'background-mode)))
+;;                 (set-frame-parameter nil 'ns-appearance bg)
+;;                 (setcdr (assq 'ns-appearance default-frame-alist) bg)))))
 
 
 ;;(when IS-WINDOWS
@@ -175,7 +176,7 @@
 ;;   (when IS-WINDOWS
 ;;     (modus-themes-load-vivendi)))
 ;;(load-theme 'modus-vivendi t))
-                       ;
+                     ;
 ;; (use-package circadian
 ;;   :config
 ;;   (when IS-WINDOWS
@@ -262,24 +263,11 @@
 
 (use-package awesome-tray
   :vc (:fetcher github :repo "manateelazycat/awesome-tray")
+  :commands awesome-tray-mode
   :config
-  (defvar modeline-backup-format nil)
-  (defun enable-awesome-tray-mode()
-    (interactive)
-    (set-face-attribute 'header-line nil :inherit 'unspecified)
-    (setq modeline-backup-format mode-line-format)
-    (setq-default mode-line-format '(" "))
-    (setq awesome-tray-mode-line-active-color (face-attribute 'highlight :background))
-    (awesome-tray-mode +1))
-  (defun disable-awesome-tray-mode()
-    (interactive)
-    (set-face-attribute 'header-line nil :inherit 'mode-line)
-    (setq-default mode-line-format modeline-backup-format)
-    (setq modeline-backup-format nil)
-    (awesome-tray-mode -1))
+ 
   
-  (add-hook 'emacs-startup-hook #'enable-awesome-tray-mode)
-  (add-hook 'after-load-theme-hook #'enable-awesome-tray-mode)
+  
 
   (defun awesome-tray-module-datetime-info ()
     (let ((system-time-locale "C"))
@@ -302,6 +290,24 @@
                                       "buffer-name"
                                       "buffer-read-only"
                                       "datetime")))
+
+(defvar modeline-backup-format nil)
+(defun enable-awesome-tray-mode()
+  (interactive)
+  (set-face-attribute 'header-line nil :inherit 'unspecified)
+  (setq modeline-backup-format mode-line-format)
+  (setq-default mode-line-format '(" "))
+  (setq awesome-tray-mode-line-active-color (face-attribute 'highlight :background))
+  (awesome-tray-mode +1))
+(defun disable-awesome-tray-mode()
+  (interactive)
+  (set-face-attribute 'header-line nil :inherit 'mode-line)
+  (setq-default mode-line-format modeline-backup-format)
+  (setq modeline-backup-format nil)
+  (awesome-tray-mode -1))
+
+(add-hook 'emacs-startup-hook #'enable-awesome-tray-mode)
+(add-hook 'after-load-theme-hook #'enable-awesome-tray-mode)
 
 (use-package nerd-icons)
 (use-package nerd-icons-ibuffer

@@ -160,7 +160,7 @@
     keymap))
 
 (defalias 'app-hs-keymap app-hs-keymap)
-(global-set-key (kbd "C-c /") 'app-hs-keymap)
+(global-set-key (kbd "C-c -") 'app-hs-keymap)
 
 (global-set-key (kbd "C-0") #'scroll-other-window)  ;; 向下翻
 (global-set-key (kbd "C-9") #'scroll-other-window-down) ;; 向上翻

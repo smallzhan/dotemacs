@@ -1,4 +1,4 @@
-;; -*- init-cc.el lexical-binding: t; -*-
+;;; init-cc.el -*- lexical-binding: t; -*-
 
 (with-eval-after-load 'cc-mode
   ;; (defconst my-c-style

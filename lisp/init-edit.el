@@ -1,4 +1,4 @@
-;; -*- lexical-binding: t; init-edit.el -*- 
+;;; init-edit.el -*- lexical-binding: t; -*- 
 
 (use-package transient
   :defer t
@@ -16,7 +16,7 @@
   (setq color-rg-kill-temp-buffer-p nil
         color-rg-mac-load-path-from-shell nil)
   :config
-  (setq color-rg-ignore-dir-list '("node_modules" "dist" "__pycache__" "straight" "elpa*" "history"))
+  (setq color-rg-ignore-dir-list '("node_modules" "dist" "__pycache__" "straight" "elpa*" "history" "__pypackages__"))
 
   (setq rg-glob-fmt
         (if IS-WINDOWS
@@ -317,8 +317,8 @@
 
 (use-package meow
   ;;:demand t
-  :init
-  (meow-global-mode 1)
+  :hook
+  (after-init . meow-global-mode)
   :config
   ;; meow-setup 用于自定义按键绑定，可以直接使用下文中的示例
   (meow-setup)
@@ -421,8 +421,9 @@
 
 (use-package blink-search
   :load-path "~/.emacs.d/site-lisp/blink-search"
+  :commands blink-search
+  :bind (("C-c l" . #'blink-search))
   :config
-  (global-set-key (kbd "C-c l") 'blink-search)
   ;;(add-hook 'blink-search-mode-hook 'meow-insert-mode)
   (setq blink-search-search-backends '("Buffer List"
                                        "Common Directory"
@@ -454,8 +455,8 @@
 
 
 (use-package markmacro
-  :vc (:fetcher github :repo "manateelazycat/markmacro")
- )
+  :vc (:fetcher github :repo "manateelazycat/markmacro"))
+ 
 
 
 (provide 'init-edit)

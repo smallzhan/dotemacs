@@ -1,4 +1,4 @@
-;; init-package-quelpa.el  -*- lexical-binding: t; -*- 
+;;; init-package-quelpa.el  -*- lexical-binding: t; -*- 
 
 (require 'init-funcs)
 
@@ -21,15 +21,16 @@
         ("melpa"        . 0)))
 ; Initialize the emacs packaging system
 ;;
-(when IS-WINDOWS (setq package-gnupghome-dir "elpa/gnupg"))
+(when IS-WINDOWS (setq package-gnupghome-dir (expand-file-name "elpa/gnupg" user-emacs-directory)))
 (unless (bound-and-true-p package--initialized)
   (setq package-enable-at-startup nil)
   (package-initialize))
-
-;; Setup `use-package'
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;;
+;;(package-initialize)
+;; ;; Setup `use-package'
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
 
 (eval-and-compile
   (setq use-package-always-ensure t)

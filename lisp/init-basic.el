@@ -104,6 +104,7 @@
   #'elisp-demos-advice-describe-function-1))
 
 (use-package dirvish
+  :pin melpa
   :config
   ;; Override dired with dirvish globally
   (dirvish-override-dired-mode)
@@ -120,7 +121,10 @@
   (setq dirvish-header-style nil)
   (setq dirvish-mode-line-height 1) 
   (setq dirvish-mode-line-format nil)
-  (setq dirvish-attributes '(all-the-icons file-size))
+  ;;(setq dirvish-attributes '(all-the-icons file-size))
+  (setq dirvish-attributes
+      '(vc-state subtree-state nerd-icons collapse git-msg file-time file-size))
+  (setq dirvish-subtree-state-style 'nerd) 
   (when IS-MAC
     (setq dired-use-ls-dired nil))
   :bind

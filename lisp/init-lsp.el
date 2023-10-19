@@ -50,17 +50,20 @@
 
 (use-package lsp-bridge
   :load-path "~/.emacs.d/site-lisp/lsp-bridge"
+  :hook (after-init . global-lsp-bridge-mode)
   :config
  
   (setq lsp-bridge-enable-log nil
         lsp-bridge-enable-auto-import t
+        lsp-bridge-enable-inlay-hint t
         acm-enable-citre nil
         acm-enable-tabnine nil
+        
         acm-enable-quick-access t
-        acm-enable-codeium t)
+        acm-enable-codeium nil)
         ;;acm-enable-yas nil)
   
-  (global-lsp-bridge-mode)
+;;  (global-lsp-bridge-mode)
   (bind-keys :map lsp-bridge-mode-map
              ;; ("M-." . lsp-bridge-find-def)  ;; override Xref bindings
              ;; ("M-," . lsp-bridge-return-from-def)
@@ -73,7 +76,12 @@
              ("C-c c R" . lsp-bridge-restart-process)
              ("C-c c o" . lsp-bridge-outgoing-call-hierarchy)
              ("C-c c h" . lsp-bridge-incoming-call-hierarchy))
-  ;; 
+
+  (defun acm-delete-frames ()
+    (interactive)
+    (acm-frame-delete-frame acm-menu-frame)
+    (acm-frame-delete-frame acm-doc-frame))
+  
   ;;(add-hook 'after-load-theme-hook #'acm-delete-frames)
   ;;(setq acm-candidate-match-function 'regexp-quote)
   ;;(add-to-list 'acm-continue-commands 'puni-backward-delete-char)
@@ -81,52 +89,53 @@
   ;(defun my-find-pypy3 ()
   ; (let ((wildchar "~/.asdf/installs/python/pypy3*/bin/pypy3"))
   ;  (file-expand-wildcards wildchar t))
-  (defun my-find-pypy3 ()
-    nil)
-  (when (executable-find "asdf")
-    (setq pypy3 (my-find-pypy3))
-    (if pypy3
-        (setq lsp-bridge-python-command (car pypy3))
-      (setq lsp-bridge-python-command
-            (string-trim (shell-command-to-string "asdf which python3")))))
-
-  (setq lsp-bridge-python-command (executable-find "python"))
-  ;;(setq lsp-bridge-python-lsp-server "pylsp")
+  ;; (defun my-find-pypy3 ()
+  ;;   nil)
+  ;; (when (executable-find "rtx")
+  ;;   (setq pypy3 (my-find-pypy3))
+  ;;   (if pypy3
+  ;;       (setq lsp-bridge-python-command (car pypy3))
+  ;;     (setq lsp-bridge-python-command
+  ;;           (string-trim (shell-command-to-string "rtx which python3")))))
+  
+  (setq lsp-bridge-python-command (executable-find "python3"))
+  ;;(setq lsp-bridge-python-lsp-server "pylance")
+  ;;(setq lsp-bridge-python-multi-lsp-server "pyright-background-analysis_ruff")
   (defun my-lsp-bridge--turn-off (filepath)
     (lsp-bridge--with-file-buffer filepath
       (lsp-bridge-mode -1)))
 
-  (advice-add #'lsp-bridge--turn-off :override #'my-lsp-bridge--turn-off)
+  (advice-add #'lsp-bridge--turn-off :override #'my-lsp-bridge--turn-off))
   ;; (defun acm-backend-lsp-snippet-expansion-fn ()
   ;;   'tempel-expand-lsp-snippet)
 
-  (defun tempel-expand-lsp-snippet (snippet)
-    (message snippet)
-    (let* ((placeholder-re 
-            "\\${[0-9]+:\\([_a-zA-Z][^}]*\\)}\\|\\${?[0-9]+}?")
-           
-           (positions (s-matched-positions-all placeholder-re snippet))
-           (matches (s-match-strings-all placeholder-re snippet))
-           ;;(matched-pos (cl-loop for pos in positions for match in matches collect (cons pos match)))
-           (template '())
-           (last-match 0))
-          (when positions
-            ;;(add-to-list 'template (substring snippet 0 (car (elt positions 0))))
-            (dolist (i (number-sequence 0 (- (length positions) 1)))
-              (let ((pos (nth i positions))
-                    (match (nth i matches)))
-               (setq now-match (car pos))
-               (if (> now-match last-match)
-                   (push (substring snippet last-match now-match) template)) 
-               (setq field-name (cadr match))
-               (if field-name 
-                   (push `(p ,field-name) template)
-                (push 'p template))
-               (setq last-match (cdr pos)))))
-          (when (< last-match (length snippet))
-           (push  (substring snippet last-match) template)
-         
-           (tempel-insert (reverse template))))))
+  ;; (defun tempel-expand-lsp-snippet (snippet)
+  ;;   (message snippet)
+  ;;   (let* ((placeholder-re 
+  ;;           "\\${[0-9]+:\\([_a-zA-Z][^}]*\\)}\\|\\${?[0-9]+}?")
+  ;;          
+  ;;          (positions (s-matched-positions-all placeholder-re snippet))
+  ;;          (matches (s-match-strings-all placeholder-re snippet))
+  ;;          ;;(matched-pos (cl-loop for pos in positions for match in matches collect (cons pos match)))
+  ;;          (template '())
+  ;;          (last-match 0))
+  ;;         (when positions
+  ;;           ;;(add-to-list 'template (substring snippet 0 (car (elt positions 0))))
+  ;;           (dolist (i (number-sequence 0 (- (length positions) 1)))
+  ;;             (let ((pos (nth i positions))
+  ;;                   (match (nth i matches)))
+  ;;              (setq now-match (car pos))
+  ;;              (if (> now-match last-match)
+  ;;                  (push (substring snippet last-match now-match) template)) 
+  ;;              (setq field-name (cadr match))
+  ;;              (if field-name 
+  ;;                  (push `(p ,field-name) template)
+  ;;               (push 'p template))
+  ;;              (setq last-match (cdr pos)))))
+  ;;         (when (< last-match (length snippet))
+  ;;          (push  (substring snippet last-match) template)
+  ;;        
+  ;;          (tempel-insert (reverse template))))))
 
  ;;(tempel-expand-lsp-snippet "queue_get_elem(${1:q}, ${2:i})"))
     
@@ -161,11 +170,13 @@
              ("n" . citre-create-tags-file)))
     
 (use-package yasnippet
-  :config
-  (yas-global-mode 1))
+  :hook
+  (after-init . yas-global-mode))
+  
 
 (use-package yasnippet-snippets
-  :config 
+  :after yasnippet
+  :config
   (add-to-list 'yas/root-directory yasnippet-snippets-dir))
 
 ;; (use-package tempel

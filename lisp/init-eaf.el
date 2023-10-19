@@ -9,6 +9,7 @@
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :defer t
   :commands eaf-open
+  :init (setq eaf-is-member-of-focus-fix-wms nil)
   :custom
   (eaf-browser-continue-where-left-off t)
   :config
@@ -55,7 +56,11 @@
   
   (advice-add #'find-file :around #'adviser-find-file)
 
-  (require 'eaf-markmap))
+  (require 'eaf-markmap)
+  (require 'eaf-pyqterminal)
+  (setq eaf-pyqterminal-font-family "BlexMono Nerd Font Mono")
+  (setq eaf-pyqterminal-font-size 14)) 
+  
   
    ;;(require 'eaf-interleave-noter))
   
@@ -68,6 +73,7 @@
 (use-package holo-layer
   :load-path "~/.emacs.d/site-lisp/holo-layer"
   :defer t
+  :disabled
   :config
   (setq holo-layer-enable-cursor-animation t)
   (setq holo-layer-hide-mode-line t)
@@ -76,16 +82,7 @@
     (setq holo-layer-active-window-color (face-attribute 'highlight :background))
     (setq holo-layer-cursor-color (frame-parameter nil 'cursor-color)))
   (add-hook 'after-load-theme-hook #'holo-layer-reset-colors)
-  ;; (defun holo-layer-mac-get-size-advice (orig-fn &rest args)
-  ;;  ;; (message "<<< %s" args)
-  ;;  (if (memq (frame-parameter (car args) 'fullscreen)
-  ;;            '(fullscreen fullboth maximized))
-  ;;      0
-  ;;    (apply orig-fn args)))
-  ;; 
-  ;; (advice-add 'holo-layer--frame-top :around #'holo-layer-mac-get-size-advice)
-  ;; (advice-add 'holo-layer--frame-left :around #'holo-layer-mac-get-size-advice)
-  ;; (advice-add 'holo-layer--frame-internal-height :around #'holo-layer-mac-get-size-advice)
+ 
   (defun holo-layer-mac-get-window-info (orig-fn &rest args)
     (if (memq (frame-parameter (car args) 'fullscreen)
               '(fullscreen fullboth maximized))
@@ -93,8 +90,6 @@
       (apply orig-fn args)))
   (advice-add 'holo-layer-get-emacs-frame-info :around #'holo-layer-mac-get-window-info)
   (holo-layer-enable))
-  ;;(setq mode-line-format nil))
-  ;;(holo-layer-enable-cursor-animation))
 
 (provide 'init-eaf)
 ;;; init-eaf.el ends here

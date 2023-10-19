@@ -1,4 +1,4 @@
-;; -*- lexical-binding: t; init-denote.el -*-
+;;; init-denote.el -*- lexical-binding: t; -*-
 
 (use-package denote
   :init

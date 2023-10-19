@@ -1,5 +1,5 @@
-;; -*- lexical-binding: t; init-go.el -*-
-(use-package go-mode)
+;;; init-go.el -*- lexical-binding: t; -*-
+;;(use-package go-mode)
   
  
 

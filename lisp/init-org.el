@@ -434,9 +434,9 @@
 (use-package org-super-links
   :vc (:fetcher github :repo "toshism/org-super-links")
   :after org
-  :bind (("C-c o s" . sl-link)
-         ("C-c o l" . sl-store-link)
-         ("C-c o C-l" . sl-insert-link)))
+  :bind (("C-c o s" . org-super-links-link)
+         ("C-c o l" . org-super-links-store-link)
+         ("C-c o C-l" . org-super-links-insert-link)))
 
 ;; (use-package org-roam
 ;;   ;;:hook (org-load . org-roam-setup)

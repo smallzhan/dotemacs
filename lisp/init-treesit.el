@@ -101,7 +101,7 @@
   (advice-add #'fingertip-open-curly :after #'my-indent-current))
 
 (dolist (hook (list
-               'prog-mode-hook
+               ;; 'prog-mode-hook
                ;; 'c-mode-common-hook
                ;; 'c-mode-hook
                ;; 'c++-mode-hook
@@ -139,7 +139,9 @@
                'json-ts-mode-hook
                'python-ts-mode-hook
                'bash-ts-mode-hook
-               'typescript-ts-mode-hook))
+               'typescript-ts-mode-hook
+               'php-ts-mode-hook
+               'rust-ts-mode-hook))
 
   (add-hook hook #'(lambda () (fingertip-mode 1))))
 
