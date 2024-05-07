@@ -1,4 +1,4 @@
-;;; init-package-quelpa.el  -*- lexical-binding: t; -*- 
+;;; init-package-vc.el  -*- lexical-binding: t; -*- 
 
 (require 'init-funcs)
 
@@ -23,8 +23,8 @@
 ;;
 (when IS-WINDOWS (setq package-gnupghome-dir (expand-file-name "elpa/gnupg" user-emacs-directory)))
 (unless (bound-and-true-p package--initialized)
-  (setq package-enable-at-startup nil)
-  (package-initialize))
+ (setq package-enable-at-startup nil)
+ (package-initialize))
 ;;
 ;;(package-initialize)
 ;; ;; Setup `use-package'
@@ -39,15 +39,18 @@
   (setq use-package-enable-imenu-support t))
 
 (eval-when-compile
-  (require 'use-package))
-
-(use-package gnu-elpa-keyring-update)
+ (require 'use-package))
 
 (when EMACS30-
-  (unless (package-installed-p 'vc-use-package)
-    (package-vc-install "https://github.com/slotThe/vc-use-package"))
+ (unless (package-installed-p 'vc-use-package)
+   (package-vc-install "https://github.com/slotThe/vc-use-package")
+   (require 'vc-use-package)))
 
- (require 'vc-use-package))
+(unless (package-installed-p 'gnu-elpa-keyring-update)
+  (use-package gnu-elpa-keyring-update))
+
+
+ ;;(require 'vc-use-package))
 
 ;; (use-package quelpa
 ;;   :init (setq quelpa-update-melpa-p nil

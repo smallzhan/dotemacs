@@ -67,8 +67,14 @@
   (bind-keys :map lsp-bridge-mode-map
              ;; ("M-." . lsp-bridge-find-def)  ;; override Xref bindings
              ;; ("M-," . lsp-bridge-return-from-def)
+             ("C-c c a" . lsp-bridge-code-action)
              ("C-c c d" . lsp-bridge-find-def)
+             ("C-c c f" . lsp-bridge-code-format)
+             ("C-c c p" . lsp-bridge-peek)
+             ("C-c c j" . lsp-bridge-peek-jump)
+             ("C-c c P" . lsp-bridge-peek-jump-back)
              ("C-c c k" . lsp-bridge-find-def-return)
+             ("C-c c l" . lsp-bridge-diagnostic-list)
              ("C-c c x" . lsp-bridge-find-references)
              ("C-c c i" . lsp-bridge-find-impl)
              ("C-c c r" . lsp-bridge-rename)

@@ -47,7 +47,12 @@
  visible-cursor nil
  ;; improve long line display performance
  bidi-inhibit-bpa t
- bidi-paragraph-direction 'left-to-right
+ ;;bidi-paragraph-direction 'left-to-right
+ bidi-display-reordering nil
+ long-line-threshold 1000
+ large-hscroll-threshold 1000
+ syntax-wholeline-max 1000
+
  ;; allow resize by pixels
  frame-resize-pixelwise t
  x-gtk-resize-child-frames nil

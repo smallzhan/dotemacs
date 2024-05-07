@@ -4,6 +4,14 @@
 (setq org-latex-compiler "xelatex")
 (setq org-preview-latex-default-process 'dvisvgm)
 (setq org-highlight-latex-and-related '(latex))
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+
+;; (setq org-latex-preview-numbered t)
+;; 
+;; (plist-put org-latex-preview-options :zoom 1.25)
+;; (plist-put org-latex-preview-options :scale 1.0)
+;; (let ((pos (assoc 'dvisvgm org-latex-preview-process-alist)))
+;;   (plist-put (cdr pos) :image-converter '("dvisvgm --page=1- --optimize --clipjoin --relative --no-fonts --bbox=preview -o %B-%%9p.svg %f")))
 
 (add-to-list 'org-latex-classes
              `("my-beamer"

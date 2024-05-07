@@ -317,8 +317,8 @@
 
 (use-package meow
   ;;:demand t
-  :hook
-  (after-init . meow-global-mode)
+  :init
+  (meow-global-mode)
   :config
   ;; meow-setup 用于自定义按键绑定，可以直接使用下文中的示例
   (meow-setup)

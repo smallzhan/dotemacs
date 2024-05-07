@@ -53,6 +53,7 @@
 
 (use-package org
   ;;:straight (:type built-in)
+  :load-path "~/.emacs.d/site-lisp/org-mode/lisp"
   :ensure nil
   :commands (org-dynamic-block-define)
   :init
@@ -229,7 +230,7 @@
     (myorg-update-parent-cookie))
 
   (setq org-agenda-text-search-extra-files '(agenda-archives))
-  (plist-put org-format-latex-options :scale 1.5)
+  ;;(plist-put org-format-latex-options :scale 1.5)
 
   ;;(set-face-attribute 'org-table nil :family "Sarasa Mono SC")
 
@@ -433,6 +434,7 @@
 ;;   (org-mode . valign-mode))
 (use-package org-super-links
   :vc (:fetcher github :repo "toshism/org-super-links")
+  :disabled
   :after org
   :bind (("C-c o s" . org-super-links-link)
          ("C-c o l" . org-super-links-store-link)
@@ -518,7 +520,7 @@
 
 (use-package org-caldav
   :after org
-  :load-path "~/.doom.d/extensions/org-caldav"
+  :load-path "~/.emacs.d/site-lisp/org-caldav"
   :config
   (setq org-caldav-url "https://calendar.dingtalk.com/dav/u_kxmc6elm"
         org-caldav-calendar-id "primary"

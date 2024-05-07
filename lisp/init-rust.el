@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-;;(use-package rust-mode)
+(use-package rust-mode :defer t)
 ;;(use-package cargo)
 
 (use-package cargo-transient

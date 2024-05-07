@@ -59,8 +59,8 @@
   (require 'eaf-markmap)
   (require 'eaf-pyqterminal)
   (setq eaf-pyqterminal-font-family "BlexMono Nerd Font Mono")
-  (setq eaf-pyqterminal-font-size 14)) 
-  
+  (setq eaf-pyqterminal-font-size 14)
+  (setq eaf-pyqterminal-device-pixel-ratio 2))
   
    ;;(require 'eaf-interleave-noter))
   

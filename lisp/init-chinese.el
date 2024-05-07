@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
 (use-package rime
+  :defer t
+  :commands rime-force-enable
   :init
   (when IS-MAC
       (setq rime-librime-root "~/Projects/librime/dist"))
@@ -42,51 +44,9 @@
 ;;     (error "Function `rime--posframe-display-content' is not available."))
 
 
-  (defun +rime-force-enable ()
-    "[ENHANCED] Force into Chinese input state.
-If current input method is not `rime', active it first. If it is
-currently in the `evil' non-editable state, then switch to
-`evil-insert-state'."
-    (interactive)
-    (let ((input-method "rime"))
-      (unless (string= current-input-method input-method)
-        (activate-input-method input-method))
-      (when (rime-predicate-evil-mode-p)
-        (if (= (1+ (point)) (line-end-position))
-            (evil-append 1)
-          (evil-insert 1)))
-      (rime-force-enable)))
+  
 
-  (defun +rime-convert-string-at-point ()
-    "Convert the string at point to Chinese using the current input scheme.
-First call `+rime-force-enable' to active the input method, and
-then search back from the current cursor for available string (if
-a string is selected, use it) as the input code, call the current
-input scheme to convert to Chinese."
-    (interactive)
-    (+rime-force-enable)
-    (let ((string (if mark-active
-                      (buffer-substring-no-properties
-                       (region-beginning) (region-end))
-                    (buffer-substring-no-properties
-                     (point) (max (line-beginning-position) (- (point) 80)))))
-          code
-          length)
-      (cond ((string-match "\\([a-z]+\\|[[:punct:]]\\)[[:blank:]]*$" string)
-             (setq code (replace-regexp-in-string
-                         "^[-']" ""
-                         (match-string 0 string)))
-             (setq length (length code))
-             (setq code (replace-regexp-in-string " +" "" code))
-             (if mark-active
-                 (delete-region (region-beginning) (region-end))
-               (when (> length 0)
-                 (delete-char (- 0 length))))
-             (when (> length 0)
-               (setq unread-command-events
-                     (append (listify-key-sequence code)
-                             unread-command-events))))
-            (t (message "`+rime-convert-string-at-point' did nothing.")))))
+  
 
   (defun +rime-predicate-button-at-point-p ()
     "Determines whether the point is a button.
@@ -139,6 +99,51 @@ Can be used in `rime-disable-predicates' and `rime-inline-predicates'."
    ("M-L" . #'+rime-convert-string-at-point)
    ("M-J" . #'rime-force-enable)))
 
+(defun +rime-force-enable ()
+    "[ENHANCED] Force into Chinese input state.
+If current input method is not `rime', active it first. If it is
+currently in the `evil' non-editable state, then switch to
+`evil-insert-state'."
+    (interactive)
+    (let ((input-method "rime"))
+      (unless (string= current-input-method input-method)
+        (activate-input-method input-method))
+      (when (rime-predicate-evil-mode-p)
+        (if (= (1+ (point)) (line-end-position))
+            (evil-append 1)
+          (evil-insert 1)))
+      (rime-force-enable)))
+
+(defun +rime-convert-string-at-point ()
+    "Convert the string at point to Chinese using the current input scheme.
+First call `+rime-force-enable' to active the input method, and
+then search back from the current cursor for available string (if
+a string is selected, use it) as the input code, call the current
+input scheme to convert to Chinese."
+    (interactive)
+    (+rime-force-enable)
+    (let ((string (if mark-active
+                      (buffer-substring-no-properties
+                       (region-beginning) (region-end))
+                    (buffer-substring-no-properties
+                     (point) (max (line-beginning-position) (- (point) 80)))))
+          code
+          length)
+      (cond ((string-match "\\([a-z]+\\|[[:punct:]]\\)[[:blank:]]*$" string)
+             (setq code (replace-regexp-in-string
+                         "^[-']" ""
+                         (match-string 0 string)))
+             (setq length (length code))
+             (setq code (replace-regexp-in-string " +" "" code))
+             (if mark-active
+                 (delete-region (region-beginning) (region-end))
+               (when (> length 0)
+                 (delete-char (- 0 length))))
+             (when (> length 0)
+               (setq unread-command-events
+                     (append (listify-key-sequence code)
+                             unread-command-events))))
+            (t (message "`+rime-convert-string-at-point' did nothing.")))))
 
 (use-package pinyinlib
   :commands (pinyinlib-build-regexp-string)
