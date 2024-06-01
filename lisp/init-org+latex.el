@@ -4,7 +4,8 @@
 (setq org-latex-compiler "xelatex")
 (setq org-preview-latex-default-process 'dvisvgm)
 (setq org-highlight-latex-and-related '(latex))
-(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+(when (boundp 'org-format-latex-options)
+ (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.0)))
 
 ;; (setq org-latex-preview-numbered t)
 ;; 

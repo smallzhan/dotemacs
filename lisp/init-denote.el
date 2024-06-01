@@ -58,16 +58,17 @@
     "Create an entry tagged 'journal', while prompting for a title."
     (interactive)
     (denote
-     (denote--title-prompt)
+     (denote-title-prompt)
      '("journal")))
   
   (defun my-denote-blog ()
     "Create an entry in sub directory 'blog', while prompting for a title and keywords."
     (interactive)
     (let ((denote-date-format "%Y-%m-%d")
-          (denote-id-format "%Y-%m-%d-T%H%M%S"))
+          (denote-id-format "%Y-%m-%d-T%H%M%S")
+          (denote-id-regexp "\\([0-9-]\\{11\\}\\)\\(T[0-9]\\{6\\}\\)"))
      (denote
-      (denote--title-prompt)
+      (denote-title-prompt)
       (denote-keywords-prompt)
       'blog
       (expand-file-name "blog" denote-directory))))
@@ -94,15 +95,16 @@
                 "\n"))
  
  ;; (defvar denote-file-type-blog (plist-put (alist-get 'org denote-file-types) :front-matter 'denote-blog-front-matter))
-  (add-to-list 'denote-file-types '(blog
-                                    :extension ".org"
-                                    :front-matter denote-blog-front-matter
-                                    :title-key-regexp "^#\\+title\\s-*:"
-                                    :title-value-function identity
-                                    :title-value-reverse-function denote-trim-whitespace
-                                    :keywords-key-regexp "^#\\+filetags\\s-*:"
-                                    :keywords-value-function denote-format-keywords-for-text-front-matter
-                                    :keywords-value-reverse-function denote-extract-keywords-from-front-matter) t) 
+  (add-to-list 'denote-file-types
+               '(blog
+                 :extension ".org"
+                 :front-matter denote-blog-front-matter
+                 :title-key-regexp "^#\\+title\\s-*:"
+                 :title-value-function identity
+                 :title-value-reverse-function denote-trim-whitespace
+                 :keywords-key-regexp "^#\\+filetags\\s-*:"
+                 :keywords-value-function denote-format-keywords-for-text-front-matter
+                 :keywords-value-reverse-function denote-extract-keywords-from-front-matter) t) 
    ;; Denote DOES NOT define any key bindings.  This is for the user to
    ;; decide.  For example:
   
@@ -142,10 +144,32 @@
                    :no-save t
                    :immediate-finish nil
                    :kill-buffer t
-                   :jump-to-captured t))))
+                   :jump-to-captured t)))
   
-  ;; Also check the commands `denote-link-after-creating',
-  ;; `denote-link-or-create'.  You may want to bind them to keys as well.
+
+  
+  (defun my-denote-split-org-subtree-to-note ()
+    "Create new Denote note as an Org file using current Org subtree."
+    (interactive)
+    (let* ((keywords (denote--keywords-prompt))
+           (text (org-get-entry))
+           (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment))
+           (tags (org-get-tags)))
+
+      (delete-region (org-entry-beginning-position) (org-end-of-subtree))
+
+      (if (> (length tags) 0)
+          (dolist (tag tags)
+            (push tag keywords)))
+
+      (let (path)
+        (save-window-excursion
+          (denote heading keywords)
+          (insert text)
+          (save-buffer)
+          (setq path (buffer-file-name)))
+        (denote-link path)))))
+ 
 
 (use-package consult-notes
  :commands (consult-notes
@@ -157,5 +181,6 @@
   (consult-notes-denote-mode))
  (setq consult-notes-sources nil)) ;; Set notes dir(s), see below
   ;;(consult-notes-org-roam-mode)) ;; Set org-roam integration)
+
 (provide 'init-denote)
 ;;; init-denote.el ends here

@@ -80,6 +80,6 @@
 (require 'init-eaf)
 (require 'init-mind-wave)
 (require 'init-dict)
-
+(require 'init-typst)
 
 (require 'init-server)

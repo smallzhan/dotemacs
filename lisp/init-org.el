@@ -53,7 +53,7 @@
 
 (use-package org
   ;;:straight (:type built-in)
-  :load-path "~/.emacs.d/site-lisp/org-mode/lisp"
+  ;;:load-path "~/.emacs.d/site-lisp/org-mode/lisp"
   :ensure nil
   :commands (org-dynamic-block-define)
   :init
@@ -620,6 +620,27 @@
           (format "curl -s -d '%s' -H 'Content-Type: text/plain' '%s/web' | curl -s -d @- -H 'Content-Type: application/json' '%s/export?format=%s'" url ebib-zotero-translation-server ebib-zotero-translation-server export-format)))
         (ebib-import-entries ebib--cur-db)))))
 
+(use-package math-preview
+  :config
+  (setq math-preview-tex-macros
+   '(("ddx" "\\frac{d#2}{d#1}" 2 "t")
+     ("Beta" . "\\mathrm{B}"))
+   math-preview-tex-marks
+   '(("\\begin{equation}" "\\end{equation}")
+     ("\\begin{equation*}" "\\end{equation*}")
+     ("\\[" "\\]")
+     ("$$" "$$")
+     ("\\begin{gather}" "\\end{gather}")
+     ("\\begin{gather*}" "\\end{gather*}")
+     ("\\begin{align}" "\\end{align}")
+     ("\\begin{align*}" "\\end{align*}"))))
+
+(use-package org-fragtog
+  ;; npm install -g git+https://gitlab.com/matsievskiysv/math-preview  
+  :config
+  (add-hook 'org-mode-hook 'org-fragtog-mode)
+  (defalias #'org-latex-preview #'math-preview-at-point)
+  (defalias #'org-clear-latex-preview #'math-preview-clear-region))
 
 (provide 'init-org)
 ;;; init-org.el ends here
