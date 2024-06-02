@@ -150,7 +150,8 @@
   (setq org-blank-before-new-entry '((heading)
                                      (plain-list-item . auto)))
   (setq org-insert-heading-respect-content nil)
-  (setq org-startup-truncated nil)
+  (setq org-startup-truncated nil
+        org-startup-numerated t) 
 
   ;;(add-hook! org-mode-hook (lambda () (yas-minor-mode -1)))
   (setq org-capture-templates
@@ -223,11 +224,11 @@
           (ps-landscape-mode t)
           (htmlize-output-type 'css)))
 
-  (defadvice org-kill-line (after fix-cookies activate)
-    (myorg-update-parent-cookie))
 
-  (defadvice kill-whole-line (after fix-cookies activate)
-    (myorg-update-parent-cookie))
+  (advice-add 'org-kill-line :after #'myorg-update-parent-cookie)
+
+  (advice-add 'kill-whole-line :after #'myorg-update-parent-cookie)
+
 
   (setq org-agenda-text-search-extra-files '(agenda-archives))
   ;;(plist-put org-format-latex-options :scale 1.5)
@@ -256,8 +257,8 @@
   (with-eval-after-load 'rime
     (add-to-list 'rime-disable-predicates 'rime-predicate-org-in-src-block-p))
 
-  (add-hook 'org-mode-hook 'variable-pitch-mode)
-  (add-hook 'org-mode-hook 'org-num-mode))
+  (add-hook 'org-mode-hook 'variable-pitch-mode))
+  ;;(add-hook 'org-mode-hook 'org-num-mode))
   
 (use-package org-expiry
   :ensure org-contrib
@@ -411,6 +412,8 @@
         org-modern-timestamp nil
         org-modern-progress nil
         org-modern-statistics nil
+        org-modern-star "❆✥❄✣♤♡♧♢"
+        org-modern-list '((43 . "▶") (45 . "»") (42 . "◈"))
         org-modern-priority '((?A . "Ⓐ")
                               (?B . "Ⓑ")
                               (?C . "Ⓒ")))
@@ -433,7 +436,7 @@
 ;;   :hook
 ;;   (org-mode . valign-mode))
 (use-package org-super-links
-  :vc (:fetcher github :repo "toshism/org-super-links")
+  :quelpa (org-super-links :fetcher git :url "https://github.com/toshism/org-super-links")
   :disabled
   :after org
   :bind (("C-c o s" . org-super-links-link)
@@ -621,6 +624,7 @@
         (ebib-import-entries ebib--cur-db)))))
 
 (use-package math-preview
+  :quelpa (math-preview :fetcher git :url "https://gitlab.com/matsievskiysv/math-preview")
   :config
   (setq math-preview-tex-macros
    '(("ddx" "\\frac{d#2}{d#1}" 2 "t")

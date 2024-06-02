@@ -52,11 +52,11 @@
 
  ;;(require 'vc-use-package))
 
-;; (use-package quelpa
-;;   :init (setq quelpa-update-melpa-p nil
-;;               quelpa-checkout-melpa-p nil))
-;; 
-;; (use-package quelpa-use-package)
+(use-package quelpa
+  :init (setq quelpa-update-melpa-p nil
+              quelpa-checkout-melpa-p nil))
+
+(use-package quelpa-use-package)
 
 
 (provide 'init-package-vc)

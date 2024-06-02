@@ -59,7 +59,7 @@
 ;;;======= font config
 
 (defvar my-fonts '((default . ("IBM Plex Mono" "DejaVu Sans Mono" "JetBrains Mono" "Cascadia Code" "Fira Code" "SF Mono"))
-                   (cjk . ("LXGW WenKai" "Source Han Serif SC" "PingFang SC" "Microsoft YaHei UI" "Sarasa Mono SC"))
+                   (cjk . ("Noto Serif CJK SC" "LXGW WenKai" "PingFang SC" "Microsoft YaHei UI" "Sarasa Mono SC"))
                    (unicode . ("Apple Color Emoji" "Segoe UI Emoji" "Symbola"))
                    (fixed . ("Iosevka Fixed" "Sarasa Mono SC"))
                    (fixed-serif . ("Latin Modern Mono" "LM Mono 10" "Courier New"))
@@ -121,10 +121,12 @@
   '(org-latex-and-related ((t (:inherit 'fixed-pitch-serif))))
   '(org-checkbox ((t :inherit 'fixed-pitch :box nil)))
   '(org-drawer ((t :inherit 'fixed-pitch)))
+  '(org-level-1 ((t :inherit 'outline-1 :height 1.1)))
+  '(org-level-2 ((t :inherit 'outline-2 :height 1.05)))
   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
 
 (use-package awesome-tray
-  :vc (:fetcher github :repo "manateelazycat/awesome-tray")
+  :quelpa (awesome-tray :fetcher git :url "https://github.com/manateelazycat/awesome-tray")
   :commands awesome-tray-mode
   :config
  

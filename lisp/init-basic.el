@@ -3,6 +3,8 @@
 (require 'init-env)
 (my/load-env)
 
+(pixel-scroll-precision-mode)
+
 (cond
  (IS-WINDOWS
   (setq w32-lwindow-modifier 'super
@@ -142,6 +144,11 @@
 
 (use-package kill-ring-search
   :bind ("C-c s y" . kill-ring-search))
+
+(use-package psearch
+  :defer t
+  :quelpa (psearch :fetcher git :url "https://github.com/twlz0ne/psearch.el"))
+ 
 
 (provide 'init-basic)
 ;;; init-basic.el ends here

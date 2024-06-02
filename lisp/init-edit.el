@@ -7,7 +7,7 @@
   (transient-bind-q-to-quit))
 
 (use-package color-rg
-  :vc (:fetcher github :repo "manateelazycat/color-rg")
+  :quelpa (color-rg :fetcher git :url "https://github.com/manateelazycat/color-rg")
   :commands (color-rg-search-symbol-in-project
              color-rg-search-input-in-project
              color-rg-search-input-in-current-file
@@ -35,22 +35,22 @@
     (define-key app-search-keymap (kbd "m") #'color-rg-search-in-org-roam)))
 
 (use-package auto-save
-  :vc (:fetcher github :repo "manateelazycat/auto-save")
+  :quelpa (auto-save :fetcher git :url "https://github.com/manateelazycat/auto-save")
   :init
   (setq auto-save-silent t)
   :config
   (auto-save-enable))
 
 ;; (use-package lazy-search
-;;   :quelpa (lazy-search :fetcher github :repo "manateelazycat/lazy-search")
+;;   :quelpa (lazy-search :fetcher git :url "https://github.com/manateelazycat/lazy-search")
 ;;   :commands lazy-search)
 
 (use-package delete-block
-  :vc (:fetcher github :repo "manateelazycat/delete-block")
+  :quelpa (delete-block :fetcher git :url "https://github.com/manateelazycat/delete-block")
   :commands (delete-block-forward delete-block-backward))
 
 (use-package thing-edit
-  :vc (:fetcher github :repo "manateelazycat/thing-edit")
+  :quelpa (thing-edit :fetcher git :url "https://github.com/manateelazycat/thing-edit")
   :bind ("C-c e e" . thing-edit-transient)
   :config
   (transient-define-prefix thing-edit-transient ()
@@ -344,13 +344,14 @@
   (add-to-list 'meow-mode-state-list '(elfeed-dashboard-mode . motion))
   (add-to-list 'meow-mode-state-list '(eaf-mode . motion))
   (add-to-list 'meow-mode-state-list '(snails-mode . motion))
+  (add-to-list 'meow-mode-state-list '(ediff-mode . motion))
   (add-to-list 'meow-mode-state-list '(blink-search-mode . motion)))
 
 
 
 (use-package parinfer-rust-mode
   :ensure nil
-  :vc (:fetcher github :repo "justinbarclay/parinfer-rust-mode")
+  :quelpa (parinfer-rust-mode :fetcher git :url "https://github.com/justinbarclay/parinfer-rust-mode")
   :when (bound-and-true-p module-file-suffix)
   :hook ((emacs-lisp-mode
           clojure-mode
@@ -399,12 +400,12 @@
 
 (use-package language-id
   :ensure nil
-  :vc (:fetcher github :repo "lassik/emacs-language-id"))
+  :quelpa (language-id :fetcher git :url "https://github.com/lassik/emacs-language-id"))
 
 (use-package format-all)
 
 (use-package vundo
-  ;;:quelpa (vundo :fetcher github :repo "casouri/vundo")
+  ;;:quelpa (vundo :fetcher git :url "https://github.com/casouri/vundo")
   :commands vundo)
 
 (use-package autorevert
@@ -455,7 +456,7 @@
 
 
 (use-package markmacro
-  :vc (:fetcher github :repo "manateelazycat/markmacro"))
+  :quelpa (markmacro :fetcher git :url "https://github.com/manateelazycat/markmacro"))
  
 
 

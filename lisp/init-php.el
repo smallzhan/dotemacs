@@ -1,6 +1,6 @@
 ;;; init-php.el  -*- lexical-binding: t; -*-
 (use-package php-ts-mode
-  :vc (:fetcher github :repo "emacs-php/php-ts-mode")
+  :quelpa (php-ts-mode :fetcher git :url "https://github.com/emacs-php/php-ts-mode")
   :config
   (add-hook 'php-ts-mode-hook #'(lambda () (lsp-bridge-mode 1)))
   (with-eval-after-load "lsp-bridge"
