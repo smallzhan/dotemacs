@@ -259,7 +259,16 @@
 
   (add-hook 'org-mode-hook 'variable-pitch-mode))
   ;;(add-hook 'org-mode-hook 'org-num-mode))
-  
+
+(use-package ol
+  :ensure nil
+  :after org
+  :config
+  (org-link-set-parameters
+   "zotero"
+   :face '(:foreground "orange" :underline t)  
+   :follow (lambda (url arg) (browse-url (format "zotero:%s" url) arg)))) 
+
 (use-package org-expiry
   :ensure org-contrib
   :after org
@@ -413,7 +422,7 @@
         org-modern-progress nil
         org-modern-statistics nil
         org-modern-star "❆✥❄✣♤♡♧♢"
-        org-modern-list '((43 . "▶") (45 . "»") (42 . "◈"))
+        org-modern-list '((?+ . "»") (?- . "▶") (?* . "⚬"))
         org-modern-priority '((?A . "Ⓐ")
                               (?B . "Ⓑ")
                               (?C . "Ⓒ")))
