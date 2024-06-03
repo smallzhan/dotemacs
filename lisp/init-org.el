@@ -151,7 +151,8 @@
                                      (plain-list-item . auto)))
   (setq org-insert-heading-respect-content nil)
   (setq org-startup-truncated nil
-        org-startup-numerated t) 
+        org-startup-numerated t
+        org-startup-indented t) 
 
   ;;(add-hook! org-mode-hook (lambda () (yas-minor-mode -1)))
   (setq org-capture-templates
@@ -324,9 +325,8 @@
     ;;  (add-hook 'before-save-hook 'org-encrypt-entries nil t))))
 
 (use-package org-super-agenda
-  :after org-agenda
   :config
-  (org-super-agenda-mode 1)
+  ;;(org-super-agenda-mode 1)
   (setq org-agenda-custom-commands
         '(("z" "Super agenda view"
            ((agenda
@@ -444,6 +444,13 @@
 ;; (use-package valign
 ;;   :hook
 ;;   (org-mode . valign-mode))
+
+;; (use-package org-modern-indent
+;;   :disabled t
+;;   :quelpa (org-modern-indent :fetcher git :url "https://github.com/jdtsmith/org-modern-indent")
+;;   :config
+;;   (add-hook 'org-modern-mode #'org-modern-indent-mode 90))
+
 (use-package org-super-links
   :quelpa (org-super-links :fetcher git :url "https://github.com/toshism/org-super-links")
   :disabled
