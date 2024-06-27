@@ -52,8 +52,8 @@
     (define-key keymap (kbd "C") #'recompile)
     ;;(define-key keymap (kbd "d") #'xref-find-definitions)
     ;;(define-key keymap (kbd "x") #'xref-find-references)
-    (define-key keymap (kbd "f") #'format-all-buffer)
-    (define-key keymap (kbd "F") #'format-all-region)
+    (define-key keymap (kbd "f") #'apheleia-format-buffer)
+    (define-key keymap (kbd "F") #'apheleia-format-region)
     (define-key keymap (kbd "D") #'delete-trailing-whitespace)
     (define-key keymap (kbd "t") #'citar-open-entry)
 

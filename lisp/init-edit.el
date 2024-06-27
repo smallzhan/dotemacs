@@ -398,11 +398,12 @@
 ;; (use-package lpy
 ;;   :hook (python-mode . lpy-mode))
 
-(use-package language-id
-  :ensure nil
-  :quelpa (language-id :fetcher git :url "https://github.com/lassik/emacs-language-id"))
+;;(use-package language-id
+;;  :ensure nil
+;;  :quelpa (language-id :fetcher git :url "https://github.com/lassik/emacs-language-id"))
 
-(use-package format-all)
+;;(use-package format-all)
+(use-package apheleia)
 
 (use-package vundo
   ;;:quelpa (vundo :fetcher git :url "https://github.com/casouri/vundo")
@@ -457,7 +458,6 @@
 
 (use-package markmacro
   :quelpa (markmacro :fetcher git :url "https://github.com/manateelazycat/markmacro"))
- 
 
 
 (provide 'init-edit)

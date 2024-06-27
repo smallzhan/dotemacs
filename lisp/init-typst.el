@@ -1,6 +1,13 @@
 ;;; init-php.el  -*- lexical-binding: t; -*-
 (use-package typst-ts-mode
-  :quelpa (typst-ts-mode :fetcher git :url "https://git.sr.ht/~meow_king/typst-ts-mode"))
+  :quelpa (typst-ts-mode :fetcher git :url "https://git.sr.ht/~meow_king/typst-ts-mode")
+  :config
+  (with-eval-after-load 'apheleia
+    (add-to-list 'apheleia-formatters
+                 '(typstyle . ("typstyle")))
+    (add-to-list 'apheleia-mode-alist '(typst-ts-mode . typstyle))))
+ 
+                                           
   
 (use-package websocket :defer t)
 (use-package typst-preview

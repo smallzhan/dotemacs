@@ -151,7 +151,7 @@
   (defun my-denote-split-org-subtree-to-note ()
     "Create new Denote note as an Org file using current Org subtree."
     (interactive)
-    (let* ((keywords (denote--keywords-prompt))
+    (let* ((keywords (denote-keywords-prompt))
            (text (org-get-entry))
            (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment))
            (tags (org-get-tags)))
@@ -168,7 +168,7 @@
           (insert text)
           (save-buffer)
           (setq path (buffer-file-name)))
-        (denote-link path)))))
+        (denote-link path "org" (denote--link-get-description path))))))
  
 
 (use-package consult-notes

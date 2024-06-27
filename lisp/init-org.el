@@ -662,5 +662,33 @@
   (defalias #'org-latex-preview #'math-preview-at-point)
   (defalias #'org-clear-latex-preview #'math-preview-clear-region))
 
+
+(defun +org--server-visit-files-a (fn files &rest args)
+    "Advise `server-visit-files' to load `org-protocol' lazily."
+    (if (not (cl-loop with protocol =
+                      (if IS-WINDOWS
+                          ;; On Windows, the file arguments for `emacsclient'
+                          ;; get funnelled through `expand-file-path' by
+                          ;; `server-process-filter'. This substitutes
+                          ;; backslashes with forward slashes and converts each
+                          ;; path to an absolute one. However, *all* absolute
+                          ;; paths on Windows will match the regexp ":/+", so we
+                          ;; need a more discerning regexp.
+                          (regexp-quote
+                           (or (bound-and-true-p org-protocol-the-protocol)
+                               "org-protocol"))
+                        ;; ...but since there is a miniscule possibility users
+                        ;; have changed `org-protocol-the-protocol' I don't want
+                        ;; this behavior for macOS/Linux users.
+                        "")
+                      for var in files
+                      if (string-match-p (format "%s:/+" protocol) (car var))
+                      return t))
+        (apply fn files args)
+      (require 'org-protocol)
+      (apply #'org--protocol-detect-protocol-server fn files args)))
+
+(advice-add 'server-visit-files :around #'+org--server-visit-files-a)
+
 (provide 'init-org)
 ;;; init-org.el ends here
